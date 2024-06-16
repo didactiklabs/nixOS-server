@@ -143,6 +143,7 @@ nixos-rebuild switch || {
     echo "nixos-rebuild switch failed"
     exit 1
 }
+nix-collect-garbage --delete-older-than 30d
 echo '''
     ⠀⢀⣣⠏⠀⠀⠀⠀⡟⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣰⠃⠀⠀⠀⣧⣀⡀
     ⠀⢼⠏⠀⠀⠀⠀⢠⡃⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠐⣗⠀⠀⠀⣰⡟⠀⠀
