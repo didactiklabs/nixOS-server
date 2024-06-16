@@ -9,8 +9,7 @@
   novaLauncher =
     pkgs.writeShellScriptBin "novaLauncher"
     ''
-      NOVA_BRANCH=${NOVA_BRANCH:- "main"}
-      novaInstall --username ${username} --hostname ${hostname} --repo https://${nixos_gitrepo} --branch $NOVA_BRANCH
+      novaInstall --username ${username} --hostname ${hostname} --repo https://${nixos_gitrepo} --branch main
     '';
 in {
   environment.systemPackages = [
