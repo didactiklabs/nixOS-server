@@ -16,7 +16,4 @@ in {
     novaInstall
     novaLauncher
   ];
-  environment.variables = {
-    NOVA_BRANCH = "main";
-  };
 }
