@@ -4,6 +4,7 @@
   username,
   hostname ? "nixos",
   lib,
+  nixos_gitrepo ? "https://github.com/didactiklabs/nixOS-server.git",
   ...
 }: let
   nixOS_version = "24.05";
@@ -17,7 +18,7 @@ in {
     ./hardware-configuration.nix
     ./tools.nix
     ./nixosModules/k3s
-    (import ./nixosModules/scripts.nix {inherit pkgs username hostname;})
+    (import ./nixosModules/scripts.nix {inherit pkgs username hostname nixos_gitrepo;})
     (import ./nixosModules/networkManager.nix {inherit lib config pkgs username;})
     (import "${home-manager}/nixos")
 
