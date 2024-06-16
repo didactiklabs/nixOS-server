@@ -1,6 +1,8 @@
 # Installation
 
-On the targeted host, run `install.sh` with following arguments:
+### Warning !!! Only work on Legacy boot installation.
+
+On the targeted NixOS host, run `install.sh` with following arguments:
 
 ```bash
 Usage: install.sh [--username <USERNAME>] [--hostname <HOSTNAME>] [--repo <REPO_URL>] [--branch <BRANCH>] [--help]
@@ -19,3 +21,5 @@ Example:
 ```
 
 Require `git` to be installed on the machine.
+
+Profile system works similarly to https://github.com/didactiklabs/nixbook.
