@@ -78,7 +78,6 @@ echo '''
 echo "Welcome to the nova NixOS server installation script choom !"
 echo ""
 echo "Your username is: $username"
-echo ""
 echo "Your hostname is: $hostname"
 echo ""
 
@@ -101,6 +100,13 @@ while [ $attempt -le $retry_count ] || [ $success != "true" ]; do
     git config --global --add safe.directory $nixos_dir || attempt=$((attempt + 1)) continue
     chown $username $nixos_dir -R
     git fetch || attempt=$((attempt + 1)) continue
+    LOCAL=$(git rev-parse @)
+    REMOTE=$(git rev-parse @{u})
+    BASE=$(git merge-base @ @{u})
+    if [ $LOCAL = $REMOTE ]; then
+        echo "Local and remote repositories are up-to-date."
+        exit 0
+    fi
     git clean -f
     git checkout $branch
     git pull origin $branch -f || attempt=$((attempt + 1)) continue

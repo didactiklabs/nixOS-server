@@ -16,8 +16,11 @@ in {
   imports = [
     ./hardware-configuration.nix
     ./tools.nix
+    ./nixosModules/k3s
+    (import ./nixosModules/scripts.nix {inherit pkgs username hostname;})
     (import ./nixosModules/networkManager.nix {inherit lib config pkgs username;})
     (import "${home-manager}/nixos")
+
     ({
       config,
       pkgs,
@@ -59,6 +62,8 @@ in {
     "fs.suid_dumpable" = 0;
     "fs.protected_fifos" = 2;
     "fs.protected_regular" = 2;
+    # Disable IPV6
+    "net.ipv6.conf.all.disable_ipv6" = 1;
   };
   # Bootloader.
   boot.kernelParams = [
@@ -69,7 +74,7 @@ in {
   boot.loader.grub.devices = ["/dev/sda"];
   boot.kernelPackages = pkgs.linuxPackages_latest;
   networking.hostName = "${hostname}"; # Define your hostname.
-  networking.nameservers = ["2a00:1098:2b::1"];
+  #networking.nameservers = ["2a01:4f8:c2c:123f::1"];
   # Enable networking
   networking.networkmanager.enable = true;
   # Set your time zone.
