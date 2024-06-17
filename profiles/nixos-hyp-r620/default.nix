@@ -6,9 +6,6 @@
   hostname,
   ...
 }: {
-  customNixOSModules = {
-    k3s.enable = true;
-  };
   home-manager = {
     users."${username}" = {
       customHomeManagerModules = {
@@ -18,9 +15,6 @@
         vim.enable = true;
         fastfetchConfig.enable = true;
       };
-      imports = [
-        ./gitConfig.nix
-      ];
     };
   };
 }
