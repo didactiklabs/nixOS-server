@@ -3,3 +3,4 @@
 hardware-configuration.nix
 configuration.nix
 result
+novaStatus.keep

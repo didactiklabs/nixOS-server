@@ -9,6 +9,12 @@
 }: let
   nixOS_version = "24.05";
   home-manager = builtins.fetchTarball "https://github.com/nix-community/home-manager/archive/release-${nixOS_version}.tar.gz";
+  nixbook = pkgs.fetchFromGitHub {
+    owner = "didactiklabs";
+    repo = "nixbook";
+    rev = "main";
+    sha256 = "sha256-khoi2yTtYkKHWOEFKORz598AZ3/XQxlDesH7CI5/wSc=";
+  };
   userProfile =
     if builtins.pathExists ./profiles/${username}-${hostname}
     then import ./profiles/${username}-${hostname} {inherit lib config pkgs username hostname;}
@@ -28,7 +34,7 @@ in {
       ...
     }:
       import
-      ./home-manager.nix {inherit lib config pkgs username home-manager nixOS_version;})
+      ./home-manager.nix {inherit lib config pkgs username home-manager nixbook nixOS_version;})
     userProfile
   ];
   boot.kernel.sysctl = {
