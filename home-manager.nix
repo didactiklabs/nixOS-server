@@ -4,6 +4,7 @@
   username,
   lib,
   home-manager,
+  nixbook,
   nixOS_version,
   ...
 }: let
@@ -34,12 +35,12 @@ in {
       };
       # Let Home Manager install and manage itself.
       imports = [
-        ./homeManagerModules/zshConfig.nix
-        ./homeManagerModules/gitConfig.nix
-        ./homeManagerModules/sshConfig.nix
-        ./homeManagerModules/starshipConfig.nix
-        ./homeManagerModules/vimConfig.nix
-        ./homeManagerModules/fastfetchConfig.nix
+        (import "${nixbook}//homeManagerModules/zshConfig.nix")
+        (import "${nixbook}//homeManagerModules/gitConfig.nix")
+        (import "${nixbook}//homeManagerModules/sshConfig.nix")
+        (import "${nixbook}//homeManagerModules/starshipConfig.nix")
+        (import "${nixbook}//homeManagerModules/vimConfig.nix")
+        (import "${nixbook}//homeManagerModules/fastfetchConfig.nix")
       ];
     };
   };

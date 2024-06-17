@@ -99,17 +99,24 @@ while [ $attempt -le $retry_count ] || [ $success != "true" ]; do
     git config pull.rebase true
     git config --global --add safe.directory $nixos_dir || attempt=$((attempt + 1)) continue
     chown $username $nixos_dir -R
+    git checkout $branch
     git fetch || attempt=$((attempt + 1)) continue
-    LOCAL=$(git rev-parse @)
-    REMOTE=$(git rev-parse @{u})
-    BASE=$(git merge-base @ @{u})
-    if [ $LOCAL = $REMOTE ]; then
-        echo "Local and remote repositories are up-to-date."
+    git pull origin $branch -f || attempt=$((attempt + 1)) continue
+    # Get the current HEAD commit hash
+    current_commit=$(git rev-parse @{u})
+    saved_commit=
+    if [[ -f novaStatus.keep ]]; then
+        saved_commit=$(<novaStatus.keep)
+    else
+        echo "novaStatus.keep file not found!"
+    fi
+    # Read the content of the status.keep file
+    # Compare the two hashes
+    if [[ "$current_commit" == "$saved_commit" ]]; then
+        echo "The commit hash matches the one in novaStatus.keep."
         exit 0
     fi
     git clean -f
-    git checkout $branch
-    git pull origin $branch -f || attempt=$((attempt + 1)) continue
     chown $username $nixos_dir -R
     break
 done
@@ -143,6 +150,7 @@ nixos-rebuild switch || {
     echo "nixos-rebuild switch failed"
     exit 1
 }
+git rev-parse @ >./novaStatus.keep
 nix-collect-garbage --delete-older-than 30d
 echo '''
     ⠀⢀⣣⠏⠀⠀⠀⠀⡟⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣰⠃⠀⠀⠀⣧⣀⡀
