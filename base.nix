@@ -25,7 +25,7 @@ in {
     ./hardware-configuration.nix
     ./tools.nix
     ./nixosModules/k3s
-    (import ./nixosModules/scripts.nix {inherit pkgs username hostname nixos_gitrepo;})
+    (import ./nixosModules/scripts.nix {inherit config pkgs lib username hostname nixos_gitrepo;})
     (import ./nixosModules/networkManager.nix {inherit lib config pkgs username;})
     (import "${home-manager}/nixos")
 

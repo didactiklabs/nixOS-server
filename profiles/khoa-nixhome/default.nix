@@ -6,6 +6,12 @@
   hostname,
   ...
 }: {
+  profileCustomization = {
+    gitOps = {
+      enable = true;
+      targetRev = "v0.0.3";
+    };
+  };
   customNixOSModules = {
     k3s = {
       enable = true;

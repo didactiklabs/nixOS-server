@@ -2,7 +2,7 @@
 set -euo pipefail
 
 print_help() {
-    echo "Usage: $(basename "$0") [--username <USERNAME>] [--hostname <HOSTNAME>] [--repo <REPO_URL>] [--branch <BRANCH>] [--help]"
+    echo "Usage: $(basename "$0") [--username <USERNAME>] [--hostname <HOSTNAME>] [--repo <REPO_URL>] [--rev <REV>] [--help]"
     echo ""
     echo "This script installs and configures a NixOS server."
     echo ""
@@ -10,17 +10,17 @@ print_help() {
     echo "  --username <USERNAME>    The desired main username."
     echo "  --hostname <HOSTNAME>    The desired hostname."
     echo "  --repo <REPO_URL>        Git repository URL to clone."
-    echo "  --branch <BRANCH>        Git branch name to use."
+    echo "  --rev <REV>           Git rev name to use."
     echo "  --help                   Display this help message and exit."
     echo ""
     echo "Example:"
-    echo "  $(basename "$0") --username myuser --hostname myhost --repo https://github.com/didactiklabs/nixOS-server.git --branch main"
+    echo "  $(basename "$0") --username myuser --hostname myhost --repo https://github.com/didactiklabs/nixOS-server.git --rev main"
 }
 
 username=
 hostname=
 git_repo=
-branch=
+rev=
 
 # Parse command-line options
 while [[ "$#" -gt 0 ]]; do
@@ -37,8 +37,8 @@ while [[ "$#" -gt 0 ]]; do
         git_repo="$2"
         shift 2
         ;;
-    --branch)
-        branch="$2"
+    --rev)
+        rev="$2"
         shift 2
         ;;
     --help)
@@ -54,7 +54,7 @@ while [[ "$#" -gt 0 ]]; do
 done
 
 # Validate if username and hostname are provided
-if [[ -z "$username" || -z "$hostname" || -z "$git_repo" || -z "$branch" ]]; then
+if [[ -z "$username" || -z "$hostname" || -z "$git_repo" || -z "$rev" ]]; then
     echo "Error: Missing arguments."
     print_help
     exit 1
@@ -98,12 +98,14 @@ while [ $attempt -le $retry_count ] || [ $success != "true" ]; do
     cd $nixos_dir
     git config pull.rebase true
     git config --global --add safe.directory $nixos_dir || attempt=$((attempt + 1)) continue
+    git reset --hard
     chown $username $nixos_dir -R
-    git checkout $branch
+    git tag -d $rev || echo No local tags found.
     git fetch || attempt=$((attempt + 1)) continue
-    git pull origin $branch -f || attempt=$((attempt + 1)) continue
+    git checkout $rev
+    git pull origin $rev -f || attempt=$((attempt + 1)) continue
     # Get the current HEAD commit hash
-    current_commit=$(git rev-parse @{u})
+    current_commit=$(git rev-parse $rev)
     saved_commit=
     if [[ -f novaStatus.keep ]]; then
         saved_commit=$(<novaStatus.keep)
