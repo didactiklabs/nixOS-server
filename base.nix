@@ -8,11 +8,12 @@
   ...
 }: let
   nixOS_version = "24.05";
+  nixbook_version = "0.0.1";
   home-manager = builtins.fetchTarball "https://github.com/nix-community/home-manager/archive/release-${nixOS_version}.tar.gz";
   nixbook = pkgs.fetchFromGitHub {
     owner = "didactiklabs";
     repo = "nixbook";
-    rev = "main";
+    rev = "refs/tags/v${nixbook_version}";
     sha256 = "sha256-Pr5/2lv1vJNBA7V9oq6UpYOwr2MutXb4d0kWXXr+Zb4=";
   };
   userProfile =
