@@ -13,7 +13,7 @@
     owner = "didactiklabs";
     repo = "nixbook";
     rev = "main";
-    sha256 = "sha256-Y1DDQaQoHfXMHKWg51ACCfxC0ipxXsZfUPF7YFjkaeY=";
+    sha256 = "sha256-Pr5/2lv1vJNBA7V9oq6UpYOwr2MutXb4d0kWXXr+Zb4=";
   };
   userProfile =
     if builtins.pathExists ./profiles/${username}-${hostname}
