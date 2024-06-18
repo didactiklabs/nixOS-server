@@ -9,10 +9,7 @@
   novaLauncher =
     pkgs.writeShellScriptBin "novaLauncher"
     ''
-      date >> /var/log/nova.log
-      echo "-----" >> /var/log/nova.log
-      echo "-----" >> /var/log/nova.log
-      novaInstall --username ${username} --hostname ${hostname} --repo https://${nixos_gitrepo} --branch main >> /var/log/nova.log
+      ${novaInstall}/bin/novaInstall --username ${username} --hostname ${hostname} --repo https://${nixos_gitrepo} --branch main
     '';
 in {
   environment.systemPackages = [
@@ -29,7 +26,7 @@ in {
       User = "root";
       Group = "root";
       Type = "oneshot";
-      ExecStart = "${novaLauncher}/bin/novaLauncher";
+      ExecStart = "${pkgs.bash}/bin/bash -lc ${novaLauncher}/bin/novaLauncher";
     };
   };
   systemd.timers."novalauncher" = {
