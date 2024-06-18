@@ -20,6 +20,7 @@
       };
       imports = [
         ./gitConfig.nix
+        ./fastfetchConfig.nix
       ];
     };
   };
