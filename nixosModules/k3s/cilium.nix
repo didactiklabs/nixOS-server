@@ -5,12 +5,12 @@
   ...
 }: let
   cfg = config.customNixOSModules;
-  ciliumVersion = "v1.15.4";
+  ciliumVersion = "v1.15.6";
   ciliumSrc = pkgs.fetchFromGitHub {
     owner = "cilium";
     repo = "cilium";
     rev = "${ciliumVersion}";
-    hash = "sha256-dHdpVXTHLh7UjBXgKMeM0l8Dl555zY8IN65nEtbtycA=";
+    hash = "sha256-oC6pjtiS8HvqzzRQsE+2bm6JP7Y3cbupXxCKSvP6/kU=";
   };
   ciliumBundle =
     pkgs.runCommand "cilium-manifests" {
@@ -30,6 +30,7 @@
         --set kubeProxyReplacement=true \
         --set annotateK8sNode=true \
         --set operator.enabled=true --set operator.rollOutPods=true --set operator.replicas=1 --set operator.image.tag=${ciliumVersion} \
+        --set "ipam.operator.clusterPoolIPv4PodCIDRList[0]=${cfg.k3s.podCIDR}" \
         --set image.tag=${ciliumVersion} \
         > $out/cilium-bundle.yaml
     '';

@@ -14,6 +14,13 @@ in {
         whether to enable k3s globally or not
       '';
     };
+    podCIDR = lib.mkOption {
+      type = lib.types.str;
+      default = "10.69.0.0/16";
+      description = ''
+        whether to enable k3s globally or not
+      '';
+    };
   };
   imports = [
     ./cilium.nix

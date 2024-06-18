@@ -7,7 +7,10 @@
   ...
 }: {
   customNixOSModules = {
-    k3s.enable = true;
+    k3s = {
+      enable = true;
+      podCIDR = "10.206.0.0/16";
+    };
   };
   home-manager = {
     users."${username}" = {
