@@ -18,9 +18,48 @@ in {
   imports = [
     ./kubeadm.nix
     ./kubelet.nix
-    # ./cni-plugins.nix
   ];
   config = lib.mkIf cfg.kubernetes.enable {
+    system = {
+      activationScripts = {
+        # we need to prepare a cni dir where kubernetes CNI pods can drop their own binaries
+        prepareCniDir.text = ''
+          mkdir -p /opt/cni/bin
+          for cnibin in ${pkgs.cni-plugins}/bin/*; do
+            ln -sf ''${cnibin} /opt/cni/bin/$(basename ''${cnibin})
+          done
+        '';
+        # CSI expects "some" binaries to be included in "real" FHS path
+        copyCSIbins.text = ''
+          mkdir -p /usr/bin
+          cp ${pkgs.kubectl}/bin/kubectl /usr/bin/kubectl
+          cp ${pkgs.util-linux}/bin/blkid /usr/bin/blkid
+          cp ${pkgs.util-linux}/bin/blockdev /usr/bin/blockdev
+          cp ${pkgs.coreutils}/bin/cat /usr/bin/cat
+          cp ${pkgs.cryptsetup}/bin/cryptsetup /usr/bin/cryptsetup
+          cp ${pkgs.coreutils}/bin/dd /usr/bin/dd
+          cp ${pkgs.coreutils}/bin/df /usr/bin/df
+          cp ${pkgs.procps}/bin/free /usr/bin/free
+          cp ${pkgs.e2fsprogs}/bin/fsck.ext3 /usr/bin/fsck.ext3
+          cp ${pkgs.e2fsprogs}/bin/fsck.ext4 /usr/bin/fsck.ext4
+          cp ${pkgs.openiscsi}/bin/iscsiadm /usr/bin/iscsiadm
+          cp ${pkgs.util-linux}/bin/losetup /usr/bin/losetup
+          cp ${pkgs.coreutils}/bin/ls /usr/bin/ls
+          cp ${pkgs.lsscsi}/bin/lsscsi /usr/bin/lsscsi
+          cp ${pkgs.coreutils}/bin/mkdir /usr/bin/mkdir
+          cp ${pkgs.e2fsprogs}/bin/mkfs.ext3 /usr/bin/mkfs.ext3
+          cp ${pkgs.e2fsprogs}/bin/mkfs.ext4 /usr/bin/mkfs.ext4
+          cp ${pkgs.mount}/bin/mount /usr/bin/mount
+          cp ${pkgs.multipath-tools}/bin/multipath /usr/bin/multipath
+          cp ${pkgs.multipath-tools}/bin/multipathd /usr/bin/multipathd
+          cp ${pkgs.procps}/bin/pgrep /usr/bin/pgrep
+          cp ${pkgs.e2fsprogs}/bin/resize2fs /usr/bin/resize2fs
+          cp ${pkgs.umount}/bin/umount /usr/bin/umount
+          cp ${pkgs.kmod}/bin/lsmod /usr/bin/lsmod
+        '';
+      };
+    };
+
     # kubelet systemd unit is heavily inspired by official image-builder unit
     systemd = {
       services.cloud-final = {
