@@ -73,6 +73,18 @@ in {
     "fs.protected_regular" = 2;
     # Disable IPV6
     "net.ipv6.conf.all.disable_ipv6" = 1;
+    # values from kubernetes official image-builder
+    "net.ipv4.tcp_syncookies" = false;
+    "vm.swappiness" = 60;
+    "net.bridge.bridge-nf-call-iptables" = 1;
+    "net.bridge.bridge-nf-call-ip6tables" = 1;
+    "net.ipv4.ip_forward" = 1;
+    "net.ipv6.conf.all.forwarding" = 1;
+    "net.ipv4.tcp_congestion_control" = "bbr";
+    "vm.overcommit_memory" = 1;
+    "kernel.panic" = 10;
+    "fs.inotify.max_user_instances" = 8192;
+    "fs.inotify.max_user_watches" = 524288;
   };
   # Bootloader.
   boot.kernelParams = [
@@ -128,15 +140,75 @@ in {
   environment.systemPackages = [
     pkgs.git
     pkgs.kubectl
+    pkgs.cilium-cli
+    pkgs.coreutils
+    pkgs.procps
+    pkgs.gawk
+    pkgs.file
+    pkgs.gnugrep
+    pkgs.unixtools.top
+    pkgs.unixtools.ping
+    pkgs.unixtools.arp
+    pkgs.gnused
+    pkgs.cloud-init
+    pkgs.mount
+    pkgs.umount
+    pkgs.multipath-tools
+    pkgs.openiscsi
+    pkgs.lsscsi
+    pkgs.curl
+    pkgs.iproute2
+    pkgs.iptables
+    pkgs.socat
+    pkgs.ethtool
+    pkgs.cri-tools
+    pkgs.conntrack-tools
+    # debug tools
+    pkgs.unixtools.netstat
+    pkgs.netcat-gnu
+    pkgs.dig
+    pkgs.tcpdump
+
   ];
   environment.variables = {
     EDITOR = "vim";
   };
-  services.resolved.enable = true;
-  # Disable the OpenSSH daemon.
-  services.openssh = {
-    enable = true;
+  services = {
+    resolved.enable = true;
+    # Disable the OpenSSH daemon.
+    openssh = {
+      enable = true;
+    };
+    cloud-init = {
+      enable = true;
+      settings = {
+        network = {
+          config = "disabled"; # prevent cloud-init to manage iface networkd files
+        };
+      };
+    };
   };
+
   networking.firewall.enable = false;
   system.stateVersion = "${nixOS_version}";
+
+  # Containerd
+  virtualisation.containerd = {
+    enable = true;
+    settings = {
+      version = 2;
+      plugins = {
+        "io.containerd.grpc.v1.cri" = {
+          cni.bin_dir = "/opt/cni/bin";
+        };
+        "io.containerd.grpc.v1.cri".containerd.runtimes.runc = {
+          runtime_type = "io.containerd.runc.v2";
+        };
+        "io.containerd.grpc.v1.cri".containerd.runtimes.runc.options = {
+          SystemdCgroup = true;
+        };
+      };
+    };
+  };
+
 }
