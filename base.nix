@@ -127,7 +127,6 @@ in {
   environment.systemPackages = [
     pkgs.git
     pkgs.kubectl
-    pkgs.
   ];
   environment.variables = {
     EDITOR = "vim";
