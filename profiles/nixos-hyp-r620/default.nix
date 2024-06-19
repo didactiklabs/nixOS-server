@@ -12,6 +12,11 @@
       targetRev = "main";
     };
   };
+  customNixOSModules = {
+    kubernetes = {
+      enable = true;
+    };
+  };
   home-manager = {
     users."${username}" = {
       customHomeManagerModules = {
