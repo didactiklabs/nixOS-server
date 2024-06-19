@@ -79,7 +79,8 @@ in {
     "iommu=pt"
   ];
   boot.loader.grub.enable = true;
-  boot.loader.grub.devices = ["/dev/sda"];
+  ## Set it in hardware-configuration.nix
+  #boot.loader.grub.devices = ["/dev/sda"];
   boot.kernelPackages = pkgs.linuxPackages_latest;
   networking.hostName = "${hostname}"; # Define your hostname.
   #networking.nameservers = ["2a01:4f8:c2c:123f::1"];
@@ -125,6 +126,8 @@ in {
   # $ nix search wget
   environment.systemPackages = [
     pkgs.git
+    pkgs.kubectl
+    pkgs.
   ];
   environment.variables = {
     EDITOR = "vim";
