@@ -6,12 +6,6 @@
   hostname,
   ...
 }: {
-  profileCustomization = {
-    gitOps = {
-      enable = false;
-      targetRev = "main";
-    };
-  };
   customNixOSModules = {
     kubernetes = {
       enable = true;
