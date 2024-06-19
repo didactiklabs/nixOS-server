@@ -6,6 +6,12 @@
   hostname,
   ...
 }: {
+  profileCustomization = {
+    gitOps = {
+      enable = false;
+      targetRev = "main";
+    };
+  };
   home-manager = {
     users."${username}" = {
       customHomeManagerModules = {
