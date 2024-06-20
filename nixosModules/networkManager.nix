@@ -2,7 +2,6 @@
   config,
   pkgs,
   lib,
-  username,
   ...
 }: let
 in {
@@ -20,11 +19,6 @@ in {
       serviceConfig = {
         ExecStart = ["" "${pkgs.networkmanager}/bin/nm-online -q"];
       };
-    };
-    users.users."${username}" = {
-      extraGroups = [
-        "networkmanager"
-      ];
     };
   };
 }
