@@ -62,6 +62,21 @@ in {
 
     # kubelet systemd unit is heavily inspired by official image-builder unit
     systemd = {
+      services.cloud-final = {
+        path = [
+          pkgs.kubernetes
+          pkgs.kubectl
+          pkgs.iproute2
+          pkgs.iptables
+          pkgs.socat
+          pkgs.ethtool
+          pkgs.cri-tools
+          pkgs.conntrack-tools
+        ];
+        after = ["containerd.service"];
+        wants = ["containerd.service"];
+      };
+
       services.kubelet = {
         enable = true;
         description = "kubelet: The Kubernetes Node Agent";

@@ -132,6 +132,7 @@ in {
     pkgs.unixtools.ping
     pkgs.unixtools.arp
     pkgs.gnused
+    pkgs.cloud-init
     pkgs.mount
     pkgs.umount
     pkgs.multipath-tools
@@ -158,6 +159,14 @@ in {
     # Disable the OpenSSH daemon.
     openssh = {
       enable = true;
+    };
+    cloud-init = {
+      enable = true;
+      settings = {
+        network = {
+          config = "disabled"; # prevent cloud-init to manage iface networkd files
+        };
+      };
     };
   };
 
