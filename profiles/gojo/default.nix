@@ -33,5 +33,6 @@ in {
       ];
     })
     (mkUser {username = "aamoyel";})
+    (mkUser {username = "nixos";})
   ];
 }
