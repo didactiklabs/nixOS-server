@@ -1,43 +1,31 @@
 {
   config,
-  username,
-  hostname ? "nixos",
+  hostname,
   lib,
   nixos_gitrepo ? "https://github.com/didactiklabs/nixOS-server.git",
   ...
 }: let
   nixOS_version = "24.05";
-  nixbook_version = "0.0.1";
-  pkgs = import (fetchTarball "https://github.com/NixOS/nixpkgs/archive/nixos-24.05.tar.gz") {};
+  nixbook_version = "0.0.3";
+  pkgs = import (fetchTarball "https://github.com/NixOS/nixpkgs/archive/nixos-${nixOS_version}.tar.gz") {};
   home-manager = builtins.fetchTarball "https://github.com/nix-community/home-manager/archive/release-${nixOS_version}.tar.gz";
   nixbook = pkgs.fetchFromGitHub {
     owner = "didactiklabs";
     repo = "nixbook";
     rev = "refs/tags/v${nixbook_version}";
-    sha256 = "sha256-Pr5/2lv1vJNBA7V9oq6UpYOwr2MutXb4d0kWXXr+Zb4=";
+    sha256 = "sha256-LVxkxYigeGunOtzggtvGv4pMy5JJyF3jxL2QgpWrWtM=";
   };
-  userProfile =
-    if builtins.pathExists ./profiles/${username}-${hostname}
-    then import ./profiles/${username}-${hostname} {inherit lib config pkgs username hostname;}
-    else import ./profiles/dummy.nix;
+  hostProfile = import ./profiles/${hostname} {inherit lib config pkgs hostname home-manager nixbook;};
 in {
   imports = [
     ./hardware-configuration.nix
     ./tools.nix
     ./nixosModules/k3s
     ./nixosModules/kubernetes
-    (import ./nixosModules/scripts.nix {inherit config pkgs lib username hostname nixos_gitrepo;})
-    (import ./nixosModules/networkManager.nix {inherit lib config pkgs username;})
+    (import ./nixosModules/scripts.nix {inherit config pkgs lib hostname nixos_gitrepo;})
+    (import ./nixosModules/networkManager.nix {inherit lib config pkgs;})
     (import "${home-manager}/nixos")
-
-    ({
-      config,
-      pkgs,
-      ...
-    }:
-      import
-      ./home-manager.nix {inherit lib config pkgs username home-manager nixbook nixOS_version;})
-    userProfile
+    hostProfile
   ];
   boot.kernel.sysctl = {
     # ANSSI R9
@@ -117,12 +105,6 @@ in {
   };
   # Configure console keymap
   console.keyMap = "fr";
-  # Define a user account. Don't forget to set a password with `passwd`.
-  users.users.${username} = {
-    isNormalUser = true;
-    description = "${username}";
-    extraGroups = ["wheel"];
-  };
   # Allow unfree packages
   nixpkgs.config.allowUnfreePredicate = pkg: true;
   nixpkgs.config.allowUnfree = true;
@@ -168,7 +150,6 @@ in {
     pkgs.netcat-gnu
     pkgs.dig
     pkgs.tcpdump
-
   ];
   environment.variables = {
     EDITOR = "vim";
@@ -210,5 +191,4 @@ in {
       };
     };
   };
-
 }

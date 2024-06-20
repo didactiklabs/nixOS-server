@@ -2,7 +2,6 @@
   pkgs,
   config,
   lib,
-  username,
   hostname,
   nixos_gitrepo,
   ...
@@ -10,7 +9,7 @@
   cfg = config.profileCustomization;
   novaInstall = pkgs.writeShellScriptBin "novaInstall" (builtins.readFile ../install.sh);
   novaLauncher = pkgs.writeShellScriptBin "novaLauncher" ''
-    ${novaInstall}/bin/novaInstall --username ${username} --hostname ${hostname} --repo https://${nixos_gitrepo} --rev ${cfg.gitOps.targetRev}
+    ${novaInstall}/bin/novaInstall --hostname ${hostname} --repo https://${nixos_gitrepo} --rev ${cfg.gitOps.targetRev}
   '';
 in {
   options.profileCustomization.gitOps = {
