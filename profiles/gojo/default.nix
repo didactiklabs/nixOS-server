@@ -21,7 +21,7 @@
 in {
   customNixOSModules = {
     k3s = {
-      enable = true;
+      enable = false;
       podCIDR = "10.206.0.0/16";
     };
   };
