@@ -173,6 +173,9 @@ in {
         "io.containerd.grpc.v1.cri" = {
           cni.bin_dir = "/opt/cni/bin";
         };
+        "io.containerd.grpc.v1.cri" = {
+          device_ownership_from_security_context = true;
+        };
         "io.containerd.grpc.v1.cri".containerd.runtimes.runc = {
           runtime_type = "io.containerd.runc.v2";
         };
