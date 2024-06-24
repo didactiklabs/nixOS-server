@@ -17,6 +17,7 @@
       vim.enable = true;
       fastfetchConfig.enable = true;
     };
+    imports = [];
   };
 
   mergedConfig = lib.recursiveUpdate defaultConfig overrides;

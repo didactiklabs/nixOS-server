@@ -13,11 +13,6 @@
       ./fastfetchConfig.nix
     ];
   };
-  userConfig = import ../../nixosModules/userConfig.nix {
-    inherit lib pkgs nixbook home-manager;
-    overrides = overrides;
-  };
-  mkUser = userConfig.mkUser;
 in {
   customNixOSModules = {
     k3s = {
@@ -26,13 +21,6 @@ in {
     };
   };
   imports = [
-    (mkUser {
-      username = "khoa";
-      userImports = [
-        ./khoa
-      ];
-    })
-    (mkUser {username = "aamoyel";})
-    (mkUser {username = "nixos";})
+    (import ../../users {inherit config pkgs lib nixbook home-manager overrides;})
   ];
 }
