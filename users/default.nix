@@ -21,7 +21,12 @@ in {
         ./khoa
       ];
     })
-    (mkUser {username = "aamoyel";})
+    (mkUser {
+      username = "aamoyel";
+      userImports = [
+        ./aamoyel
+      ];
+    })
     (mkUser {username = "nixos";})
   ];
 }
