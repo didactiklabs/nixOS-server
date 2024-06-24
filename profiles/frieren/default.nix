@@ -13,11 +13,6 @@
       ./fastfetchConfig.nix
     ];
   };
-  userConfig = import ../../nixosModules/userConfig.nix {
-    inherit lib pkgs nixbook home-manager;
-    overrides = overrides;
-  };
-  mkUser = userConfig.mkUser;
 in {
   customNixOSModules = {
     kubernetes = {
@@ -25,6 +20,6 @@ in {
     };
   };
   imports = [
-    (mkUser {username = "nixos";})
+    (import ../../users {inherit config pkgs lib nixbook home-manager overrides;})
   ];
 }
