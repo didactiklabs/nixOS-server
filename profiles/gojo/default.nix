@@ -15,9 +15,8 @@
   };
 in {
   customNixOSModules = {
-    k3s = {
-      enable = false;
-      podCIDR = "10.206.0.0/16";
+    kubernetes = {
+      enable = true;
     };
   };
   imports = [
