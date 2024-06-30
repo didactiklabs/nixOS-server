@@ -22,6 +22,7 @@ in {
     ./tools.nix
     ./nixosModules/k3s
     ./nixosModules/kubernetes
+    ./nixosModules/caCertificates
     (import ./nixosModules/scripts.nix {inherit config pkgs lib hostname nixos_gitrepo;})
     (import ./nixosModules/networkManager.nix {inherit lib config pkgs;})
     (import "${home-manager}/nixos")

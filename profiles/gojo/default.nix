@@ -18,6 +18,9 @@ in {
     kubernetes = {
       enable = true;
     };
+    caCertificates = {
+      didactiklabs.enable = true;
+    };
   };
   imports = [
     (import ../../users {inherit config pkgs lib nixbook home-manager overrides;})
