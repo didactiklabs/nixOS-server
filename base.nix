@@ -1,4 +1,5 @@
 {
+  pkgs ? import (fetchTarball "https://github.com/NixOS/nixpkgs/archive/706eef542dec88cc0ed25b9075d3037564b2d164.tar.gz") {}
   config,
   hostname,
   lib,
@@ -7,7 +8,6 @@
 }: let
   nixOS_version = "24.05";
   nixbook_version = "0.0.3";
-  pkgs = import (fetchTarball "https://github.com/NixOS/nixpkgs/archive/nixos-${nixOS_version}.tar.gz") {};
   home-manager = builtins.fetchTarball "https://github.com/nix-community/home-manager/archive/release-${nixOS_version}.tar.gz";
   nixbook = pkgs.fetchFromGitHub {
     owner = "didactiklabs";
