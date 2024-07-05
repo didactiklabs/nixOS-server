@@ -14,7 +14,6 @@
       gitConfig.enable = true;
       sshConfig.enable = true;
       starship.enable = true;
-      vim.enable = true;
       fastfetchConfig.enable = true;
     };
     imports = [];
@@ -57,7 +56,6 @@
             (import "${nixbook}//homeManagerModules/gitConfig.nix")
             (import "${nixbook}//homeManagerModules/sshConfig.nix")
             (import "${nixbook}//homeManagerModules/starshipConfig.nix")
-            (import "${nixbook}//homeManagerModules/vimConfig.nix")
             (import "${nixbook}//homeManagerModules/fastfetchConfig.nix")
           ]
           userImports
