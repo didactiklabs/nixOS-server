@@ -1,28 +1,30 @@
 {
-  pkgs ? import (fetchTarball "https://github.com/NixOS/nixpkgs/archive/706eef542dec88cc0ed25b9075d3037564b2d164.tar.gz") {}
-  config,
+  pkgs ?
+    import (fetchTarball "https://github.com/NixOS/nixpkgs/archive/706eef542dec88cc0ed25b9075d3037564b2d164.tar.gz") {}
+    config,
   hostname,
   lib,
   nixos_gitrepo ? "https://github.com/didactiklabs/nixOS-server.git",
   ...
 }: let
   nixOS_version = "24.05";
-  nixbook_version = "0.0.3";
+  nixbook_version = "0.0.5";
+  pkgs = import (fetchTarball "https://github.com/NixOS/nixpkgs/archive/nixos-${nixOS_version}.tar.gz") {};
   home-manager = builtins.fetchTarball "https://github.com/nix-community/home-manager/archive/release-${nixOS_version}.tar.gz";
   nixbook = pkgs.fetchFromGitHub {
     owner = "didactiklabs";
     repo = "nixbook";
     rev = "refs/tags/v${nixbook_version}";
-    sha256 = "sha256-LVxkxYigeGunOtzggtvGv4pMy5JJyF3jxL2QgpWrWtM=";
+    sha256 = "sha256-qWNZUpVJjORpKatIV4ry64sOohaaUynxd/72PvpYPRc=";
   };
   hostProfile = import ./profiles/${hostname} {inherit lib config pkgs hostname home-manager nixbook;};
 in {
   imports = [
     ./hardware-configuration.nix
     ./tools.nix
+    (import "${nixbook}//nixosModules/caCertificates.nix")
     ./nixosModules/k3s
     ./nixosModules/kubernetes
-    ./nixosModules/caCertificates
     (import ./nixosModules/scripts.nix {inherit config pkgs lib hostname nixos_gitrepo;})
     (import ./nixosModules/networkManager.nix {inherit lib config pkgs;})
     (import "${home-manager}/nixos")
