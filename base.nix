@@ -18,17 +18,18 @@
   };
   hostProfile = import ./profiles/${hostname} {inherit lib config pkgs hostname home-manager nixbook;};
 in {
-  imports = [
-    ./hardware-configuration.nix
-    ./tools.nix
-    (import "${nixbook}//nixosModules/caCertificates.nix")
-    ./nixosModules/k3s
-    ./nixosModules/kubernetes
-    (import ./nixosModules/scripts.nix {inherit config pkgs lib hostname nixos_gitrepo;})
-    (import ./nixosModules/networkManager.nix {inherit lib config pkgs;})
-    (import "${home-manager}/nixos")
-    hostProfile
-  ];
+  imports =
+    [
+      ./tools.nix
+      (import "${nixbook}//nixosModules/caCertificates.nix")
+      ./nixosModules/k3s
+      ./nixosModules/kubernetes
+      (import ./nixosModules/scripts.nix {inherit config pkgs lib hostname nixos_gitrepo;})
+      (import ./nixosModules/networkManager.nix {inherit lib config pkgs;})
+      (import "${home-manager}/nixos")
+      hostProfile
+      ./profiles/${hostname}/hardware-configuration.nix
+    ]
   boot.kernel.sysctl = {
     # ANSSI R9
     "kernel.dmesg_restrict" = 1;
