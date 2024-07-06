@@ -7,14 +7,14 @@
   ...
 }: let
   nixOS_version = "24.05";
-  nixbook_version = "0.0.9";
+  nixbook_version = "0.0.10";
   pkgs = import (fetchTarball "https://github.com/NixOS/nixpkgs/archive/nixos-${nixOS_version}.tar.gz") {};
   home-manager = builtins.fetchTarball "https://github.com/nix-community/home-manager/archive/release-${nixOS_version}.tar.gz";
   nixbook = pkgs.fetchFromGitHub {
     owner = "didactiklabs";
     repo = "nixbook";
     rev = "refs/tags/v${nixbook_version}";
-    sha256 = "sha256-q9VKv8NHzERl76KejFnSHBSCi9tRaaCeFkvezYbj+Mk=";
+    sha256 = "sha256-Q/md9Sx7ILAJIH2w2t34ScxeubvRHBn1cgLIbyBQfmI=";
   };
   hostProfile = import ./profiles/${hostname} {inherit lib config pkgs hostname home-manager nixbook;};
 in {
