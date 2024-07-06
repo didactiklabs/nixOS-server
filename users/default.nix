@@ -29,6 +29,10 @@ in {
       userImports = [
         ./aamoyel
       ];
+      authorizedKeys = [
+        "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIC+Z8AEpTitOovoh9qCVUIiXA6Z9I0w0U789x5JbBNTX aamoyel@alesio-desktop"
+        "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIK2XU8gaciNxY7vj5yacFpZSWhW4oL2RQncE1y1wJOSg aamoyel@aamoyel-elitebook"
+      ];
     })
     (mkUser {username = "nixos";})
   ];
