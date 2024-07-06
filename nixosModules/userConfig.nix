@@ -24,6 +24,7 @@
   mkUser = {
     username,
     userImports ? [],
+    authorizedKeys ? [],
   }: {
     programs.zsh.enable = true;
     users.users."${username}" = {
@@ -31,6 +32,7 @@
       extraGroups = mergedConfig.extraGroups;
       isNormalUser = true;
       description = "${username}";
+      openssh.authorizedKeys.keys = authorizedKeys;
     };
     home-manager = {
       useUserPackages = true;
