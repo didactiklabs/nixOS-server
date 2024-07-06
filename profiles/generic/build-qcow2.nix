@@ -7,7 +7,7 @@
 with lib; {
   imports = [
     <nixpkgs/nixos/modules/installer/cd-dvd/channel.nix>
-    ./hardware-generic.nix
+    ./hardware-configuration.nix
   ];
 
   system.build.qcow2 = import <nixpkgs/nixos/lib/make-disk-image.nix> {
