@@ -163,6 +163,7 @@ in {
       enable = true;
     };
   };
+  security.sudo.wheelNeedsPassword = false;
 
   networking.firewall.enable = false;
   system.stateVersion = "${nixOS_version}";
