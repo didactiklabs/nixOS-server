@@ -28,8 +28,8 @@ in {
       (import ./nixosModules/networkManager.nix {inherit lib config pkgs;})
       (import "${home-manager}/nixos")
       hostProfile
-      ./profiles/${hostname}/hardware-configuration.nix
     ]
+    ++ lib.optional (hostname != "generic") ./hardware-configuration.nix;
   boot.kernel.sysctl = {
     # ANSSI R9
     "kernel.dmesg_restrict" = 1;
