@@ -72,7 +72,7 @@ in {
     "net.ipv4.ip_forward" = 1;
     "net.ipv6.conf.all.forwarding" = 1;
     "net.ipv4.tcp_congestion_control" = "bbr";
-    "vm.overcommit_memory" = 1;
+    "vm.overcommit_memory" = lib.mkDefault "1";
     "kernel.panic" = 10;
     "fs.inotify.max_user_instances" = 8192;
     "fs.inotify.max_user_watches" = 524288;
@@ -82,7 +82,7 @@ in {
     "intel_iommu=on"
     "iommu=pt"
   ];
-  boot.loader.grub.enable = true;
+  boot.loader.grub.enable = lib.mkDefault true;
   ## Set it in hardware-configuration.nix
   #boot.loader.grub.devices = ["/dev/sda"];
   boot.kernelPackages = pkgs.linuxPackages_latest;

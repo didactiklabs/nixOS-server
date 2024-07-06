@@ -15,6 +15,7 @@
   };
 in {
   networking.hostName = lib.mkForce "";
+  services.qemuGuest.enable = true;
   customNixOSModules = {
     kubernetes = {
       enable = true;
