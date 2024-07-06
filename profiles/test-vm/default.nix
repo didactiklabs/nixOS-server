@@ -14,6 +14,7 @@
     ];
   };
 in {
+  users.users."nixos".password = "test";
   services.qemuGuest.enable = true;
   virtualisation.forwardPorts = [
     {
