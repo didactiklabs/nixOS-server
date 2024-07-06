@@ -3,3 +3,5 @@
 result
 novaStatus.keep
 hardware-configuration.nix
+*.qcow2
+*.iso
