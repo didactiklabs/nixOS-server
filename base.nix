@@ -29,7 +29,7 @@ in {
       (import "${home-manager}/nixos")
       hostProfile
     ]
-    ++ lib.optional (hostname != "generic") ./hardware-configuration.nix;
+    ++ lib.optional (hostname != "generic") /etc/nixos/hardware-configuration.nix;
   boot.kernel.sysctl = {
     # ANSSI R9
     "kernel.dmesg_restrict" = 1;
