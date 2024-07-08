@@ -7,7 +7,7 @@
   ...
 }: let
   nixOS_version = "24.05";
-  nixbook_version = "0.0.10";
+  nixbook_version = "0.0.12";
   pkgs = import (fetchTarball "https://github.com/NixOS/nixpkgs/archive/nixos-${nixOS_version}.tar.gz") {};
   home-manager = builtins.fetchTarball "https://github.com/nix-community/home-manager/archive/release-${nixOS_version}.tar.gz";
   nixbook = pkgs.fetchFromGitHub {
@@ -18,17 +18,15 @@
   };
   hostProfile = import ./profiles/${hostname} {inherit lib config pkgs hostname home-manager nixbook;};
 in {
-  imports =
-    [
-      ./tools.nix
-      (import "${nixbook}//nixosModules/caCertificates.nix")
-      ./nixosModules/k3s
-      ./nixosModules/kubernetes
-      (import ./nixosModules/networkManager.nix {inherit lib config pkgs;})
-      (import "${home-manager}/nixos")
-      hostProfile
-    ]
-    ++ lib.optional (hostname != "generic") /etc/nixos/hardware-configuration.nix;
+  imports = [
+    ./tools.nix
+    (import "${nixbook}//nixosModules/caCertificates.nix")
+    ./nixosModules/k3s
+    ./nixosModules/kubernetes
+    (import ./nixosModules/networkManager.nix {inherit lib config pkgs;})
+    (import "${home-manager}/nixos")
+    hostProfile
+  ];
   boot.kernel.sysctl = {
     # ANSSI R9
     "kernel.dmesg_restrict" = 1;
@@ -163,6 +161,10 @@ in {
     };
   };
   security.sudo.wheelNeedsPassword = false;
+  nix.settings.trusted-users = [
+    "root"
+    "@wheel"
+  ];
 
   networking.firewall.enable = false;
   system.stateVersion = "${nixOS_version}";
