@@ -12,8 +12,5 @@
     vim
     tree
     openvpn
-    btop # top replacer
-    duf # df replacer
-    sd # sd alternative
   ];
 }
