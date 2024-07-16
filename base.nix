@@ -1,28 +1,28 @@
-{
-  pkgs ? import (fetchTarball "https://github.com/NixOS/nixpkgs/archive/706eef542dec88cc0ed25b9075d3037564b2d164.tar.gz") {},
-  config,
-  hostname,
-  lib,
-  nixos_gitrepo ? "https://github.com/didactiklabs/nixOS-server.git",
-  ...
-}: let
+{ pkgs ? import (fetchTarball
+  "https://github.com/NixOS/nixpkgs/archive/706eef542dec88cc0ed25b9075d3037564b2d164.tar.gz")
+  { }, config, hostname, lib
+, nixos_gitrepo ? "https://github.com/didactiklabs/nixOS-server.git", ... }:
+let
   nixOS_version = "24.05";
   nixbook_version = "0.0.19";
-  home-manager = builtins.fetchTarball "https://github.com/nix-community/home-manager/archive/release-${nixOS_version}.tar.gz";
+  home-manager = builtins.fetchTarball
+    "https://github.com/nix-community/home-manager/archive/release-${nixOS_version}.tar.gz";
   nixbook = pkgs.fetchFromGitHub {
     owner = "didactiklabs";
     repo = "nixbook";
     rev = "refs/tags/v${nixbook_version}";
-    sha256 = "";
+    sha256 = "sha256-uiCnazlc+XMkKxVNDFId7gJqFMzmz52mrwQq5PQTKDE=";
   };
-  hostProfile = import ./profiles/${hostname} {inherit lib config pkgs hostname home-manager nixbook;};
+  hostProfile = import ./profiles/${hostname} {
+    inherit lib config pkgs hostname home-manager nixbook;
+  };
 in {
   imports = [
     ./tools.nix
     (import "${nixbook}//nixosModules/caCertificates.nix")
     ./nixosModules/k3s
     ./nixosModules/kubernetes
-    (import ./nixosModules/networkManager.nix {inherit lib config pkgs;})
+    (import ./nixosModules/networkManager.nix { inherit lib config pkgs; })
     (import "${home-manager}/nixos")
     hostProfile
   ];
@@ -74,10 +74,7 @@ in {
     "fs.inotify.max_user_watches" = 524288;
   };
   # Bootloader.
-  boot.kernelParams = [
-    "intel_iommu=on"
-    "iommu=pt"
-  ];
+  boot.kernelParams = [ "intel_iommu=on" "iommu=pt" ];
   boot.loader.grub.enable = lib.mkDefault true;
   ## Set it in hardware-configuration.nix
   #boot.loader.grub.devices = ["/dev/sda"];
@@ -149,21 +146,14 @@ in {
     pkgs.dig
     pkgs.tcpdump
   ];
-  environment.variables = {
-    EDITOR = "vim";
-  };
+  environment.variables = { EDITOR = "vim"; };
   services = {
     resolved.enable = true;
     # Disable the OpenSSH daemon.
-    openssh = {
-      enable = true;
-    };
+    openssh = { enable = true; };
   };
   security.sudo.wheelNeedsPassword = false;
-  nix.settings.trusted-users = [
-    "root"
-    "@wheel"
-  ];
+  nix.settings.trusted-users = [ "root" "@wheel" ];
 
   networking.firewall.enable = false;
   system.stateVersion = "${nixOS_version}";
@@ -174,9 +164,7 @@ in {
     settings = {
       version = 2;
       plugins = {
-        "io.containerd.grpc.v1.cri" = {
-          cni.bin_dir = "/opt/cni/bin";
-        };
+        "io.containerd.grpc.v1.cri" = { cni.bin_dir = "/opt/cni/bin"; };
         "io.containerd.grpc.v1.cri" = {
           device_ownership_from_security_context = true;
         };
