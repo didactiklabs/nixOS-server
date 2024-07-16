@@ -31,7 +31,7 @@ in {
       ];
       authorizedKeys = [
         "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIC+Z8AEpTitOovoh9qCVUIiXA6Z9I0w0U789x5JbBNTX aamoyel@alesio-desktop"
-        "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIK2XU8gaciNxY7vj5yacFpZSWhW4oL2RQncE1y1wJOSg aamoyel@aamoyel-elitebook"
+        "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIKtzv1NKNZqM0A6PZjYmOVIqv6rzi9OO94Uq0tze+Pkj aamoyel@nishinoya"
       ];
     })
     (mkUser {username = "nixos";})
