@@ -1,31 +1,18 @@
-{
-  pkgs,
-  nixbook,
-  home-manager,
-  lib,
-  overrides ? {},
-}: let
+{ pkgs, nixbook, home-manager, lib, overrides ? { }, }:
+let
   defaultConfig = {
-    extraGroups = [
-      "networkmanager"
-      "wheel"
-    ];
+    extraGroups = [ "networkmanager" "wheel" ];
     customHomeManagerModules = {
       gitConfig.enable = true;
       sshConfig.enable = true;
-      starship.enable = true;
       fastfetchConfig.enable = true;
     };
-    imports = [];
+    imports = [ ];
   };
 
   mergedConfig = lib.recursiveUpdate defaultConfig overrides;
 
-  mkUser = {
-    username,
-    userImports ? [],
-    authorizedKeys ? [],
-  }: {
+  mkUser = { username, userImports ? [ ], authorizedKeys ? [ ], }: {
     programs.zsh.enable = true;
     users.users."${username}" = {
       shell = pkgs.zsh;
@@ -45,9 +32,7 @@
             stateVersion = "24.05";
             username = "${username}";
             homeDirectory = "/home/${username}";
-            sessionVariables = {
-              NIXPKGS_ALLOW_UNFREE = 1;
-            };
+            sessionVariables = { NIXPKGS_ALLOW_UNFREE = 1; };
           };
           programs.home-manager.enable = true;
         };
@@ -57,7 +42,6 @@
             (import "${nixbook}//homeManagerModules/zshConfig.nix")
             (import "${nixbook}//homeManagerModules/gitConfig.nix")
             (import "${nixbook}//homeManagerModules/sshConfig.nix")
-            (import "${nixbook}//homeManagerModules/starshipConfig.nix")
             (import "${nixbook}//homeManagerModules/fastfetchConfig.nix")
           ]
           userImports
@@ -65,4 +49,4 @@
       };
     };
   };
-in {inherit mkUser;}
+in { inherit mkUser; }
