@@ -7,7 +7,7 @@ let
 in {
   boot.initrd.availableKernelModules =
     [ "ehci_pci" "ata_piix" "megaraid_sas" "usb_storage" "usbhid" "sd_mod" ];
-  boot.initrd.kernelModules = [ ];
+  boot.initrd.kernelModules = [ "dm_snapshot" ];
   boot.kernelModules = [ "kvm-intel" ];
   boot.extraModulePackages = [ ];
   boot.loader.grub.devices = [ "/dev/sdc" ];
