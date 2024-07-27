@@ -4,14 +4,14 @@
 , nixos_gitrepo ? "https://github.com/didactiklabs/nixOS-server.git", ... }:
 let
   nixOS_version = "24.05";
-  nixbook_version = "0.0.21";
+  nixbook_version = "0.0.22";
   home-manager = builtins.fetchTarball
     "https://github.com/nix-community/home-manager/archive/release-${nixOS_version}.tar.gz";
   nixbook = pkgs.fetchFromGitHub {
     owner = "didactiklabs";
     repo = "nixbook";
     rev = "refs/tags/v${nixbook_version}";
-    sha256 = "sha256-6DMTGLPF2oQTgnqLjRoKjipy+au6UcdUBEMTTzxYtiY=";
+    sha256 = "sha256-yR/7WyHQYTcnfAlTEi/GycB5+fivq21XcskXyNnkJd8=";
   };
   hostProfile = import ./profiles/${hostname} {
     inherit lib config pkgs hostname home-manager nixbook;
