@@ -1,7 +1,7 @@
-{ config, pkgs, lib, nixbook, home-manager, overrides, ... }:
+{ config, pkgs, lib, sources, overrides, ... }:
 let
   userConfig = import ../nixosModules/userConfig.nix {
-    inherit lib pkgs nixbook home-manager;
+    inherit lib pkgs sources;
     overrides = overrides;
   };
   mkUser = userConfig.mkUser;

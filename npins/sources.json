@@ -1,0 +1,50 @@
+{
+  "pins": {
+    "cilium": {
+      "type": "GitRelease",
+      "repository": {
+        "type": "GitHub",
+        "owner": "cilium",
+        "repo": "cilium"
+      },
+      "pre_releases": false,
+      "version_upper_bound": null,
+      "release_prefix": null,
+      "version": "v1.16.1",
+      "revision": "c6fd7cb26d664a0b5aa51c1c9ab6257ce76151ab",
+      "url": "https://api.github.com/repos/cilium/cilium/tarball/v1.16.1",
+      "hash": "0n36j668fwclmln1haqfch6p59plp3ss1xsbzp50848hn84cf6dy"
+    },
+    "home-manager": {
+      "type": "Git",
+      "repository": {
+        "type": "GitHub",
+        "owner": "nix-community",
+        "repo": "home-manager"
+      },
+      "branch": "release-24.05",
+      "revision": "e1391fb22e18a36f57e6999c7a9f966dc80ac073",
+      "url": "https://github.com/nix-community/home-manager/archive/e1391fb22e18a36f57e6999c7a9f966dc80ac073.tar.gz",
+      "hash": "0c83di08nhkzq0cwc3v7aax3x8y5m7qahyzxppinzwxi3r8fnjq3"
+    },
+    "nixbook": {
+      "type": "Git",
+      "repository": {
+        "type": "GitHub",
+        "owner": "didactiklabs",
+        "repo": "nixbook"
+      },
+      "branch": "main",
+      "revision": "fb37a75f5ee15f6bef13ea54ce39b7516ee1ec47",
+      "url": "https://github.com/didactiklabs/nixbook/archive/fb37a75f5ee15f6bef13ea54ce39b7516ee1ec47.tar.gz",
+      "hash": "08rafi7l3vxgrrhzzkywfw06pydy937k1y6kskkvxn5lpch4n3ld"
+    },
+    "nixpkgs": {
+      "type": "Channel",
+      "name": "nixos-24.05",
+      "url": "https://releases.nixos.org/nixos/24.05/nixos-24.05.3999.c42fcfbdfeae/nixexprs.tar.xz",
+      "hash": "0ibs048d6ijgrd2nv3wpcf2jx0al5rpr7ignma9nmrsyla5bfi0s"
+    }
+  },
+  "version": 3
+}

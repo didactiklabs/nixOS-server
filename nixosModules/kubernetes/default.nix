@@ -1,10 +1,5 @@
-{
-  config,
-  pkgs,
-  lib,
-  ...
-}: let
-  cfg = config.customNixOSModules;
+{ config, pkgs, lib, ... }:
+let cfg = config.customNixOSModules;
 in {
   options.customNixOSModules.kubernetes = {
     enable = lib.mkOption {
@@ -15,10 +10,7 @@ in {
       '';
     };
   };
-  imports = [
-    ./kubeadm.nix
-    ./kubelet.nix
-  ];
+  imports = [ ./kubeadm.nix ./kubelet.nix ];
   config = lib.mkIf cfg.kubernetes.enable {
     system = {
       activationScripts = {
@@ -62,13 +54,10 @@ in {
 
     # kubelet systemd unit is heavily inspired by official image-builder unit
     systemd = {
-
       services.kubelet = {
         enable = true;
         description = "kubelet: The Kubernetes Node Agent";
-        documentation = [
-          "https://kubernetes.io/docs/home/"
-        ];
+        documentation = [ "https://kubernetes.io/docs/home/" ];
         unitConfig = {
           After = "gen-kubelet-extra-args.service";
           Require = "gen-kubelet-extra-args.service";
@@ -93,19 +82,18 @@ in {
           Restart = "always";
           RestartSec = 10;
           Environment = [
-            "KUBELET_KUBECONFIG_ARGS=\"--bootstrap-kubeconfig=/etc/kubernetes/bootstrap-kubelet.conf --kubeconfig=/etc/kubernetes/kubelet.conf\""
-            "KUBELET_CONFIG_ARGS=\"--config=/var/lib/kubelet/config.yaml\""
+            ''
+              KUBELET_KUBECONFIG_ARGS="--bootstrap-kubeconfig=/etc/kubernetes/bootstrap-kubelet.conf --kubeconfig=/etc/kubernetes/kubelet.conf"''
+            ''KUBELET_CONFIG_ARGS="--config=/var/lib/kubelet/config.yaml"''
           ];
-          EnvironmentFile = [
-            "-/var/lib/kubelet/kubeadm-flags.env"
-            "-/etc/sysconfig/kubelet"
-          ];
+          EnvironmentFile =
+            [ "-/var/lib/kubelet/kubeadm-flags.env" "-/etc/sysconfig/kubelet" ];
           ExecStart = [
             "${pkgs.kubernetes}/bin/kubelet $KUBELET_KUBECONFIG_ARGS $KUBELET_CONFIG_ARGS $KUBELET_KUBEADM_ARGS $KUBELET_EXTRA_ARGS"
           ];
         };
-        wantedBy = ["multi-user.target"];
-     };
+        wantedBy = [ "multi-user.target" ];
+      };
 
       # we need cacert to be a real file to be mounted in kube's pods using hostPath volumes
       tmpfiles.rules = [

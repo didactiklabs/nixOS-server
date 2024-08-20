@@ -1,4 +1,4 @@
-{ pkgs, nixbook, home-manager, lib, overrides ? { }, }:
+{ pkgs, sources, lib, overrides ? { }, }:
 let
   defaultConfig = {
     extraGroups = [ "networkmanager" "wheel" ];
@@ -39,10 +39,11 @@ let
         imports = lib.concatLists [
           mergedConfig.imports
           [
-            (import "${nixbook}//homeManagerModules/zshConfig.nix")
-            (import "${nixbook}//homeManagerModules/gitConfig.nix")
-            (import "${nixbook}//homeManagerModules/sshConfig.nix")
-            (import "${nixbook}//homeManagerModules/fastfetchConfig.nix")
+            (import "${sources.nixbook}//homeManagerModules/zshConfig.nix")
+            (import "${sources.nixbook}//homeManagerModules/gitConfig.nix")
+            (import "${sources.nixbook}//homeManagerModules/sshConfig.nix")
+            (import
+              "${sources.nixbook}//homeManagerModules/fastfetchConfig.nix")
           ]
           userImports
         ];
