@@ -1,29 +1,17 @@
-{ pkgs ? import (fetchTarball
-  "https://github.com/NixOS/nixpkgs/archive/706eef542dec88cc0ed25b9075d3037564b2d164.tar.gz")
-  { }, config, hostname, lib
-, nixos_gitrepo ? "https://github.com/didactiklabs/nixOS-server.git", ... }:
+{ config, hostname, lib, ... }:
 let
-  nixOS_version = "24.05";
-  nixbook_version = "0.0.22";
-  home-manager = builtins.fetchTarball
-    "https://github.com/nix-community/home-manager/archive/release-${nixOS_version}.tar.gz";
-  nixbook = pkgs.fetchFromGitHub {
-    owner = "didactiklabs";
-    repo = "nixbook";
-    rev = "refs/tags/v${nixbook_version}";
-    sha256 = "sha256-yR/7WyHQYTcnfAlTEi/GycB5+fivq21XcskXyNnkJd8=";
-  };
-  hostProfile = import ./profiles/${hostname} {
-    inherit lib config pkgs hostname home-manager nixbook;
-  };
+  sources = import ./npins;
+  pkgs = import sources.nixpkgs { };
+  hostProfile =
+    import ./profiles/${hostname} { inherit lib config pkgs hostname sources; };
 in {
   imports = [
     ./tools.nix
-    (import "${nixbook}//nixosModules/caCertificates.nix")
+    (import "${sources.nixbook}//nixosModules/caCertificates.nix")
     ./nixosModules/k3s
     ./nixosModules/kubernetes
     (import ./nixosModules/networkManager.nix { inherit lib config pkgs; })
-    (import "${home-manager}/nixos")
+    (import "${sources.home-manager}/nixos")
     hostProfile
   ];
   boot.kernel.sysctl = {
@@ -74,15 +62,16 @@ in {
     "fs.inotify.max_user_watches" = 524288;
   };
   # Bootloader.
-  boot.kernelParams = [ "intel_iommu=on" "iommu=pt" ];
-  boot.loader.grub.enable = lib.mkDefault true;
-  ## Set it in hardware-configuration.nix
-  #boot.loader.grub.devices = ["/dev/sda"];
-  boot.kernelPackages = pkgs.linuxPackages_latest;
-  networking.hostName = "${hostname}"; # Define your hostname.
-  #networking.nameservers = ["2a01:4f8:c2c:123f::1"];
-  # Enable networking
-  networking.networkmanager.enable = true;
+  boot = {
+    kernelParams = [ "intel_iommu=on" "iommu=pt" ];
+    loader.grub.enable = lib.mkDefault true;
+    kernelPackages = pkgs.linuxPackages_latest;
+  };
+  networking = {
+    hostName = "${hostname}"; # Define your hostname.
+    networkmanager.enable = true;
+    firewall.enable = false;
+  };
   # Set your time zone.
   time.timeZone = "Europe/Paris";
   # Select internationalisation properties.
@@ -102,19 +91,23 @@ in {
   # Configure console keymap
   console.keyMap = "fr";
   # Allow unfree packages
-  nixpkgs.config.allowUnfreePredicate = pkg: true;
-  nixpkgs.config.allowUnfree = true;
-  nix.extraOptions = ''
-    experimental-features = nix-command flakes
-  '';
+  nixpkgs.config = {
+    allowUnfreePredicate = pkg: true;
+    allowUnfree = true;
+  };
+  nix = {
+    settings = {
+      nix-path =
+        [ "nixpkgs=${sources.nixpkgs}" "home-manager=${sources.home-manager}" ];
+      experimental-features = [ "nix-command" "flakes" ];
+      trusted-users = [ "root" "@wheel" ];
+    };
+  };
   # SSH Agent
-  programs.gnupg.agent.enableSSHSupport = false;
-  programs.ssh.startAgent = true;
-  # New versions of OpenSSH seem to default to disallowing all `ssh-add -s`
-  # calls when no whitelist is provided, so this becomes necessary.
-  # programs.ssh.agentPKCS11Whitelist = "${pkgs.opensc}/lib/opensc-pkcs11.so";
-  # List packages installed in system profile. To search, run:
-  # $ nix search wget
+  programs = {
+    ssh.startAgent = true;
+    gnupg.agent.enableSSHSupport = false;
+  };
   environment.systemPackages = [
     pkgs.git
     pkgs.kubectl
@@ -153,11 +146,7 @@ in {
     openssh = { enable = true; };
   };
   security.sudo.wheelNeedsPassword = false;
-  nix.settings.trusted-users = [ "root" "@wheel" ];
-
-  networking.firewall.enable = false;
-  system.stateVersion = "${nixOS_version}";
-
+  system.stateVersion = "24.05";
   # Containerd
   virtualisation.containerd = {
     enable = true;

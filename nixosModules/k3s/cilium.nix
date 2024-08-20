@@ -1,39 +1,24 @@
-{
-  config,
-  pkgs,
-  lib,
-  ...
-}: let
+{ config, pkgs, lib, ... }:
+let
   cfg = config.customNixOSModules;
-  ciliumVersion = "v1.15.6";
-  ciliumSrc = pkgs.fetchFromGitHub {
-    owner = "cilium";
-    repo = "cilium";
-    rev = "${ciliumVersion}";
-    hash = "sha256-oC6pjtiS8HvqzzRQsE+2bm6JP7Y3cbupXxCKSvP6/kU=";
-  };
-  ciliumBundle =
-    pkgs.runCommand "cilium-manifests" {
-      name = "cilium-manifests";
-      buildInputs = [
-        pkgs.gnused
-        pkgs.kubernetes-helm
-      ];
-      src = "${ciliumSrc}";
-    }
-    ''
-      export HOME=$(mktemp -d)
-      mkdir -p $out/
-      ${pkgs.kubernetes-helm}/bin/helm template ${ciliumSrc}/install/kubernetes/cilium --namespace kube-system  \
-        --set ipv4.enabled=true --set ipv6.enabled=false \
-        --set rollOutCiliumPods=true \
-        --set kubeProxyReplacement=true \
-        --set annotateK8sNode=true \
-        --set operator.enabled=true --set operator.rollOutPods=true --set operator.replicas=1 --set operator.image.tag=${ciliumVersion} \
-        --set "ipam.operator.clusterPoolIPv4PodCIDRList[0]=${cfg.k3s.podCIDR}" \
-        --set image.tag=${ciliumVersion} \
-        > $out/cilium-bundle.yaml
-    '';
+  sources = import ../../npins;
+  ciliumSrc = sources.cilium;
+  ciliumBundle = pkgs.runCommand "cilium-manifests" {
+    name = "cilium-manifests";
+    buildInputs = [ pkgs.gnused pkgs.kubernetes-helm ];
+    src = "${ciliumSrc}";
+  } ''
+    export HOME=$(mktemp -d)
+    mkdir -p $out/
+    ${pkgs.kubernetes-helm}/bin/helm template ${ciliumSrc}/install/kubernetes/cilium --namespace kube-system  \
+      --set ipv4.enabled=true --set ipv6.enabled=false \
+      --set rollOutCiliumPods=true \
+      --set kubeProxyReplacement=true \
+      --set annotateK8sNode=true \
+      --set operator.enabled=true --set operator.rollOutPods=true --set operator.replicas=1  \
+      --set "ipam.operator.clusterPoolIPv4PodCIDRList[0]=${cfg.k3s.podCIDR}"
+      > $out/cilium-bundle.yaml
+  '';
 in {
   config = lib.mkIf cfg.k3s.enable {
     system.activationScripts.manageCilium = ''
