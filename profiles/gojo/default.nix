@@ -1,13 +1,28 @@
-{ config, pkgs, lib, sources, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  sources,
+  ...
+}:
 let
   overrides = {
     customHomeManagerModules = { };
     imports = [ ./fastfetchConfig.nix ];
   };
-in {
-  boot.initrd.availableKernelModules =
-    [ "ehci_pci" "ata_piix" "usbhid" "usb_storage" "sd_mod" ];
-  boot.initrd.kernelModules = [ "dm_snapshot" "dm-thin-pool" ];
+in
+{
+  boot.initrd.availableKernelModules = [
+    "ehci_pci"
+    "ata_piix"
+    "usbhid"
+    "usb_storage"
+    "sd_mod"
+  ];
+  boot.initrd.kernelModules = [
+    "dm_snapshot"
+    "dm-thin-pool"
+  ];
   boot.kernelModules = [ "kvm-intel" ];
   boot.extraModulePackages = [ ];
   boot.loader.grub.devices = [ "/dev/sda" ];
@@ -18,12 +33,24 @@ in {
   swapDevices = [ ];
   networking.useDHCP = lib.mkDefault true;
   nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
-  hardware.cpu.intel.updateMicrocode =
-    lib.mkDefault config.hardware.enableRedistributableFirmware;
+  hardware.cpu.intel.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
   customNixOSModules = {
-    kubernetes = { enable = true; };
-    caCertificates = { didactiklabs.enable = true; };
+    kubernetes = {
+      enable = true;
+    };
+    caCertificates = {
+      didactiklabs.enable = true;
+    };
   };
-  imports =
-    [ (import ../../users { inherit config pkgs lib sources overrides; }) ];
+  imports = [
+    (import ../../users {
+      inherit
+        config
+        pkgs
+        lib
+        sources
+        overrides
+        ;
+    })
+  ];
 }

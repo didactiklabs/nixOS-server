@@ -1,11 +1,19 @@
-{ config, pkgs, lib, sources, overrides, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  sources,
+  overrides,
+  ...
+}:
 let
   userConfig = import ../nixosModules/userConfig.nix {
     inherit lib pkgs sources;
     overrides = overrides;
   };
   mkUser = userConfig.mkUser;
-in {
+in
+{
   imports = [
     (mkUser {
       username = "khoa";

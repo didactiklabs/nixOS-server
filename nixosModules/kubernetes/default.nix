@@ -1,6 +1,13 @@
-{ config, pkgs, lib, ... }:
-let cfg = config.customNixOSModules;
-in {
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
+let
+  cfg = config.customNixOSModules;
+in
+{
   options.customNixOSModules.kubernetes = {
     enable = lib.mkOption {
       type = lib.types.bool;
@@ -10,7 +17,10 @@ in {
       '';
     };
   };
-  imports = [ ./kubeadm.nix ./kubelet.nix ];
+  imports = [
+    ./kubeadm.nix
+    ./kubelet.nix
+  ];
   config = lib.mkIf cfg.kubernetes.enable {
     system = {
       activationScripts = {
@@ -82,12 +92,13 @@ in {
           Restart = "always";
           RestartSec = 10;
           Environment = [
-            ''
-              KUBELET_KUBECONFIG_ARGS="--bootstrap-kubeconfig=/etc/kubernetes/bootstrap-kubelet.conf --kubeconfig=/etc/kubernetes/kubelet.conf"''
+            ''KUBELET_KUBECONFIG_ARGS="--bootstrap-kubeconfig=/etc/kubernetes/bootstrap-kubelet.conf --kubeconfig=/etc/kubernetes/kubelet.conf"''
             ''KUBELET_CONFIG_ARGS="--config=/var/lib/kubelet/config.yaml"''
           ];
-          EnvironmentFile =
-            [ "-/var/lib/kubelet/kubeadm-flags.env" "-/etc/sysconfig/kubelet" ];
+          EnvironmentFile = [
+            "-/var/lib/kubelet/kubeadm-flags.env"
+            "-/etc/sysconfig/kubelet"
+          ];
           ExecStart = [
             "${pkgs.kubernetes}/bin/kubelet $KUBELET_KUBECONFIG_ARGS $KUBELET_CONFIG_ARGS $KUBELET_KUBEADM_ARGS $KUBELET_EXTRA_ARGS"
           ];
