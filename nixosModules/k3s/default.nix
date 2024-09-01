@@ -1,6 +1,8 @@
 { config, lib, ... }:
-let cfg = config.customNixOSModules;
-in {
+let
+  cfg = config.customNixOSModules;
+in
+{
   options.customNixOSModules.k3s = {
     enable = lib.mkOption {
       type = lib.types.bool;
@@ -17,7 +19,10 @@ in {
       '';
     };
   };
-  imports = [ ./cilium.nix ./fluxcd.nix ];
+  imports = [
+    ./cilium.nix
+    ./fluxcd.nix
+  ];
   # https://github.com/NixOS/nixpkgs/blob/master/pkgs/applications/networking/cluster/k3s/docs/USAGE.md
   config = lib.mkIf cfg.k3s.enable {
     networking.firewall.allowedTCPPorts = [

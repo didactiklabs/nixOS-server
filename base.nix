@@ -1,10 +1,23 @@
-{ config, hostname, lib, ... }:
+{
+  config,
+  hostname,
+  lib,
+  ...
+}:
 let
   sources = import ./npins;
   pkgs = import sources.nixpkgs { };
-  hostProfile =
-    import ./profiles/${hostname} { inherit lib config pkgs hostname sources; };
-in {
+  hostProfile = import ./profiles/${hostname} {
+    inherit
+      lib
+      config
+      pkgs
+      hostname
+      sources
+      ;
+  };
+in
+{
   imports = [
     ./tools.nix
     (import "${sources.nixbook}//nixosModules/caCertificates.nix")
@@ -63,7 +76,10 @@ in {
   };
   # Bootloader.
   boot = {
-    kernelParams = [ "intel_iommu=on" "iommu=pt" ];
+    kernelParams = [
+      "intel_iommu=on"
+      "iommu=pt"
+    ];
     loader.grub.enable = lib.mkDefault true;
     kernelPackages = pkgs.linuxPackages_latest;
   };
@@ -97,10 +113,18 @@ in {
   };
   nix = {
     settings = {
-      nix-path =
-        [ "nixpkgs=${sources.nixpkgs}" "home-manager=${sources.home-manager}" ];
-      experimental-features = [ "nix-command" "flakes" ];
-      trusted-users = [ "root" "@wheel" ];
+      nix-path = [
+        "nixpkgs=${sources.nixpkgs}"
+        "home-manager=${sources.home-manager}"
+      ];
+      experimental-features = [
+        "nix-command"
+        "flakes"
+      ];
+      trusted-users = [
+        "root"
+        "@wheel"
+      ];
     };
   };
   # SSH Agent
@@ -139,11 +163,15 @@ in {
     pkgs.dig
     pkgs.tcpdump
   ];
-  environment.variables = { EDITOR = "vim"; };
+  environment.variables = {
+    EDITOR = "vim";
+  };
   services = {
     resolved.enable = true;
     # Disable the OpenSSH daemon.
-    openssh = { enable = true; };
+    openssh = {
+      enable = true;
+    };
   };
   security.sudo.wheelNeedsPassword = false;
   system.stateVersion = "24.05";
@@ -153,7 +181,9 @@ in {
     settings = {
       version = 2;
       plugins = {
-        "io.containerd.grpc.v1.cri" = { cni.bin_dir = "/opt/cni/bin"; };
+        "io.containerd.grpc.v1.cri" = {
+          cni.bin_dir = "/opt/cni/bin";
+        };
         "io.containerd.grpc.v1.cri" = {
           device_ownership_from_security_context = true;
         };

@@ -3,10 +3,10 @@
   pkgs,
   lib,
   ...
-}: let
+}:
+let
   cfg = config.customHomeManagerModules;
-in {
-  imports = [
-    ./gitConfig.nix
-  ];
+in
+{
+  imports = [ ./gitConfig.nix ];
 }

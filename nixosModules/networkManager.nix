@@ -1,4 +1,5 @@
-{ pkgs, ... }: {
+{ pkgs, ... }:
+{
   config = {
     # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
     # The global useDHCP flag is deprecated, therefore explicitly set to false here.
@@ -11,7 +12,10 @@
     ## cf https://github.com/NixOS/nixpkgs/issues/180175#issuecomment-1658731959
     systemd.services.NetworkManager-wait-online = {
       serviceConfig = {
-        ExecStart = [ "" "${pkgs.networkmanager}/bin/nm-online -q" ];
+        ExecStart = [
+          ""
+          "${pkgs.networkmanager}/bin/nm-online -q"
+        ];
       };
     };
   };

@@ -1,4 +1,5 @@
-{ pkgs, ... }: {
+{ pkgs, ... }:
+{
   environment.defaultPackages = with pkgs; [
     # tools
     dogdns

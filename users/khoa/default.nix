@@ -1,5 +1,4 @@
-{...}: {
-  imports = [
-    ./gitConfig.nix
-  ];
+{ ... }:
+{
+  imports = [ ./gitConfig.nix ];
 }
