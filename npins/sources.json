@@ -35,15 +35,15 @@
         "repo": "nixbook"
       },
       "branch": "main",
-      "revision": "fb37a75f5ee15f6bef13ea54ce39b7516ee1ec47",
-      "url": "https://github.com/didactiklabs/nixbook/archive/fb37a75f5ee15f6bef13ea54ce39b7516ee1ec47.tar.gz",
-      "hash": "08rafi7l3vxgrrhzzkywfw06pydy937k1y6kskkvxn5lpch4n3ld"
+      "revision": "c44898d99d6495ad0d1269a2055c58b96d8b8013",
+      "url": "https://github.com/didactiklabs/nixbook/archive/c44898d99d6495ad0d1269a2055c58b96d8b8013.tar.gz",
+      "hash": "033zyb15fkwra3y64bh2by8fsqcfcxsa5adv8hf0smcq6p091b4v"
     },
     "nixpkgs": {
       "type": "Channel",
       "name": "nixos-24.05",
-      "url": "https://releases.nixos.org/nixos/24.05/nixos-24.05.3999.c42fcfbdfeae/nixexprs.tar.xz",
-      "hash": "0ibs048d6ijgrd2nv3wpcf2jx0al5rpr7ignma9nmrsyla5bfi0s"
+      "url": "https://releases.nixos.org/nixos/24.05/nixos-24.05.4469.6e99f2a27d60/nixexprs.tar.xz",
+      "hash": "103wiavbv2m4lkfz517javswjp6xyhhy60v1x083qb0dzw05xzap"
     }
   },
   "version": 3
