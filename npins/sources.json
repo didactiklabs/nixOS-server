@@ -27,6 +27,36 @@
       "url": "https://github.com/nix-community/home-manager/archive/2f23fa308a7c067e52dfcc30a0758f47043ec176.tar.gz",
       "hash": "00wp0s9b5nm5rsbwpc1wzfrkyxxmqjwsc1kcibjdbfkh69arcpsn"
     },
+    "kubeadm": {
+      "type": "GitRelease",
+      "repository": {
+        "type": "GitHub",
+        "owner": "kubernetes",
+        "repo": "kubernetes"
+      },
+      "pre_releases": false,
+      "version_upper_bound": null,
+      "release_prefix": null,
+      "version": "v1.31.1",
+      "revision": "4190e7226e6c56f2317388e88511f3f73cfbe29c",
+      "url": "https://api.github.com/repos/kubernetes/kubernetes/tarball/v1.31.1",
+      "hash": "09gx0hd2aisk0y3pih7vx5c5s4kk9x9fzmgqsxd4pq52cqsds8aq"
+    },
+    "kubelet": {
+      "type": "GitRelease",
+      "repository": {
+        "type": "GitHub",
+        "owner": "kubernetes",
+        "repo": "kubernetes"
+      },
+      "pre_releases": false,
+      "version_upper_bound": null,
+      "release_prefix": null,
+      "version": "v1.31.0",
+      "revision": "e73bd2e33f000c5a2886771e712d6c90796a4873",
+      "url": "https://api.github.com/repos/kubernetes/kubernetes/tarball/v1.31.0",
+      "hash": "1p0vgjw56x3sbkzg888p4xxzp1133rsmh1pkarb6rkrffbrbfbiv"
+    },
     "nixbook": {
       "type": "Git",
       "repository": {

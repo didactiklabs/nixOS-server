@@ -1,6 +1,8 @@
 {
   config,
   pkgs,
+  kubelet,
+  kubeadm,
   lib,
   ...
 }:
@@ -18,8 +20,22 @@ in
     };
   };
   imports = [
-    ./kubeadm.nix
-    ./kubelet.nix
+    (import ./kubeadm.nix {
+      inherit
+        pkgs
+        kubeadm
+        config
+        lib
+        ;
+    })
+    (import ./kubelet.nix {
+      inherit
+        pkgs
+        kubelet
+        config
+        lib
+        ;
+    })
   ];
   config = lib.mkIf cfg.kubernetes.enable {
     system = {
@@ -100,7 +116,7 @@ in
             "-/etc/sysconfig/kubelet"
           ];
           ExecStart = [
-            "${pkgs.kubernetes}/bin/kubelet $KUBELET_KUBECONFIG_ARGS $KUBELET_CONFIG_ARGS $KUBELET_KUBEADM_ARGS $KUBELET_EXTRA_ARGS"
+            "${kubelet}/bin/kubelet $KUBELET_KUBECONFIG_ARGS $KUBELET_CONFIG_ARGS $KUBELET_KUBEADM_ARGS $KUBELET_EXTRA_ARGS"
           ];
         };
         wantedBy = [ "multi-user.target" ];
