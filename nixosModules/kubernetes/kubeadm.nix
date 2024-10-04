@@ -1,6 +1,7 @@
 {
   config,
   pkgs,
+  pkgs-unstable,
   lib,
   ...
 }:
@@ -8,7 +9,7 @@ let
   cfg = config.customNixOSModules;
   kubeadm = pkgs.runCommand "get-kubeadm" { nativeBuildInputs = [ ]; } ''
     mkdir -p $out/bin
-    cp ${pkgs.kubernetes}/bin/kubeadm $out/bin/
+    cp ${pkgs-unstable.kubernetes}/bin/kubeadm $out/bin/
   '';
 in
 {

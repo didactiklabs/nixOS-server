@@ -7,6 +7,7 @@
 let
   sources = import ./npins;
   pkgs = import sources.nixpkgs { };
+  pkgs-unstable = import sources.nixpkgs-unstable { };
   hostProfile = import ./profiles/${hostname} {
     inherit
       lib
@@ -22,7 +23,14 @@ in
     ./tools.nix
     (import "${sources.nixbook}//nixosModules/caCertificates.nix")
     ./nixosModules/k3s
-    ./nixosModules/kubernetes
+    (import ./nixosModules/kubernetes {
+      inherit
+        pkgs
+        config
+        lib
+        pkgs-unstable
+        ;
+    })
     (import ./nixosModules/networkManager.nix { inherit lib config pkgs; })
     (import "${sources.home-manager}/nixos")
     hostProfile

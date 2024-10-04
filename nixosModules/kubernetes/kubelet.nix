@@ -1,6 +1,7 @@
 {
   config,
   pkgs,
+  pkgs-unstable,
   lib,
   ...
 }:
@@ -8,7 +9,7 @@ let
   cfg = config.customNixOSModules;
   kubelet = pkgs.runCommand "get-kubelet" { nativeBuildInputs = [ ]; } ''
     mkdir -p $out/bin
-    cp ${pkgs.kubernetes}/bin/kubelet $out/bin/
+    cp ${pkgs-unstable.kubernetes}/bin/kubelet $out/bin/
   '';
 in
 {

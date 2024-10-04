@@ -44,6 +44,12 @@
       "name": "nixos-24.05",
       "url": "https://releases.nixos.org/nixos/24.05/nixos-24.05.5438.5966581aa04b/nixexprs.tar.xz",
       "hash": "1s9rqd7i9yxx3y9mm3if10pj46ak09ygflbbm3cvw96vys2jxjaq"
+    },
+    "nixpkgs-unstable": {
+      "type": "Channel",
+      "name": "nixos-unstable",
+      "url": "https://releases.nixos.org/nixos/unstable/nixos-24.11pre687768.27e30d177e57/nixexprs.tar.xz",
+      "hash": "17m6gfb9bwhdl679f1s2ish4j14q8m8c05c8gvzh7i5hcki51s1l"
     }
   },
   "version": 3

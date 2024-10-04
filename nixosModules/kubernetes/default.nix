@@ -1,6 +1,7 @@
 {
   config,
   pkgs,
+  pkgs-unstable,
   lib,
   ...
 }:
@@ -18,8 +19,22 @@ in
     };
   };
   imports = [
-    ./kubeadm.nix
-    ./kubelet.nix
+    (import ./kubeadm.nix {
+      inherit
+        pkgs
+        pkgs-unstable
+        config
+        lib
+        ;
+    })
+    (import ./kubelet.nix {
+      inherit
+        pkgs
+        pkgs-unstable
+        config
+        lib
+        ;
+    })
   ];
   config = lib.mkIf cfg.kubernetes.enable {
     system = {
@@ -34,7 +49,7 @@ in
         # CSI expects "some" binaries to be included in "real" FHS path
         copyCSIbins.text = ''
           mkdir -p /usr/bin
-          cp ${pkgs.kubectl}/bin/kubectl /usr/bin/kubectl
+          cp ${pkgs-unstable.kubectl}/bin/kubectl /usr/bin/kubectl
           cp ${pkgs.util-linux}/bin/blkid /usr/bin/blkid
           cp ${pkgs.util-linux}/bin/blockdev /usr/bin/blockdev
           cp ${pkgs.coreutils}/bin/cat /usr/bin/cat
