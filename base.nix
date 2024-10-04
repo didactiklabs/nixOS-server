@@ -106,12 +106,17 @@ in
   };
   # Configure console keymap
   console.keyMap = "fr";
-  # Allow unfree packages
-  nixpkgs.config = {
-    allowUnfreePredicate = pkg: true;
-    allowUnfree = true;
-  };
   nix = {
+    package = pkgs.lix;
+    gc = {
+      automatic = true;
+      dates = "weekly";
+      options = "--delete-older-than 7d";
+    };
+    optimise = {
+      automatic = true;
+      dates = [ "03:45" ];
+    };
     settings = {
       nix-path = [
         "nixpkgs=${sources.nixpkgs}"
@@ -125,6 +130,8 @@ in
         "root"
         "@wheel"
       ];
+      substituters = [ "https://didactiklabs.cachix.org" ];
+      trusted-public-keys = [ "didactiklabs.cachix.org-1:HYJV+l+6uSwJIAm4wdqVP/TuclEptn6oI2dzLqHq88k=" ];
     };
   };
   # SSH Agent
