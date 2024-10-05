@@ -1,5 +1,4 @@
 {
-  config,
   pkgs,
   lib,
   sources,
@@ -8,10 +7,14 @@
 }:
 let
   userConfig = import ../nixosModules/userConfig.nix {
-    inherit lib pkgs sources;
-    overrides = overrides;
+    inherit
+      lib
+      pkgs
+      sources
+      overrides
+      ;
   };
-  mkUser = userConfig.mkUser;
+  inherit (userConfig) mkUser;
 in
 {
   imports = [
