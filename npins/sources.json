@@ -52,10 +52,10 @@
       "pre_releases": false,
       "version_upper_bound": null,
       "release_prefix": null,
-      "version": "v1.31.0",
-      "revision": "e73bd2e33f000c5a2886771e712d6c90796a4873",
-      "url": "https://api.github.com/repos/kubernetes/kubernetes/tarball/v1.31.0",
-      "hash": "1p0vgjw56x3sbkzg888p4xxzp1133rsmh1pkarb6rkrffbrbfbiv"
+      "version": "v1.31.1",
+      "revision": "4190e7226e6c56f2317388e88511f3f73cfbe29c",
+      "url": "https://api.github.com/repos/kubernetes/kubernetes/tarball/v1.31.1",
+      "hash": "09gx0hd2aisk0y3pih7vx5c5s4kk9x9fzmgqsxd4pq52cqsds8aq"
     },
     "nixbook": {
       "type": "Git",
