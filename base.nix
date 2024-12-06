@@ -102,8 +102,8 @@ in
     ];
     loader.grub.enable = lib.mkDefault true;
     kernelPackages = pkgs.linuxPackages_latest;
+    tmp.cleanOnBoot = true;
   };
-  tmp.cleanOnBoot = true;
   networking = {
     hostName = "${hostname}"; # Define your hostname.
     networkmanager.enable = true;
