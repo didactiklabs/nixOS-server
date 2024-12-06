@@ -22,10 +22,10 @@
         "owner": "nix-community",
         "repo": "home-manager"
       },
-      "branch": "release-24.05",
-      "revision": "2f23fa308a7c067e52dfcc30a0758f47043ec176",
-      "url": "https://github.com/nix-community/home-manager/archive/2f23fa308a7c067e52dfcc30a0758f47043ec176.tar.gz",
-      "hash": "00wp0s9b5nm5rsbwpc1wzfrkyxxmqjwsc1kcibjdbfkh69arcpsn"
+      "branch": "release-24.11",
+      "revision": "e38d3dd1d355a003cc63e8fe6ff66ef2257509ed",
+      "url": "https://github.com/nix-community/home-manager/archive/e38d3dd1d355a003cc63e8fe6ff66ef2257509ed.tar.gz",
+      "hash": "17hmby14qrq6xxk1zwmm6z42mq5xsqs9ffhfpsbwyrigzkas2gv4"
     },
     "kubeadm": {
       "type": "GitRelease",
@@ -65,15 +65,15 @@
         "repo": "nixbook"
       },
       "branch": "main",
-      "revision": "adcacd8cac2bd77692ef15284201cf65e3c34315",
-      "url": "https://github.com/didactiklabs/nixbook/archive/adcacd8cac2bd77692ef15284201cf65e3c34315.tar.gz",
-      "hash": "07xx2qph2j2l1wwdry4ggcsz94r5ndcsgy7l97c584wwfm8vzgh4"
+      "revision": "0aa6ad3cf618542dee31cd4578d6bf73252d63e8",
+      "url": "https://github.com/didactiklabs/nixbook/archive/0aa6ad3cf618542dee31cd4578d6bf73252d63e8.tar.gz",
+      "hash": "0yxlp80bn5k5f5v6d269qfnp7s0qvzp4h0i277s3snmp1n5nx0wr"
     },
     "nixpkgs": {
       "type": "Channel",
-      "name": "nixos-24.05",
-      "url": "https://releases.nixos.org/nixos/24.05/nixos-24.05.5630.c505ebf77752/nixexprs.tar.xz",
-      "hash": "05vcvi1qf4admbq6k40rcx03w05wf4ab05l944wkn9js0aqmj9r4"
+      "name": "nixos-24.11",
+      "url": "https://releases.nixos.org/nixos/24.11/nixos-24.11.710486.4dc2fc4e62db/nixexprs.tar.xz",
+      "hash": "1pby8y3dcbdcjb6dklyy0wnn1dhzbbqaki6l2nlw9x13n6qqj4mb"
     }
   },
   "version": 3
