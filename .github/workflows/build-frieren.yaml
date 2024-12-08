@@ -41,20 +41,14 @@ jobs:
             };
           }
           EOF'
-      - uses: DeterminateSystems/magic-nix-cache-action@main
-      - name: Set up cache
-        uses: zombiezen/setup-nix-cache-action@v0.4.0
-        with:
-          substituters: https://attic.didactiklabs.io/didactiklabs
-          trusted_public_keys: didactiklabs:djXdtItTlj9rvE5Jsqv1oURQWICivrOAC8E3C9FE1C8=
-      - name: Build
-        run: nix-build '<nixpkgs/nixos>' -A config.system.build.toplevel -I nixos-config=profiles/frieren/configuration.nix
       - name: Setup Attic cache
         uses: ryanccn/attic-action@v0
         with:
           endpoint: ${{ secrets.ATTIC_ENDPOINT }}
           cache: ${{ secrets.ATTIC_CACHE }}
           token: ${{ secrets.ATTIC_TOKEN }}
+      - name: Build
+        run: nix-build '<nixpkgs/nixos>' -A config.system.build.toplevel -I nixos-config=profiles/frieren/configuration.nix
       - name: Push
         run: |
           attic push didactiklabs ./result
