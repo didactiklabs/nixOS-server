@@ -161,6 +161,7 @@ in
     gnupg.agent.enableSSHSupport = false;
   };
   environment.systemPackages = [
+    pkgs.killall
     pkgs.git
     pkgs.kubectl
     pkgs.cilium-cli
