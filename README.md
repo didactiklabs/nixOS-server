@@ -34,13 +34,13 @@ colmena apply
 Then for the first controlplane:
 
 ```bash
-colmena exec --on <cp0> "sudo kubeadm upgrade apply v1.31.1 -y"
+colmena exec --on <cp0> "sudo kubeadm upgrade apply v1.31.1 -y -v=9"
 ```
 
 Then for others and workers:
 
 ```bash
-colmena exec --on <worker01>,<worker02> "sudo kubeadm upgrade node"
+colmena exec --on <worker01>,<worker02> "sudo kubeadm upgrade node -v=9"
 ```
 
 ##### Upgrade kubelet
