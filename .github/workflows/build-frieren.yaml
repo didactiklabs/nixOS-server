@@ -41,14 +41,13 @@ jobs:
             };
           }
           EOF'
-      - name: Setup Attic cache
-        uses: ryanccn/attic-action@v0
-        with:
-          endpoint: ${{ secrets.ATTIC_ENDPOINT }}
-          cache: ${{ secrets.ATTIC_CACHE }}
-          token: ${{ secrets.ATTIC_TOKEN }}
-      - name: Build
-        run: nix-build '<nixpkgs/nixos>' -A config.system.build.toplevel -I nixos-config=profiles/frieren/configuration.nix
-      - name: Push
+      - name: Auth to s3 cache
         run: |
-          attic push didactiklabs ./result
+          aws --profile default configure set aws_access_key_id "${{ secrets.AWS_ACCESS_KEY_ID }}"
+          aws --profile default configure set aws_secret_access_key "${{ secrets.AWS_SECRET_ACCESS_KEY_ID }}"
+      - name: Build and Push
+        run: |
+          echo '${{ secrets.CACHE_PRIVATE_KEY }}' > cache-priv.pem
+          build=$(nix-build '<nixpkgs/nixos>' -A config.system.build.toplevel -I nixos-config=profiles/frieren/configuration.nix)
+          nix store sign -k cache-priv.pem $build
+          nix copy --to 's3://nix-cache?profile=default&scheme=https&endpoint=s3.didactiklabs.io' $build
