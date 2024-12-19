@@ -151,8 +151,8 @@ in
         "root"
         "@wheel"
       ];
-      substituters = [ "https://didactiklabs.cachix.org" ];
-      trusted-public-keys = [ "didactiklabs.cachix.org-1:HYJV+l+6uSwJIAm4wdqVP/TuclEptn6oI2dzLqHq88k=" ];
+      substituters = [ "https://s3.didactiklabs.io/nix-cache" ];
+      trusted-public-keys = [ "didactiklabs-nixcache:PxLKN0+ZkP07M8g8/B6xbP6A4MYpqQg6LH7V3muiy/0=" ];
     };
   };
   # SSH Agent
