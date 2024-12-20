@@ -14,6 +14,7 @@ let
       allowLocalDeployment = true;
       targetUser = builtins.getEnv "USER";
       targetHost = parent.host;
+      tags = parent.tags;
     };
     imports = [ ./profiles/${parent.hostName}/configuration.nix ];
   };
@@ -25,9 +26,16 @@ in
   gojo = createConfiguration {
     hostName = "gojo";
     host = "10.207.7.2";
+    tags = [ "didactiklabs" ];
+  };
+  vi = createConfiguration {
+    hostName = "vi";
+    host = "10.0.1.70";
+    tags = [ "bealv" ];
   };
   frieren = createConfiguration {
     hostName = "frieren";
     host = "10.254.0.5";
+    tags = [ "didactiklabs" ];
   };
 }
