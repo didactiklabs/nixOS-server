@@ -26,16 +26,25 @@ in
   gojo = createConfiguration {
     hostName = "gojo";
     host = "10.207.7.2";
-    tags = [ "didactiklabs" ];
+    tags = [
+      "didactiklabs"
+      "worker"
+    ];
   };
   vi = createConfiguration {
     hostName = "vi";
     host = "10.0.1.70";
-    tags = [ "bealv" ];
+    tags = [
+      "bealv"
+      "worker"
+    ];
   };
   frieren = createConfiguration {
     hostName = "frieren";
     host = "10.254.0.5";
-    tags = [ "didactiklabs" ];
+    tags = [
+      "didactiklabs"
+      "cp"
+    ];
   };
 }
