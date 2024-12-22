@@ -35,6 +35,7 @@ in
     ./tools.nix
     (import "${sources.nixbook}//nixosModules/caCertificates.nix")
     ./nixosModules/k3s
+    ./nixosModules/ginx.nix
     (import ./nixosModules/kubernetes {
       inherit
         pkgs
