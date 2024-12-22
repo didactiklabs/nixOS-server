@@ -6,6 +6,7 @@
 }:
 let
   sources = import ./npins;
+  ginx = import "${sources.nixbook}//customPkgs/ginx.nix" { inherit pkgs; };
   pkgs = import sources.nixpkgs { };
 
   kubernetesComponent =
@@ -161,6 +162,7 @@ in
     gnupg.agent.enableSSHSupport = false;
   };
   environment.systemPackages = [
+    ginx
     pkgs.killall
     pkgs.git
     pkgs.kubectl
