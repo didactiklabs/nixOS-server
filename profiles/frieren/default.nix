@@ -42,6 +42,7 @@ in
     caCertificates = {
       didactiklabs.enable = true;
     };
+    ginx.enable = true;
   };
   imports = [
     (import ../../users {
