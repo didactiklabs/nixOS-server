@@ -28,7 +28,7 @@ in
         ];
         wantedBy = [ "multi-user.target" ];
         serviceConfig = {
-          ExecStart = "${ginx}/bin/ginx --source https://github.com/didactiklabs/nixOs-server -b main -n 60 -- colmena apply-local --sudo";
+          ExecStart = "${pkgs.bash}/bin/bash -c ${ginx}/bin/ginx --source https://github.com/didactiklabs/nixOs-server -b main -n 60 -- colmena apply-local --sudo";
           Restart = "on-failure";
         };
       };
