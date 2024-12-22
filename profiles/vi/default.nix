@@ -41,6 +41,7 @@ in
       didactiklabs.enable = true;
       bealv.enable = true;
     };
+    ginx.enable = true;
   };
   imports = [
     (import ../../users {
