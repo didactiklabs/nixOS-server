@@ -31,6 +31,14 @@ in
       "worker"
     ];
   };
+  naruto = createConfiguration {
+    hostName = "naruto";
+    host = "10.0.1.72";
+    tags = [
+      "bealv"
+      "worker"
+    ];
+  };
   vi = createConfiguration {
     hostName = "vi";
     host = "10.0.1.70";
