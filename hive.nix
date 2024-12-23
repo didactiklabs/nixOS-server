@@ -31,8 +31,8 @@ in
       "worker"
     ];
   };
-  naruto = createConfiguration {
-    hostName = "naruto";
+  megumin = createConfiguration {
+    hostName = "megumin";
     host = "10.0.1.72";
     tags = [
       "bealv"

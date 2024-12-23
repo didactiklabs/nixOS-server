@@ -1,4 +1,4 @@
-name: Build naruto
+name: Build megumin
 on:
   push:
     branches:
@@ -68,6 +68,6 @@ jobs:
       - name: Build and Push
         run: |
           echo '${{ secrets.CACHE_PRIVATE_KEY }}' > cache-priv.pem
-          build=$(nix-build '<nixpkgs/nixos>' -A config.system.build.toplevel -I nixos-config=profiles/naruto/configuration.nix)
+          build=$(nix-build '<nixpkgs/nixos>' -A config.system.build.toplevel -I nixos-config=profiles/megumin/configuration.nix)
           nix store sign -r -k cache-priv.pem $build
           nix copy --to 's3://nix-cache?profile=default&scheme=https&endpoint=s3.didactiklabs.io' $build
