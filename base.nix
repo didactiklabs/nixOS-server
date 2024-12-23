@@ -9,17 +9,6 @@ let
   ginx = import "${sources.nixbook}//customPkgs/ginx.nix" { inherit pkgs; };
   pkgs = import sources.nixpkgs { };
 
-  kubernetesComponent =
-    component: source:
-    pkgs.kubernetes.overrideAttrs (oldAttrs: {
-      src = source;
-      components = [ component ];
-    });
-
-  # Define kubelet and kubeadm using the common function with different versions and hashes
-  kubelet = kubernetesComponent "cmd/kubelet" sources.kubelet;
-  kubeadm = kubernetesComponent "cmd/kubeadm" sources.kubeadm;
-
   hostProfile = import ./profiles/${hostname} {
     inherit
       lib
@@ -41,8 +30,6 @@ in
         pkgs
         config
         lib
-        kubelet
-        kubeadm
         ;
     })
     (import ./nixosModules/networkManager.nix { inherit lib config pkgs; })

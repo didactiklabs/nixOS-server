@@ -1,13 +1,25 @@
 {
   config,
   pkgs,
-  kubelet,
-  kubeadm,
   lib,
   ...
 }:
 let
   cfg = config.customNixOSModules;
+  sources = import ../../npins;
+
+  kubernetesComponent =
+    component: source:
+    pkgs.kubernetes.overrideAttrs (oldAttrs: {
+      src = source;
+      components = [ component ];
+    });
+
+  # Define kubelet and kubeadm using the common function with different versions and hashes
+  kubeadmSource = sources."kubeadm-${cfg.kubernetes.version.kubeadm}";
+  kubeletSource = sources."kubelet-${cfg.kubernetes.version.kubelet}";
+  kubelet = kubernetesComponent "cmd/kubelet" kubeletSource;
+  kubeadm = kubernetesComponent "cmd/kubeadm" kubeadmSource;
 in
 {
   options.customNixOSModules.kubernetes = {
@@ -17,6 +29,22 @@ in
       description = ''
         whether to enable kubernetes binaries globally or not
       '';
+    };
+    version = {
+      kubeadm = lib.mkOption {
+        type = lib.types.string;
+        default = "vx.x.x";
+        description = ''
+          kubeadm version
+        '';
+      };
+      kubelet = lib.mkOption {
+        type = lib.types.string;
+        default = "vx.x.x";
+        description = ''
+          kubelet version
+        '';
+      };
     };
   };
   imports = [

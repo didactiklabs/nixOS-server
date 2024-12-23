@@ -27,8 +27,16 @@ To upgrade kubernetes version you must do the following:
 Run this with this repo to update the pkgs pinning:
 
 ```bash
-npins add --name kubeadm github kubernetes kubernetes --at v1.31.1
-colmena apply
+npins add --name kubeadm-v1.31.1 github kubernetes kubernetes --at v1.31.1 # The naming is as important as the version pinned !!!
+npins add --name kubelet-v1.31.1 github kubernetes kubernetes --at v1.31.1 # The naming is as important as the version pinned !!!
+```
+
+Then set the option in the module of your profile `kubernetes.version.kubeadm`.
+
+Now run:
+
+```bash
+colmena apply # or merge to main to auto-apply it.
 ```
 
 Then for the first controlplane:
@@ -45,9 +53,10 @@ colmena exec --on <worker01>,<worker02> "sudo kubeadm upgrade node -v=9"
 
 ##### Upgrade kubelet
 
-Now get back to the repo and run:
+Then set the option in the module of your profile `kubernetes.version.kubelet`.
+
+Now run:
 
 ```bash
-npins add --name kubelet github kubernetes kubernetes --at v1.31.1
-colmena apply
+colmena apply # or merge to main to auto-apply it.
 ```

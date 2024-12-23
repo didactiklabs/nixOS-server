@@ -36,6 +36,10 @@ in
   customNixOSModules = {
     kubernetes = {
       enable = true;
+      version = {
+        kubeadm = "v1.31.4";
+        kubelet = "v1.31.4";
+      };
     };
     caCertificates = {
       didactiklabs.enable = true;
