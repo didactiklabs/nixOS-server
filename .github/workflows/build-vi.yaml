@@ -36,9 +36,9 @@ jobs:
           tool-cache: false
           android: true
           dotnet: true
-          haskell: true
-          large-packages: true
-          docker-images: true
+          haskell: false
+          large-packages: false
+          docker-images: false
           swap-storage: true
       - name: Checkout code
         uses: actions/checkout@v3
