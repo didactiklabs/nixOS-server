@@ -32,14 +32,14 @@ in
     };
     version = {
       kubeadm = lib.mkOption {
-        type = lib.types.string;
+        type = lib.types.str;
         default = "vx.x.x";
         description = ''
           kubeadm version
         '';
       };
       kubelet = lib.mkOption {
-        type = lib.types.string;
+        type = lib.types.str;
         default = "vx.x.x";
         description = ''
           kubelet version
