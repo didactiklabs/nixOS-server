@@ -8,6 +8,5 @@
     unzip
     vim
     tree
-    openvpn
   ];
 }
