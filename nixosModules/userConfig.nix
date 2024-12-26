@@ -42,6 +42,9 @@ let
         users.${username} = {
           config = {
             customHomeManagerModules = mergedConfig.customHomeManagerModules;
+            programs.zsh.initExtra = ''
+              fastfetch
+            '';
             home = {
               stateVersion = "24.05";
               username = "${username}";
