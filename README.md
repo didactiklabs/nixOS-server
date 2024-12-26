@@ -29,7 +29,9 @@ To upgrade kubernetes version you must do the following:
 
 ##### Upgrade the control plane and kubelet configs
 
-Run this with this repo to update the pkgs pinning:
+You first need to check if the requested kubernetes version is available in the npins/sources.json (it should be automagically be updated with our didactikbot).
+
+If not run:
 
 ```bash
 npins add --name kubeadm-v1.31.1 github kubernetes kubernetes --at v1.31.1 # The naming is as important as the version pinned !!!
