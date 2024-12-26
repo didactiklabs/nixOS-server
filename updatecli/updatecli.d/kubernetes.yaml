@@ -1,0 +1,62 @@
+name: kubernetes Update
+scms:
+  default:
+    kind: 'github'
+    spec:
+      email: 'updatecli@didactiklabs.io'
+      owner: 'didactiklabs'
+      repository: 'nixOS-server'
+      token: '{{ requiredEnv "UPDATECLI_GITHUB_TOKEN" }}'
+      username: '{{ requiredEnv "GITHUB_ACTOR" }}'
+      branch: 'main'
+sources:
+  default:
+    name: Get value from json
+    # scmid: 'default'
+    kind: json
+    spec:
+      file: npins/sources.json
+      key: pins.kubernetes-latest.version
+  kubernetes:
+    kind: githubrelease
+    spec:
+      owner: 'kubernetes'
+      repository: 'kubernetes'
+      token: '{{ requiredEnv "UPDATECLI_GITHUB_TOKEN" }}'
+      username: '{{ requiredEnv "GITHUB_ACTOR" }}'
+      versionfilter:
+        kind: semver
+        pattern: '*'
+conditions:
+  default:
+    name: Check if version is the same
+    sourceid: 'default'
+    scmid: 'default'
+    kind: shell
+    spec:
+      environments:
+        - name: PATH
+      command: test "{{ source `kubernetes` }}" ==
+targets:
+  default:
+    name: kubernetes npins update {{ source `kubernetes` }}
+    kind: shell
+    scmid: 'default'
+    disablesourceinput: true
+    spec:
+      environments:
+        - name: PATH
+        - name: NIX_PATH
+      command: |
+        nix run nixpkgs#npins -- add --name kubernetes-latest github kubernetes kubernetes --at {{ source `kubernetes` }}
+        nix run nixpkgs#npins -- add --name kubeadm-{{ source `kubernetes` }} github kubernetes kubernetes --at {{ source `kubernetes` }}
+        nix run nixpkgs#npins -- add --name kubelet-{{ source `kubernetes` }} github kubernetes kubernetes --at {{ source `kubernetes` }}
+actions:
+  default:
+    kind: 'github/pullrequest'
+    scmid: 'default'
+    spec:
+      automerge: false
+      description: 'Update kubernetes npins.'
+      draft: false
+      title: 'UPDATECLI: Update kubernetes'
