@@ -9,7 +9,7 @@ let
   logo =
     let
       image = pkgs.fetchurl {
-        url = "https://i.pinimg.com/736x/7a/a3/64/7aa3640aed08fd4572f0a38c0dd56846.jpg";
+        url = "https://i.imgur.com/jum4sY0.jpeg";
         sha256 = "sha256-HGAScMH+zAUIhocWLwBXkAMMAk4v374arREmcnX0zXE=";
       };
     in
