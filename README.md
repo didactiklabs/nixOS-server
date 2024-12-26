@@ -1,3 +1,8 @@
+[![Build Frieren](https://github.com/didactiklabs/nixOS-server/actions/workflows/build-frieren.yaml/badge.svg)](https://github.com/didactiklabs/nixOS-server/actions/workflows/build-frieren.yaml)
+[![Build Gojo](https://github.com/didactiklabs/nixOS-server/actions/workflows/build-gojo.yaml/badge.svg)](https://github.com/didactiklabs/nixOS-server/actions/workflows/build-gojo.yaml)
+[![Build megumin](https://github.com/didactiklabs/nixOS-server/actions/workflows/build-megumin.yaml/badge.svg)](https://github.com/didactiklabs/nixOS-server/actions/workflows/build-megumin.yaml)
+[![Build vi](https://github.com/didactiklabs/nixOS-server/actions/workflows/build-vi.yaml/badge.svg)](https://github.com/didactiklabs/nixOS-server/actions/workflows/build-vi.yaml)
+
 # Installation
 
 ### Warning !!! Only work on Legacy boot installation
