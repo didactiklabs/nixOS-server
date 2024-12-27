@@ -29,7 +29,7 @@ in
         wantedBy = [ "multi-user.target" ];
         serviceConfig = {
           ExecStart = "${pkgs.bash}/bin/bash -c '${ginx}/bin/ginx --source https://github.com/didactiklabs/nixOs-server -b main -n 60 --exit-on-fail -- colmena apply-local'";
-          Restart = "on-failure";
+          Restart = "always";
         };
       };
     };
