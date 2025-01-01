@@ -18,8 +18,92 @@ let
       sources
       ;
   };
+  jsonFile = builtins.toJSON {
+    url = builtins.readFile (
+      pkgs.runCommand "getRemoteUrl" { buildInputs = [ pkgs.git ]; } ''
+        if [ -d ${./.git} ]; then
+          grep -oP '(?<=url = ).*' ${./.git/config} | tr -d '\n' > $out;
+        else
+          echo "no remote URL" | tr -d '\n' > $out;
+        fi
+      ''
+    );
+    branch = builtins.readFile (
+      pkgs.runCommand "getBranch" { buildInputs = [ pkgs.git ]; } ''
+        if [ -d ${./.git} ]; then
+          cat ${./.git/HEAD} | awk '{print $2}' | tr -d '\n' > $out;
+        else
+          echo "unknown" | tr -d '\n' > $out;
+        fi
+      ''
+    );
+    rev =
+      if builtins.pathExists ./.git then
+        let
+          gitRepo = builtins.fetchGit ./.; # Fetch the Git repository
+        in
+        gitRepo.rev # Access the 'rev' attribute directly
+      else
+        {
+          rev = "unknown"; # Default value when there's no .git directory
+        }
+        .rev;
+    lastModifiedDate =
+      if builtins.pathExists ./.git then
+        let
+          gitRepo = builtins.fetchGit ./.; # Fetch the Git repository
+        in
+        gitRepo.lastModifiedDate
+      else
+        {
+          lastModifiedDate = "unknown";
+        }
+        .lastModifiedDate;
+  };
 in
 {
+  environment = {
+    etc = {
+      "nixos/version".source = pkgs.writeText "projectGit.json" jsonFile;
+    };
+    systemPackages = [
+      ginx
+      pkgs.killall
+      pkgs.git
+      pkgs.kubectl
+      pkgs.cilium-cli
+      pkgs.coreutils
+      pkgs.procps
+      pkgs.gawk
+      pkgs.file
+      pkgs.gnugrep
+      pkgs.unixtools.top
+      pkgs.unixtools.ping
+      pkgs.unixtools.arp
+      pkgs.gnused
+      pkgs.mount
+      pkgs.umount
+      pkgs.multipath-tools
+      pkgs.openiscsi
+      pkgs.lsscsi
+      pkgs.curl
+      pkgs.iproute2
+      pkgs.iptables
+      pkgs.socat
+      pkgs.ethtool
+      pkgs.cri-tools
+      pkgs.conntrack-tools
+      # debug tools
+      pkgs.unixtools.netstat
+      pkgs.netcat-gnu
+      pkgs.dig
+      pkgs.tcpdump
+    ];
+    variables = {
+      EDITOR = "vim";
+    };
+  };
+
   imports = [
     ./tools.nix
     (import "${sources.nixbook}//nixosModules/caCertificates.nix")
@@ -148,42 +232,6 @@ in
   programs = {
     ssh.startAgent = true;
     gnupg.agent.enableSSHSupport = false;
-  };
-  environment.systemPackages = [
-    ginx
-    pkgs.killall
-    pkgs.git
-    pkgs.kubectl
-    pkgs.cilium-cli
-    pkgs.coreutils
-    pkgs.procps
-    pkgs.gawk
-    pkgs.file
-    pkgs.gnugrep
-    pkgs.unixtools.top
-    pkgs.unixtools.ping
-    pkgs.unixtools.arp
-    pkgs.gnused
-    pkgs.mount
-    pkgs.umount
-    pkgs.multipath-tools
-    pkgs.openiscsi
-    pkgs.lsscsi
-    pkgs.curl
-    pkgs.iproute2
-    pkgs.iptables
-    pkgs.socat
-    pkgs.ethtool
-    pkgs.cri-tools
-    pkgs.conntrack-tools
-    # debug tools
-    pkgs.unixtools.netstat
-    pkgs.netcat-gnu
-    pkgs.dig
-    pkgs.tcpdump
-  ];
-  environment.variables = {
-    EDITOR = "vim";
   };
   services = {
     resolved.enable = true;
