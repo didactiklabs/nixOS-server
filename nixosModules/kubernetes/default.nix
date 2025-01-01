@@ -114,7 +114,7 @@ in
         documentation = [ "https://kubernetes.io/docs/home/" ];
         unitConfig = {
           After = "gen-kubelet-extra-args.service";
-          Require = "gen-kubelet-extra-args.service";
+          Requires = "gen-kubelet-extra-args.service";
           StartLimitInterval = 0;
         };
         path = [
