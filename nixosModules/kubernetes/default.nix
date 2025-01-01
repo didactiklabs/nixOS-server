@@ -114,7 +114,7 @@ in
         documentation = [ "https://kubernetes.io/docs/home/" ];
         unitConfig = {
           After = "gen-kubelet-extra-args.service";
-          Requires = "gen-kubelet-extra-args.service";
+          # Requires = "gen-kubelet-extra-args.service"; # this service doesn't seem to exist, it had a typos that corrected made the service stop.
           StartLimitInterval = 0;
         };
         path = [
