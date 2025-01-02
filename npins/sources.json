@@ -110,9 +110,9 @@
         "repo": "nixbook"
       },
       "branch": "main",
-      "revision": "7eaf7bf5ed69dbb125667864a76af37fdf4d4e09",
-      "url": "https://github.com/didactiklabs/nixbook/archive/7eaf7bf5ed69dbb125667864a76af37fdf4d4e09.tar.gz",
-      "hash": "18nvkkq04va3jb1300miy7ikmx5hfbb5xrq743w3r7plxqlxxrd2"
+      "revision": "25a059bdf528d23fa67a0e758092d5dbbb720274",
+      "url": "https://github.com/didactiklabs/nixbook/archive/25a059bdf528d23fa67a0e758092d5dbbb720274.tar.gz",
+      "hash": "0m35hihahmjk8nhd080rparyw6x28crnnhmc3v929g30g0269p99"
     },
     "nixpkgs": {
       "type": "Git",
