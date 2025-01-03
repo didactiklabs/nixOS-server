@@ -30,7 +30,7 @@ let
       programs.zsh.enable = true;
       users.users."${username}" = {
         shell = pkgs.zsh;
-        extraGroups = mergedConfig.extraGroups;
+        inherit (mergedConfig) extraGroups;
         isNormalUser = true;
         description = "${username}";
         openssh.authorizedKeys.keys = authorizedKeys;
@@ -41,7 +41,7 @@ let
         backupFileExtension = "rebuild";
         users.${username} = {
           config = {
-            customHomeManagerModules = mergedConfig.customHomeManagerModules;
+            inherit (mergedConfig) customHomeManagerModules;
             programs.zsh.initExtra = ''
               fastfetch
             '';
