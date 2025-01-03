@@ -20,6 +20,33 @@ let
   kubeletSource = sources."kubelet-${cfg.kubernetes.version.kubelet}";
   kubelet = kubernetesComponent "cmd/kubelet" kubeletSource;
   kubeadm = kubernetesComponent "cmd/kubeadm" kubeadmSource;
+  kubeadm-bin = pkgs.runCommand "get-kubeadm" { nativeBuildInputs = [ ]; } ''
+    mkdir -p $out/bin
+    cp ${kubeadm}/bin/kubeadm $out/bin/
+  '';
+  kubelet-bin = pkgs.runCommand "get-kubelet" { nativeBuildInputs = [ ]; } ''
+    mkdir -p $out/bin
+    cp ${kubelet}/bin/kubelet $out/bin/
+  '';
+  kubeadm-upgrade = pkgs.writeShellScriptBin "kubeadm-upgrade" ''
+    set -euo pipefail
+    if [ -f "/etc/kubernetes/admin.conf" ] && [ "$(${pkgs.kubectl}/bin/kubectl --kubeconfig=/etc/kubernetes/admin.conf get nodes | grep control-plane)" ]; then
+      KUBE_APISERVER_VERSION=$(${pkgs.kubectl}/bin/kubectl --kubeconfig=/etc/kubernetes/admin.conf version -o json | ${pkgs.jq}/bin/jq -r '.serverVersion.gitVersion')
+      if [ "$KUBE_APISERVER_VERSION" != "${cfg.kubernetes.version.kubeadm}" ]; then
+        ${kubeadm-bin}/bin/kubeadm upgrade apply ${cfg.kubernetes.version.kubeadm} -y -v=9
+        echo upgrade control-plane done.
+        exit 0
+      fi
+    elif [ -f "/etc/kubernetes/kubelet.conf" ] && [ "$(${pkgs.kubectl}/bin/kubectl --kubeconfig=/etc/kubernetes/kubelet.conf cluster-info | grep running)" ]; then
+      KUBE_APISERVER_VERSION=$(${pkgs.kubectl}/bin/kubectl --kubeconfig=/etc/kubernetes/kubelet.conf version -o json | ${pkgs.jq}/bin/jq -r '.serverVersion.gitVersion')
+      if [ "$KUBE_APISERVER_VERSION" != "${cfg.kubernetes.version.kubeadm}" ]; then
+        ${kubeadm-bin}/bin/kubeadm upgrade node ${cfg.kubernetes.version.kubeadm} -v=9
+        echo upgrade worker done.
+        exit 0
+      fi
+    fi
+    echo no upgrade required.
+  '';
 in
 {
   options.customNixOSModules.kubernetes = {
@@ -47,24 +74,6 @@ in
       };
     };
   };
-  imports = [
-    (import ./kubeadm.nix {
-      inherit
-        pkgs
-        kubeadm
-        config
-        lib
-        ;
-    })
-    (import ./kubelet.nix {
-      inherit
-        pkgs
-        kubelet
-        config
-        lib
-        ;
-    })
-  ];
   config = lib.mkIf cfg.kubernetes.enable {
     system = {
       activationScripts = {
@@ -105,9 +114,36 @@ in
         '';
       };
     };
-
+    environment = {
+      systemPackages = [
+        kubeadm-bin
+        kubelet-bin
+      ];
+    };
     # kubelet systemd unit is heavily inspired by official image-builder unit
     systemd = {
+      services.kubeadm-upgrade = {
+        enable = true;
+        path = [
+          "${kubeadm-bin}"
+          pkgs.jq
+        ];
+        wantedBy = [ "multi-user.target" ];
+        serviceConfig = {
+          ExecStart = "${pkgs.bash}/bin/bash -c '${kubeadm-upgrade}/bin/kubeadm-upgrade'";
+          Restart = "on-failure";
+        };
+      };
+      timers.kubeadm-upgrade-timer = {
+        enable = true;
+        description = "Timer to run myService every 5 minutes";
+        wantedBy = [ "timers.target" ];
+        timerConfig = {
+          OnUnitActiveSec = "5min";
+          Persistent = true;
+          Unit = "kubeadm-upgrade.service";
+        };
+      };
       services.kubelet = {
         enable = true;
         description = "kubelet: The Kubernetes Node Agent";
@@ -139,7 +175,7 @@ in
             "-/etc/sysconfig/kubelet"
           ];
           ExecStart = [
-            "${kubelet}/bin/kubelet $KUBELET_KUBECONFIG_ARGS $KUBELET_CONFIG_ARGS $KUBELET_KUBEADM_ARGS $KUBELET_EXTRA_ARGS"
+            "${kubelet-bin}/bin/kubelet $KUBELET_KUBECONFIG_ARGS $KUBELET_CONFIG_ARGS $KUBELET_KUBEADM_ARGS $KUBELET_EXTRA_ARGS"
           ];
         };
         wantedBy = [ "multi-user.target" ];
