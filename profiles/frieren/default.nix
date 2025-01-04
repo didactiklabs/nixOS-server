@@ -12,21 +12,23 @@ let
   };
 in
 {
-  boot.initrd.availableKernelModules = [
-    "ehci_pci"
-    "ata_piix"
-    "megaraid_sas"
-    "usb_storage"
-    "usbhid"
-    "sd_mod"
-  ];
-  boot.initrd.kernelModules = [
-    "dm_snapshot"
-    "dm-thin-pool"
-  ];
-  boot.kernelModules = [ "kvm-intel" ];
-  boot.extraModulePackages = [ ];
-  boot.loader.grub.devices = [ "/dev/sdc" ];
+  boot = {
+    initrd.availableKernelModules = [
+      "ehci_pci"
+      "ata_piix"
+      "megaraid_sas"
+      "usb_storage"
+      "usbhid"
+      "sd_mod"
+    ];
+    initrd.kernelModules = [
+      "dm_snapshot"
+      "dm-thin-pool"
+    ];
+    kernelModules = [ "kvm-intel" ];
+    extraModulePackages = [ ];
+    loader.grub.devices = [ "/dev/sdc" ];
+  };
   fileSystems."/" = {
     device = "/dev/disk/by-uuid/a072429e-a0ab-4c57-961f-0abc176d56b1";
     fsType = "ext4";
@@ -36,6 +38,7 @@ in
   nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
   hardware.cpu.intel.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
   customNixOSModules = {
+    networkManager.enable = true;
     kubernetes = {
       enable = true;
       version = {

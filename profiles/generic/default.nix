@@ -27,16 +27,11 @@ in
     ];
     loader.grub.device = "/dev/sda";
   };
-  fileSystems."/" = {
-    device = "/dev/disk/by-uuid/43e0783e-b4f2-4131-b6d8-5ede6ac78496";
-    fsType = "ext4";
-  };
   swapDevices = [ ];
   networking.useDHCP = lib.mkDefault true;
   nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
   hardware.cpu.intel.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
   customNixOSModules = {
-    networkManager.enable = true;
     kubernetes = {
       enable = true;
       version = {
@@ -51,6 +46,8 @@ in
     ginx.enable = true;
   };
   imports = [
+    <nixpkgs/nixos/modules/installer/cd-dvd/installation-cd-minimal.nix>
+    <nixpkgs/nixos/modules/installer/cd-dvd/channel.nix>
     (import ../../users {
       inherit
         config
