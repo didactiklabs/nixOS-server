@@ -1,3 +1,4 @@
+{ _, ... }:
 {
   boot.kernel.sysctl = {
     # ANSSI R9
@@ -41,7 +42,6 @@
     "net.ipv4.ip_forward" = 1;
     "net.ipv6.conf.all.forwarding" = 1;
     "net.ipv4.tcp_congestion_control" = "bbr";
-    "vm.overcommit_memory" = "1";
     "kernel.panic" = 10;
     "fs.inotify.max_user_instances" = 8192;
     "fs.inotify.max_user_watches" = 524288;

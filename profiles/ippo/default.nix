@@ -25,10 +25,16 @@ in
       "dm_snapshot"
       "dm-thin-pool"
     ];
-    loader.grub.device = "/dev/sda";
+    loader = {
+      systemd-boot.enable = false;
+      grub = {
+        enable = true;
+        device = "/dev/disk/by-label/ROOT";
+      };
+    };
   };
   fileSystems."/" = {
-    device = "/dev/disk/by-uuid/43e0783e-b4f2-4131-b6d8-5ede6ac78496";
+    device = "/dev/disk/by-label/ROOT";
     fsType = "ext4";
   };
   swapDevices = [ ];
@@ -36,7 +42,6 @@ in
   nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
   hardware.cpu.intel.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
   customNixOSModules = {
-    networkManager.enable = true;
     kubernetes = {
       enable = true;
       version = {

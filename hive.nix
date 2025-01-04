@@ -14,7 +14,7 @@ let
       allowLocalDeployment = true;
       targetUser = builtins.getEnv "USER";
       targetHost = parent.host;
-      tags = parent.tags;
+      inherit (parent) tags;
     };
     imports = [ ./profiles/${parent.hostName}/configuration.nix ];
   };
@@ -28,6 +28,14 @@ in
     host = "10.207.7.2";
     tags = [
       "didactiklabs"
+      "worker"
+    ];
+  };
+  ippo = createConfiguration {
+    hostName = "ippo";
+    host = "1.1.1.1";
+    tags = [
+      "bealv"
       "worker"
     ];
   };
