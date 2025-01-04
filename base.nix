@@ -132,7 +132,6 @@ in
   };
   networking = {
     hostName = "${hostname}"; # Define your hostname.
-    networkmanager.enable = true;
     firewall.enable = false;
   };
   # Set your time zone.
