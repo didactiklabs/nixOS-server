@@ -37,7 +37,7 @@ It is possible to test the iso in a vm by doing the following:
 
 ```bash
 nix-shell
-runIso
+runIso <partitions profile> <true or false, enable cloud-init>
 ```
 
 The whole installation will roll before your eyes.

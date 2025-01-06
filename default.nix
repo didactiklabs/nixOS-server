@@ -1,5 +1,6 @@
 {
   cloud ? false,
+  partition ? "default",
 }:
 let
   sources = import ./npins;
@@ -9,9 +10,9 @@ let
   laptop = import "${pkgs.path}/nixos/lib/eval-config.nix" {
     system = "x86_64-linux";
     modules = [
-      ./installer/configuration.nix
+      ./installer/live-configuration.nix
     ];
-    specialArgs = { inherit disko cloud; };
+    specialArgs = { inherit disko partition cloud; };
   };
 in
 {

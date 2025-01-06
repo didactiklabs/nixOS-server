@@ -29,15 +29,32 @@ in
       systemd-boot.enable = false;
       grub = {
         enable = true;
-        device = "/dev/disk/by-label/ROOT";
+        device = "/dev/disko";
       };
     };
   };
-  fileSystems."/" = {
-    device = "/dev/disk/by-label/ROOT";
-    fsType = "ext4";
+  fileSystems = {
+    "/" = {
+      device = "/dev/disk/by-label/ROOT";
+      fsType = "ext4";
+    };
+    "/tmp" = {
+      device = "/dev/disk/by-label/TMP";
+      fsType = "ext4";
+    };
+    "/var" = {
+      device = "/dev/disk/by-label/VAR";
+      fsType = "ext4";
+    };
+    "/var/lib/containerd" = {
+      device = "/dev/disk/by-label/VARLIBCONTAINERD";
+      fsType = "ext4";
+    };
+    "/nix" = {
+      device = "/dev/disk/by-label/NIX";
+      fsType = "ext4";
+    };
   };
-  swapDevices = [ ];
   networking.useDHCP = lib.mkDefault true;
   nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
   hardware.cpu.intel.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
