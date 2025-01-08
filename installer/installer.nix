@@ -25,8 +25,6 @@
         --root /mnt \
         --no-root-password \
         --system "${config.system.build.installSystem.nixos.config.system.build.toplevel}"
-      mkdir -p /mnt/tmp/nixos-server
-      cp -r ${config.system.build.installSystem.sources}/. /mnt/tmp/nixos-server
       reboot
     '';
     installer = pkgs.writeScriptBin "installer" ''

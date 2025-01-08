@@ -8,7 +8,7 @@ pkgs.mkShell {
     pkgs.qemu
     (pkgs.writeShellScriptBin "buildIso" ''
       #!/bin/bash
-      nix-build default.nix --argstr partition "''${1:-default}" --arg cloud "''${2:-false}"
+      cp $(nix-build default.nix --argstr partition "''${1:-default}" --arg cloud "''${2:-false}")/iso/* output/
     '')
     (pkgs.writeShellScriptBin "runIso" ''
       #!/bin/bash

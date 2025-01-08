@@ -88,6 +88,21 @@
               ];
             };
           };
+          varliblonghorn = {
+            size = "100G";
+            content = {
+              type = "filesystem";
+              format = "ext4";
+              mountpoint = "/var/lib/longhorn";
+              mountOptions = [
+                "noatime"
+              ];
+              extraArgs = [
+                "-L"
+                "VARLIBLONGHORN"
+              ];
+            };
+          };
           root = {
             size = "100%";
             content = {

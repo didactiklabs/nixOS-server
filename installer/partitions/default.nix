@@ -29,7 +29,7 @@
         type = "lvm_vg";
         lvs = {
           nix = {
-            size = "20G";
+            size = "40G";
             content = {
               type = "filesystem";
               format = "ext4";
@@ -44,7 +44,7 @@
             };
           };
           tmp = {
-            size = "2G";
+            size = "5G";
             content = {
               type = "filesystem";
               format = "ext4";
@@ -74,7 +74,7 @@
             };
           };
           root = {
-            size = "2G";
+            size = "5G";
             content = {
               type = "filesystem";
               format = "ext4";

@@ -31,7 +31,24 @@ in
       "worker"
     ];
   };
+  frieren = createConfiguration {
+    hostName = "frieren";
+    host = "10.254.0.5";
+    tags = [
+      "didactiklabs"
+      "cp"
+    ];
+  };
+
   ippo = createConfiguration {
+    hostName = "rintaro";
+    host = "1.1.1.1";
+    tags = [
+      "bealv"
+      "worker"
+    ];
+  };
+  rintaro = createConfiguration {
     hostName = "ippo";
     host = "1.1.1.1";
     tags = [
@@ -53,14 +70,6 @@ in
     tags = [
       "bealv"
       "worker"
-    ];
-  };
-  frieren = createConfiguration {
-    hostName = "frieren";
-    host = "10.254.0.5";
-    tags = [
-      "didactiklabs"
-      "cp"
     ];
   };
 }

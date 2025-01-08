@@ -5,11 +5,11 @@
   config,
   partition,
   cloud,
+  lib,
   ...
 }:
 let
   diskoCfg = import ./partitions/${partition}.nix { disk = "/dev/disko"; };
-  installerSources = pkgs.callPackage ./sources.nix { };
   nixosConfig = import ./pre-configuration.nix {
     inherit
       pkgs
@@ -20,13 +20,14 @@ let
       config
       ;
   };
+  isoType = if cloud then "-cloud" else "";
 in
 {
+  isoImage.isoName = lib.mkForce "${config.isoImage.isoBaseName}-${config.system.nixos.label}-${pkgs.stdenv.hostPlatform.system}-${partition}${isoType}.iso";
   imports = [
     "${modulesPath}/installer/cd-dvd/installation-cd-minimal.nix"
     (import ./installer.nix { inherit disko diskoCfg; })
   ];
-  system.build.installSystem.sources = installerSources;
   system.build.installSystem.nixos = nixosConfig.system.build.installSystem.nixos;
   services.getty.autologinUser = "nixos";
   console.keyMap = "fr";

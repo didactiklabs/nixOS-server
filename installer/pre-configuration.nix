@@ -7,6 +7,10 @@
   cloud,
   ...
 }:
+let
+  sources = import ../npins;
+  ginx = import "${sources.nixbook}//customPkgs/ginx.nix" { inherit pkgs; };
+in
 {
   system.build.installSystem.nixos = import "${pkgs.path}/nixos/lib/eval-config.nix" {
     system = "x86_64-linux";
@@ -36,8 +40,7 @@
           }
                 echo Starting final configuration...
                 sleep 2
-                cd /tmp/nixos-server
-                colmena apply-local --sudo
+                ginx --source https://github.com/didactiklabs/nixos-server -b main --now -- colmena apply-local --sudo
                 sudo reboot
         '';
         nixpkgs.config.allowUnfree = true;
@@ -46,6 +49,7 @@
           wirelesstools
           networkmanager
           dhcpcd
+          ginx
           colmena
         ];
         services = {
