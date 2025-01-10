@@ -14,7 +14,7 @@ let
       allowLocalDeployment = true;
       targetUser = builtins.getEnv "USER";
       targetHost = parent.host;
-      tags = parent.tags;
+      inherit (parent) tags;
     };
     imports = [ ./profiles/${parent.hostName}/configuration.nix ];
   };
@@ -28,6 +28,31 @@ in
     host = "10.207.7.2";
     tags = [
       "didactiklabs"
+      "worker"
+    ];
+  };
+  frieren = createConfiguration {
+    hostName = "frieren";
+    host = "10.254.0.5";
+    tags = [
+      "didactiklabs"
+      "cp"
+    ];
+  };
+
+  ippo = createConfiguration {
+    hostName = "ippo";
+    host = "1.1.1.1";
+    tags = [
+      "bealv"
+      "worker"
+    ];
+  };
+  rintaro = createConfiguration {
+    hostName = "rintaro";
+    host = "1.1.1.1";
+    tags = [
+      "bealv"
       "worker"
     ];
   };
@@ -45,14 +70,6 @@ in
     tags = [
       "bealv"
       "worker"
-    ];
-  };
-  frieren = createConfiguration {
-    hostName = "frieren";
-    host = "10.254.0.5";
-    tags = [
-      "didactiklabs"
-      "cp"
     ];
   };
 }

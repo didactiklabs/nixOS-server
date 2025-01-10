@@ -50,6 +50,10 @@ in
       device = "/dev/disk/by-label/VARLIBCONTAINERD";
       fsType = "ext4";
     };
+    "/var/lib/longhorn" = {
+      device = "/dev/disk/by-label/VARLIBLONGHORN";
+      fsType = "ext4";
+    };
     "/nix" = {
       device = "/dev/disk/by-label/NIX";
       fsType = "ext4";

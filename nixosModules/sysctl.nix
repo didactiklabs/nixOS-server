@@ -1,3 +1,4 @@
+{ _, ... }:
 {
   boot.kernel.sysctl = {
     # ANSSI R9
@@ -33,17 +34,5 @@
     "fs.protected_regular" = 2;
     # Disable IPV6
     "net.ipv6.conf.all.disable_ipv6" = 1;
-    # values from kubernetes official image-builder
-    "net.ipv4.tcp_syncookies" = false;
-    "vm.swappiness" = 60;
-    "net.bridge.bridge-nf-call-iptables" = 1;
-    "net.bridge.bridge-nf-call-ip6tables" = 1;
-    "net.ipv4.ip_forward" = 1;
-    "net.ipv6.conf.all.forwarding" = 1;
-    "net.ipv4.tcp_congestion_control" = "bbr";
-    "vm.overcommit_memory" = "1";
-    "kernel.panic" = 10;
-    "fs.inotify.max_user_instances" = 8192;
-    "fs.inotify.max_user_watches" = 524288;
   };
 }
