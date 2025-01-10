@@ -13,7 +13,7 @@ pkgs.testers.runNixOSTest {
       {
         imports = [
           ../nixosModules/kubernetes
-          ../nixosModules/kernelSysctl.nix
+          ../nixosModules/sysctl.nix
           ../nixosModules/networkManager.nix
           ../tools.nix
         ];
@@ -45,7 +45,7 @@ pkgs.testers.runNixOSTest {
       {
         imports = [
           ../nixosModules/kubernetes
-          ../nixosModules/kernelSysctl.nix
+          ../nixosModules/sysctl.nix
           ../tools.nix
         ];
         networking.firewall.enable = false;

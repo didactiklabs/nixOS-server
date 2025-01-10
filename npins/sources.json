@@ -15,6 +15,21 @@
       "url": "https://api.github.com/repos/cilium/cilium/tarball/v1.16.3",
       "hash": "0l06dnl5d3pzmmracdcwkfyzx9f6xwgprj9h9kd692azld9lyacs"
     },
+    "disko": {
+      "type": "GitRelease",
+      "repository": {
+        "type": "GitHub",
+        "owner": "nix-community",
+        "repo": "disko"
+      },
+      "pre_releases": false,
+      "version_upper_bound": null,
+      "release_prefix": null,
+      "version": "v1.10.0",
+      "revision": "0c6ee81232d47064f46f9d83a3dde70a2ac56d2c",
+      "url": "https://api.github.com/repos/nix-community/disko/tarball/v1.10.0",
+      "hash": "0jfasvk0hz76cipnv2mfrbgf86gcmnf0niapcm7p37xh7a0w2wxj"
+    },
     "home-manager": {
       "type": "Git",
       "repository": {
