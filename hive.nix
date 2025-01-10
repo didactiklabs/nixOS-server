@@ -41,7 +41,7 @@ in
   };
 
   ippo = createConfiguration {
-    hostName = "rintaro";
+    hostName = "ippo";
     host = "1.1.1.1";
     tags = [
       "bealv"
@@ -49,7 +49,7 @@ in
     ];
   };
   rintaro = createConfiguration {
-    hostName = "ippo";
+    hostName = "rintaro";
     host = "1.1.1.1";
     tags = [
       "bealv"

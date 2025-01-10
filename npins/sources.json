@@ -38,9 +38,9 @@
         "repo": "home-manager"
       },
       "branch": "release-24.11",
-      "revision": "613691f285dad87694c2ba1c9e6298d04736292d",
-      "url": "https://github.com/nix-community/home-manager/archive/613691f285dad87694c2ba1c9e6298d04736292d.tar.gz",
-      "hash": "1lvws93d1hq36lf1j1cfq6lzh1cgjrad8jhjw7vr987my5cfv450"
+      "revision": "bd65bc3cde04c16755955630b344bc9e35272c56",
+      "url": "https://github.com/nix-community/home-manager/archive/bd65bc3cde04c16755955630b344bc9e35272c56.tar.gz",
+      "hash": "15k41il0mvmwyv6jns4z8k6khhmb22jk5gpcqs1paym3l01g6abn"
     },
     "kubeadm-v1.31.4": {
       "type": "GitRelease",
@@ -125,9 +125,9 @@
         "repo": "nixbook"
       },
       "branch": "main",
-      "revision": "59e902357df01e66cdcaffd9f7482040a31dfe81",
-      "url": "https://github.com/didactiklabs/nixbook/archive/59e902357df01e66cdcaffd9f7482040a31dfe81.tar.gz",
-      "hash": "1x30qfwxmwwknzkh2imf5k85r8n526lyzhyljzglss04fxihgd3b"
+      "revision": "9cf57f570ccbdbb419fed1264a8766db48a44a11",
+      "url": "https://github.com/didactiklabs/nixbook/archive/9cf57f570ccbdbb419fed1264a8766db48a44a11.tar.gz",
+      "hash": "1kgfyfsh9rxgpkr6wp6l59v1s6wx210xq3qwnih47qrxi26wllwf"
     },
     "nixpkgs": {
       "type": "Git",
