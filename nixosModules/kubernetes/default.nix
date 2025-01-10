@@ -40,7 +40,7 @@ let
     elif [ -f "/etc/kubernetes/kubelet.conf" ] && [ "$(${pkgs.kubectl}/bin/kubectl --kubeconfig=/etc/kubernetes/kubelet.conf cluster-info | grep running)" ]; then
       KUBE_APISERVER_VERSION=$(${pkgs.kubectl}/bin/kubectl --kubeconfig=/etc/kubernetes/kubelet.conf version -o json | ${pkgs.jq}/bin/jq -r '.serverVersion.gitVersion')
       if [ "$KUBE_APISERVER_VERSION" != "${cfg.kubernetes.version.kubeadm}" ]; then
-        ${kubeadm-bin}/bin/kubeadm upgrade node ${cfg.kubernetes.version.kubeadm} -v=9
+        ${kubeadm-bin}/bin/kubeadm upgrade node -v=9
         echo upgrade worker done.
         exit 0
       fi

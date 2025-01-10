@@ -42,7 +42,7 @@ in
 
   ippo = createConfiguration {
     hostName = "ippo";
-    host = "1.1.1.1";
+    host = "ippo";
     tags = [
       "bealv"
       "worker"
@@ -50,7 +50,7 @@ in
   };
   rintaro = createConfiguration {
     hostName = "rintaro";
-    host = "1.1.1.1";
+    host = "rintaro";
     tags = [
       "bealv"
       "worker"
@@ -58,7 +58,7 @@ in
   };
   megumin = createConfiguration {
     hostName = "megumin";
-    host = "10.0.1.72";
+    host = "megumin";
     tags = [
       "bealv"
       "worker"
@@ -66,7 +66,7 @@ in
   };
   vi = createConfiguration {
     hostName = "vi";
-    host = "10.0.1.70";
+    host = "vi";
     tags = [
       "bealv"
       "worker"
