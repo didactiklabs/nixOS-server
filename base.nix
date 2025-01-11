@@ -64,10 +64,6 @@ let
   };
 in
 {
-  networking.nameservers = [
-    "1.1.1.1"
-    "1.0.0.1"
-  ];
   environment = {
     etc = {
       "nixos/version".source = pkgs.writeText "projectGit.json" jsonFile;
