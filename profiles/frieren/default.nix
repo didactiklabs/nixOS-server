@@ -12,6 +12,15 @@ let
   };
 in
 {
+  environment = {
+    etc = {
+      "kubernetes/kubelet/conf.d/00-config.yaml".text = ''
+        kind: KubeletConfiguration
+        apiVersion: kubelet.config.k8s.io/v1beta1
+        maxPods: 200
+      '';
+    };
+  };
   boot = {
     initrd.availableKernelModules = [
       "ehci_pci"

@@ -181,7 +181,7 @@ in
           RestartSec = 10;
           Environment = [
             ''KUBELET_KUBECONFIG_ARGS="--bootstrap-kubeconfig=/etc/kubernetes/bootstrap-kubelet.conf --kubeconfig=/etc/kubernetes/kubelet.conf"''
-            ''KUBELET_CONFIG_ARGS="--config=/var/lib/kubelet/config.yaml"''
+            ''KUBELET_CONFIG_ARGS="--config=/var/lib/kubelet/config.yaml --config-dir=/etc/kubernetes/kubelet/config.d"''
           ];
           EnvironmentFile = [
             "-/var/lib/kubelet/kubeadm-flags.env"
