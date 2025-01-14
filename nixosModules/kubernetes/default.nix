@@ -132,6 +132,12 @@ in
         kubeadm-bin
         kubelet-bin
       ];
+      etc = {
+        "kubernetes/kubelet/config.d/99-config.yaml".text = ''
+          kind: KubeletConfiguration
+          apiVersion: kubelet.config.k8s.io/v1beta1
+        '';
+      };
     };
     # kubelet systemd unit is heavily inspired by official image-builder unit
     systemd = {
