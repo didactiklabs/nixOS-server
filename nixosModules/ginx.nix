@@ -64,7 +64,7 @@ in
           ];
           wantedBy = [ "multi-user.target" ];
           serviceConfig = {
-            ExecStart = "${pkgs.bash}/bin/bash -c '${ossync}/bin/ossync";
+            ExecStart = "${pkgs.bash}/bin/bash -c '${ossync}/bin/ossync'";
             Restart = "always";
           };
         };
