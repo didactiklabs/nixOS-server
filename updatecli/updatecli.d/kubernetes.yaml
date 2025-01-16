@@ -56,7 +56,7 @@ actions:
     kind: 'github/pullrequest'
     scmid: 'default'
     spec:
-      automerge: true
+      automerge: false
       description: 'Update kubernetes npins.'
       draft: false
       title: 'UPDATECLI: Update kubernetes'
