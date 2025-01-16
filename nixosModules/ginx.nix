@@ -18,10 +18,12 @@ let
   '';
   ossync = pkgs.writeShellScriptBin "ossync" ''
     set -euo pipefail
-    if  [ "$(${pkgs.jq}/bin/jq .rev /etc/nixos/version)" != "$(${pkgs.git}/bin/git ls-remote https://github.com/didactiklabs/nixOs-server HEAD | awk '{print $1}')" ]; then
-      ${osupdate}/bin/osupdate
+    if [ -e "/etc/nixos/version" ]; then
+      if  [ "$(${pkgs.jq}/bin/jq .rev /etc/nixos/version)" != "$(${pkgs.git}/bin/git ls-remote https://github.com/didactiklabs/nixOs-server HEAD | awk '{print $1}')" ]; then
+        ${osupdate}/bin/osupdate
+      fi
+      OS is up to date.
     fi
-    OS is up to date.
   '';
 in
 {
