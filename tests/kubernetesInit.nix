@@ -72,7 +72,7 @@ pkgs.testers.runNixOSTest {
   };
 
   testScript = ''
-    master.succeed('kubeadm version -o json | jq -r .clientVersion.gitVersion | grep -q "^v1.32.0$"')
+    master.succeed('kubeadm version -o json | jq -r .clientVersion.gitVersion | grep -q "^${kubernetesLatestVersion}$"')
     master.wait_until_succeeds('kubeadm init --pod-network-cidr=10.244.0.0/16 --control-plane-endpoint=master --apiserver-cert-extra-sans=master', timeout = 300)
 
     master.wait_until_succeeds('kubectl --kubeconfig=/etc/kubernetes/admin.conf get nodes | grep control-plane', timeout = 300)
