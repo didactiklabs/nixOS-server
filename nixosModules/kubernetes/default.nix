@@ -133,7 +133,7 @@ in
         kubelet-bin
       ];
       etc = {
-        "kubernetes/kubelet/config.d/99-config.yaml".text = ''
+        "kubernetes/kubelet/config.d/99-config.conf".text = ''
           kind: KubeletConfiguration
           apiVersion: kubelet.config.k8s.io/v1beta1
         '';
