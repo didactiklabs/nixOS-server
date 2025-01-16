@@ -16,7 +16,7 @@ let
     echo Running ginx...
     ${ginx}/bin/ginx --source https://github.com/didactiklabs/nixOs-server -b main --now -- ${pkgs.colmena}/bin/colmena apply-local --sudo
   '';
-  ossync = pkgs.writeShellScriptBin "osupdate" ''
+  ossync = pkgs.writeShellScriptBin "ossync" ''
     set -euo pipefail
     if  [ "$(${pkgs.jq}/bin/jq .rev /etc/nixos/version)" != "$(${pkgs.git}/bin/git ls-remote https://github.com/didactiklabs/nixOs-server HEAD | awk '{print $1}')" ]; then
       ${osupdate}/bin/osupdate
