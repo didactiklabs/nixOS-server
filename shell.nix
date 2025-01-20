@@ -8,14 +8,27 @@ pkgs.mkShell {
     pkgs.qemu
     (pkgs.writeShellScriptBin "buildIso" ''
       #!/bin/bash
+      set -euo pipefail
       mkdir -p output
-      cp $(nix-build default.nix --argstr partition "''${1:-default}" --arg cloud "''${2:-false}")/iso/* output/
+      cp $(nix-build default.nix -A buildIso --argstr partition "''${1:-default60G}" --arg cloud "''${2:-false}")/iso/* output/
+    '')
+    (pkgs.writeShellScriptBin "buildQcow2" ''
+      #!/bin/bash
+      set -euo pipefail
+      mkdir -p output
+      chmod +w output -R
+      cp $(${pkgs.nixos-generators}/bin/nixos-generate -f qcow -c profiles/$1/configuration.nix -I nixpkgs=$(nix eval --raw -f npins nixpkgs.outPath)) output/$1.qcow2
+    '')
+    (pkgs.writeShellScriptBin "runQcow2" ''
+      #!/bin/bash
+      set -euo pipefail
+      mkdir -p output
+      chmod +w output -R
+      ${pkgs.nixos-generators}/bin/nixos-generate -f vm --run -c profiles/$1/configuration.nix -I nixpkgs=$(nix eval --raw -f npins nixpkgs.outPath)
     '')
     (pkgs.writeShellScriptBin "runIso" ''
       #!/bin/bash
-
       set -euo pipefail
-
       # Step 1: Build the NixOS ISO
       if ! nix-build default.nix --argstr partition "''${1:-default}" --arg cloud "''${2:-false}"; then
         echo "nix-build failed!"

@@ -15,7 +15,23 @@ Build the iso with the following command:
 
 ```bash
 nix-shell
-buildIso
+buildIso <partions profile> <true or false cloud-init>
+```
+
+Build the qcow2 with the following command:
+
+```bash
+nix-shell
+buildQcow2 <profile>
+```
+
+**NOTE**
+
+```
+IPPO is the profile for a generic ISO install.
+RINTARO is the profile for a generic QCOW2 install.
+
+That's just how it is.
 ```
 
 Then just run the iso in a fresh VM, it will auto install the generic profile.
