@@ -6,7 +6,6 @@
 }:
 let
   sources = import ./npins;
-  ginx = import "${sources.nixbook}//customPkgs/ginx.nix" { inherit pkgs; };
   pkgs = import sources.nixpkgs { };
 
   hostProfile = import ./profiles/${hostname} {
@@ -22,7 +21,7 @@ in
 {
   environment = {
     systemPackages = [
-      ginx
+      pkgs.kitty
       pkgs.killall
       pkgs.git
       pkgs.kubectl

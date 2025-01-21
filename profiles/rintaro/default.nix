@@ -13,20 +13,13 @@ let
 in
 {
   boot = {
-    initrd.availableKernelModules = [
-      "ata_piix"
-      "uhci_hcd"
-      "virtio_pci"
-      "virtio_scsi"
-      "sd_mod"
-      "sr_mod"
-    ];
-    initrd.kernelModules = [
-      "dm_snapshot"
-      "dm-thin-pool"
+    kernelParams = [
+      "consoleblank=0"
+      "console=ttyS0,115200n8"
     ];
     loader = {
-      systemd-boot.enable = false;
+      systemd-boot.configurationLimit = 0;
+      timeout = 0;
       grub = {
         enable = true;
       };
@@ -36,8 +29,6 @@ in
     hostName = lib.mkForce "";
   };
   networking.useDHCP = lib.mkDefault true;
-  nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
-  hardware.cpu.intel.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
   services.cloud-init.enable = true;
   customNixOSModules = {
     kubernetes = {
@@ -51,7 +42,7 @@ in
       didactiklabs.enable = true;
       bealv.enable = true;
     };
-    ginx.enable = true;
+    ginx.enable = false;
   };
   imports = [
     (import ../../users {
@@ -63,5 +54,6 @@ in
         overrides
         ;
     })
+    <nixpkgs/nixos/modules/profiles/qemu-guest.nix>
   ];
 }
