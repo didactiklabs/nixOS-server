@@ -141,6 +141,15 @@ in
     };
     # kubelet systemd unit is heavily inspired by official image-builder unit
     systemd = {
+      services.cloud-final = {
+        path = [
+          "${kubeadm-bin}"
+          "${kubelet-bin}"
+          pkgs.cri-tools
+        ];
+        after = [ "containerd.service" ];
+        wants = [ "containerd.service" ];
+      };
       services.kubeadm-upgrade = {
         enable = true;
         path = [
