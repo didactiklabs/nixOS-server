@@ -141,25 +141,68 @@ in
     };
     # kubelet systemd unit is heavily inspired by official image-builder unit
     systemd = {
-      services.cloud-final = {
-        path = [
-          "${kubeadm-bin}"
-          "${kubelet-bin}"
-          pkgs.cri-tools
-        ];
-        after = [ "containerd.service" ];
-        wants = [ "containerd.service" ];
-      };
-      services.kubeadm-upgrade = {
-        enable = true;
-        path = [
-          "${kubeadm-bin}"
-          pkgs.jq
-        ];
-        wantedBy = [ "multi-user.target" ];
-        serviceConfig = {
-          ExecStart = "${pkgs.bash}/bin/bash -c '${kubeadm-upgrade}/bin/kubeadm-upgrade'";
-          Restart = "on-failure";
+      services = {
+        cloud-final = {
+          path = [
+            "${kubeadm-bin}"
+            "${kubelet-bin}"
+            pkgs.cri-tools
+            pkgs.ethtool
+            pkgs.conntrack-tools
+            pkgs.iptables
+            pkgs.iproute2
+            pkgs.socat
+          ];
+          after = [ "containerd.service" ];
+          wants = [ "containerd.service" ];
+        };
+        kubeadm-upgrade = {
+          enable = true;
+          path = [
+            "${kubeadm-bin}"
+            pkgs.jq
+          ];
+          wantedBy = [ "multi-user.target" ];
+          serviceConfig = {
+            ExecStart = "${pkgs.bash}/bin/bash -c '${kubeadm-upgrade}/bin/kubeadm-upgrade'";
+            Restart = "on-failure";
+          };
+        };
+        kubelet = {
+          enable = true;
+          description = "kubelet: The Kubernetes Node Agent";
+          documentation = [ "https://kubernetes.io/docs/home/" ];
+          path = [
+            "/opt/cni/bin"
+            pkgs.mount
+            pkgs.umount
+            pkgs.util-linux
+            pkgs.file
+            pkgs.iproute2
+            pkgs.iptables
+            pkgs.socat
+            pkgs.ethtool
+            pkgs.conntrack-tools
+            pkgs.multipath-tools
+            pkgs.openiscsi
+            pkgs.lsscsi
+          ];
+          serviceConfig = {
+            Restart = "always";
+            RestartSec = 10;
+            Environment = [
+              ''KUBELET_KUBECONFIG_ARGS="--bootstrap-kubeconfig=/etc/kubernetes/bootstrap-kubelet.conf --kubeconfig=/etc/kubernetes/kubelet.conf"''
+              ''KUBELET_CONFIG_ARGS="--config=/var/lib/kubelet/config.yaml --config-dir=/etc/kubernetes/kubelet/config.d"''
+            ];
+            EnvironmentFile = [
+              "-/var/lib/kubelet/kubeadm-flags.env"
+              "-/etc/sysconfig/kubelet"
+            ];
+            ExecStart = [
+              "${kubelet-bin}/bin/kubelet $KUBELET_KUBECONFIG_ARGS $KUBELET_CONFIG_ARGS $KUBELET_KUBEADM_ARGS $KUBELET_EXTRA_ARGS"
+            ];
+          };
+          wantedBy = [ "multi-user.target" ];
         };
       };
       timers.kubeadm-upgrade-timer = {
@@ -171,42 +214,6 @@ in
           Persistent = true;
           Unit = "kubeadm-upgrade.service";
         };
-      };
-      services.kubelet = {
-        enable = true;
-        description = "kubelet: The Kubernetes Node Agent";
-        documentation = [ "https://kubernetes.io/docs/home/" ];
-        path = [
-          "/opt/cni/bin"
-          pkgs.mount
-          pkgs.umount
-          pkgs.util-linux
-          pkgs.file
-          pkgs.iproute2
-          pkgs.iptables
-          pkgs.socat
-          pkgs.ethtool
-          pkgs.conntrack-tools
-          pkgs.multipath-tools
-          pkgs.openiscsi
-          pkgs.lsscsi
-        ];
-        serviceConfig = {
-          Restart = "always";
-          RestartSec = 10;
-          Environment = [
-            ''KUBELET_KUBECONFIG_ARGS="--bootstrap-kubeconfig=/etc/kubernetes/bootstrap-kubelet.conf --kubeconfig=/etc/kubernetes/kubelet.conf"''
-            ''KUBELET_CONFIG_ARGS="--config=/var/lib/kubelet/config.yaml --config-dir=/etc/kubernetes/kubelet/config.d"''
-          ];
-          EnvironmentFile = [
-            "-/var/lib/kubelet/kubeadm-flags.env"
-            "-/etc/sysconfig/kubelet"
-          ];
-          ExecStart = [
-            "${kubelet-bin}/bin/kubelet $KUBELET_KUBECONFIG_ARGS $KUBELET_CONFIG_ARGS $KUBELET_KUBEADM_ARGS $KUBELET_EXTRA_ARGS"
-          ];
-        };
-        wantedBy = [ "multi-user.target" ];
       };
 
       # we need cacert to be a real file to be mounted in kube's pods using hostPath volumes

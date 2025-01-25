@@ -1,6 +1,7 @@
 {
   cloud ? false,
   partition ? "default60G",
+  profile ? "kaasix",
   ...
 }:
 let
@@ -15,9 +16,23 @@ let
     ];
     specialArgs = { inherit disko partition cloud; };
   };
+  nixosSystem = import (sources.nixpkgs + "/nixos") {
+    configuration = ./profiles/${profile}/configuration.nix;
+  };
+  buildQcow2 = import <nixpkgs/nixos/lib/make-disk-image.nix> {
+    inherit lib pkgs;
+    inherit (nixosSystem) config;
+    inherit (nixosSystem.config.virtualisation) diskSize;
+    format = "qcow2";
+    configFile = ./profiles/${profile}/configuration.nix;
+    partitionTableType = "hybrid";
+    additionalSpace = "100G";
+  };
+  inherit (pkgs) lib;
 in
 {
   imports = [ <nixpkgs/nixos/modules/installer/cd-dvd/channel.nix> ];
+  inherit lib nixosSystem buildQcow2;
   buildIso =
     (isoInstall.extendModules {
       modules = [
@@ -27,4 +42,12 @@ in
         }
       ];
     }).config.system.build.isoImage;
+  ociQcow2 = pkgs.dockerTools.streamLayeredImage {
+    name = "${profile}-${nixosSystem.config.customNixOSModules.kubernetes.version.kubeadm}";
+    includeStorePaths = false;
+    fakeRootCommands = ''
+      mkdir -p ./disk
+      cp -L ${buildQcow2}/nixos.qcow2 ./disk/${profile}.qcow2
+    '';
+  };
 }

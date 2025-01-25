@@ -6,6 +6,7 @@ pkgs.mkShell {
 
   packages = [
     pkgs.qemu
+    pkgs.docker
     (pkgs.writeShellScriptBin "buildIso" ''
       #!/bin/bash
       set -euo pipefail
@@ -17,14 +18,14 @@ pkgs.mkShell {
       set -euo pipefail
       mkdir -p output
       chmod +w output -R
-      cp $(${pkgs.nixos-generators}/bin/nixos-generate -f qcow -c profiles/$1/configuration.nix -I nixpkgs=$(nix eval --raw -f npins nixpkgs.outPath)) output/$1.qcow2
+      cp $(nix-build default.nix -A buildQcow2 --argstr profile $1)/$1.qcow2 output/$1.qcow2
     '')
-    (pkgs.writeShellScriptBin "runQcow2" ''
+    (pkgs.writeShellScriptBin "buildOciQcow2" ''
       #!/bin/bash
       set -euo pipefail
       mkdir -p output
       chmod +w output -R
-      ${pkgs.nixos-generators}/bin/nixos-generate -f vm --run -c profiles/$1/configuration.nix -I nixpkgs=$(nix eval --raw -f npins nixpkgs.outPath)
+      $(nix-build default.nix -A ociQcow2 --argstr profile $1) > output/$1-qcow2-oci.tar
     '')
     (pkgs.writeShellScriptBin "runIso" ''
       #!/bin/bash
