@@ -25,18 +25,8 @@ jobs:
   build:
     needs: pre_job
     if: ${{ needs.pre_job.outputs.should_skip != 'true' }}
-    runs-on: ubuntu-latest
+    runs-on: didactiklabs-runners
     steps:
-      - name: Free Disk Space (Ubuntu)
-        uses: jlumbroso/free-disk-space@main
-        with:
-          tool-cache: false
-          android: true
-          dotnet: true
-          haskell: false
-          large-packages: false
-          docker-images: false
-          swap-storage: true
       - name: Checkout code
         uses: actions/checkout@v3
       - name: Set output
@@ -54,6 +44,7 @@ jobs:
             fallback = true
             trusted-public-keys = didactiklabs-nixcache:PxLKN0+ZkP07M8g8/B6xbP6A4MYpqQg6LH7V3muiy/0= cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY=
             substituters = https://s3.didactiklabs.io/nix-cache https://cache.nixos.org/
+            system-features = nixos-test benchmark big-parallel kvm
       - name: Auth to s3 cache
         run: |
           aws --profile default configure set aws_access_key_id "${{ secrets.AWS_ACCESS_KEY_ID }}"
@@ -64,11 +55,16 @@ jobs:
         uses: 'google-github-actions/auth@v2'
         with:
           credentials_json: '${{ secrets.GCLOUD_AUTH_CREDENTIAL_FILE }}'
+      - name: 'Set up Cloud SDK'
+        uses: 'google-github-actions/setup-gcloud@v2'
+        with:
+          version: '>= 363.0.0'
       - name: Build and Push
         run: |
+          chmod o+rx /home/runner -R
           nix-shell shell.nix --run "buildOciQcow2 kaasix"
           gcloud auth configure-docker gcr.io --quiet
-          skopeo --version
-          skopeo copy \
+          nix run nixpkgs#skopeo -- --version
+          nix run nixpkgs#skopeo -- copy --insecure-policy \
           docker-archive:output/kaasix-qcow2-oci.tar \
           docker://gcr.io/${{ secrets.GCLOUD_PROJECT }}/kaasix-$(nix eval --raw -f . nixosSystem.config.customNixOSModules.kubernetes.version.kubeadm --argstr profile kaasix):${{ steps.vars.outputs.tag }}
