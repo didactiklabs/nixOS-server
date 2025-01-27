@@ -49,60 +49,47 @@ in
   };
   services = {
     openssh.ports = [ 2077 ];
-    github-runners = {
-      runner1 = {
-        enable = true;
-        name = "runner1";
-        user = "nixos";
-        tokenFile = "/home/nixos/token1";
-        inherit extraPackages url;
-        workDir = "/home/nixos/runner1";
-      };
-      runner2 = {
-        enable = true;
-        name = "runner2";
-        user = "nixos";
-        tokenFile = "/home/nixos/token2";
-        inherit extraPackages url;
-        workDir = "/home/nixos/runner2";
-      };
-      runner3 = {
-        enable = true;
-        name = "runner3";
-        user = "nixos";
-        tokenFile = "/home/nixos/token3";
-        inherit extraPackages url;
-        workDir = "/home/nixos/runner3";
-      };
-      runner4 = {
-        enable = true;
-        name = "runner4";
-        user = "nixos";
-        tokenFile = "/home/nixos/token4";
-        inherit extraPackages url;
-        workDir = "/home/nixos/runner4";
-      };
-      runner5 = {
-        enable = true;
-        name = "runner5";
-        user = "nixos";
-        tokenFile = "/home/nixos/token5";
-        inherit extraPackages url;
-        workDir = "/home/nixos/runner5";
-      };
-    };
+    # github-runners = {
+    #   runner1 = {
+    #     enable = true;
+    #     name = "runner1";
+    #     user = "nixos";
+    #     tokenFile = "/home/nixos/token1";
+    #     inherit extraPackages url;
+    #   };
+    #   runner2 = {
+    #     enable = true;
+    #     name = "runner2";
+    #     user = "nixos";
+    #     tokenFile = "/home/nixos/token2";
+    #     inherit extraPackages url;
+    #   };
+    #   runner3 = {
+    #     enable = true;
+    #     name = "runner3";
+    #     user = "nixos";
+    #     tokenFile = "/home/nixos/token3";
+    #     inherit extraPackages url;
+    #   };
+    #   runner4 = {
+    #     enable = true;
+    #     name = "runner4";
+    #     user = "nixos";
+    #     tokenFile = "/home/nixos/token4";
+    #     inherit extraPackages url;
+    #   };
+    #   runner5 = {
+    #     enable = true;
+    #     name = "runner5";
+    #     user = "nixos";
+    #     tokenFile = "/home/nixos/token5";
+    #     inherit extraPackages url;
+    #   };
+    # };
   };
   fileSystems = {
     "/" = {
       device = "/dev/disk/by-label/ROOT";
-      fsType = "ext4";
-    };
-    "/var" = {
-      device = "/dev/disk/by-label/VAR";
-      fsType = "ext4";
-    };
-    "/nix" = {
-      device = "/dev/disk/by-label/NIX";
       fsType = "ext4";
     };
   };
@@ -121,7 +108,6 @@ in
   };
 
   imports = [
-    ./user.nix
     (import ../../users {
       inherit
         config
