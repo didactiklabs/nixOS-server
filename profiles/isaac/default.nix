@@ -119,7 +119,9 @@ in
     };
     ginx.enable = true;
   };
+
   imports = [
+    ./user.nix
     (import ../../users {
       inherit
         config
