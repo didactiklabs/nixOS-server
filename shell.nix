@@ -11,7 +11,7 @@ pkgs.mkShell {
       #!/bin/bash
       set -euo pipefail
       mkdir -p output
-      cp $(nix-build default.nix -A buildIso --argstr partition "''${1:-default60G}" --arg cloud "''${2:-false}")/iso/* output/
+      cp $(nix-build default.nix -A buildIso --argstr partition "''${1:-default60G}" --argstr cloud "''${2:-false}")/iso/* output/
     '')
     (pkgs.writeShellScriptBin "buildQcow2" ''
       #!/bin/bash
@@ -31,7 +31,7 @@ pkgs.mkShell {
       #!/bin/bash
       set -euo pipefail
       # Step 1: Build the NixOS ISO
-      if ! nix-build default.nix --argstr partition "''${1:-default}" --arg cloud "''${2:-false}"; then
+      if ! nix-build default.nix --argstr partition "''${1:-default}" --argstr cloud "''${2:-false}"; then
         echo "nix-build failed!"
         exit 1
       fi

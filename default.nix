@@ -1,5 +1,5 @@
 {
-  cloud ? false,
+  cloud ? "ippo",
   partition ? "default60G",
   profile ? "kaasix",
   ...

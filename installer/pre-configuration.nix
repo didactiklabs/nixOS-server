@@ -28,7 +28,7 @@ in
         security.sudo.wheelNeedsPassword = false;
         programs.bash.loginShellInit = ''
           ${
-            if cloud then
+            if cloud == "true" then
               ''
                 while [ ! -f /var/lib/cloud/instance/boot-finished ]; do
                   echo 'Waiting for cloud-init...';
@@ -54,9 +54,9 @@ in
         ];
         services = {
           getty.autologinUser = "nixos";
-          qemuGuest.enable = if cloud then true else false;
+          qemuGuest.enable = if cloud == "true" then true else false;
           cloud-init =
-            if cloud then
+            if cloud == "true" then
               {
                 enable = true;
               }
@@ -64,7 +64,7 @@ in
               { };
         };
         networking = {
-          hostName = if cloud then "" else "ippo";
+          hostName = if cloud == "true" then "" else "${cloud}";
           useDHCP = true;
         };
         boot.loader = {
