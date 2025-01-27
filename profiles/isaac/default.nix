@@ -53,30 +53,35 @@ in
       runner1 = {
         enable = true;
         name = "runner1";
+        user = "nixos";
         tokenFile = "/home/nixos/token1";
         url = "https://github.com/didactiklabs";
       };
       runner2 = {
         enable = true;
         name = "runner2";
+        user = "nixos";
         tokenFile = "/home/nixos/token2";
         url = "https://github.com/didactiklabs";
       };
       runner3 = {
         enable = true;
         name = "runner3";
+        user = "nixos";
         tokenFile = "/home/nixos/token3";
         url = "https://github.com/didactiklabs";
       };
       runner4 = {
         enable = true;
         name = "runner4";
+        user = "nixos";
         tokenFile = "/home/nixos/token4";
         url = "https://github.com/didactiklabs";
       };
       runner5 = {
         enable = true;
         name = "runner5";
+        user = "nixos";
         tokenFile = "/home/nixos/token5";
         url = "https://github.com/didactiklabs";
       };
