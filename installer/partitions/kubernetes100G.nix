@@ -89,7 +89,7 @@
             };
           };
           root = {
-            size = "100%";
+            size = "5G";
             content = {
               type = "filesystem";
               format = "ext4";
