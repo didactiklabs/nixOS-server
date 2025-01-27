@@ -23,6 +23,7 @@ let
     updatecli
     git-lfs
   ];
+  orgUrl = "https://github.com/didactiklabs";
 in
 {
   boot = {
@@ -54,65 +55,41 @@ in
         name = "runner1";
         user = "nixos";
         tokenFile = "/home/nixos/token1";
-        url = "https://github.com/didactiklabs";
-        inherit extraPackages;
-        extraEnvironment = {
-          TMPDIR = "/home/nixos/tmp";
-        };
+        inherit extraPackages orgUrl;
       };
       runner2 = {
         enable = true;
         name = "runner2";
         user = "nixos";
         tokenFile = "/home/nixos/token2";
-        url = "https://github.com/didactiklabs";
-        inherit extraPackages;
-        extraEnvironment = {
-          TMPDIR = "/home/nixos/tmp";
-        };
+        inherit extraPackages orgUrl;
       };
       runner3 = {
         enable = true;
         name = "runner3";
         user = "nixos";
         tokenFile = "/home/nixos/token3";
-        url = "https://github.com/didactiklabs";
-        inherit extraPackages;
-        extraEnvironment = {
-          TMPDIR = "/home/nixos/tmp";
-        };
+        inherit extraPackages orgUrl;
       };
       runner4 = {
         enable = true;
         name = "runner4";
         user = "nixos";
         tokenFile = "/home/nixos/token4";
-        url = "https://github.com/didactiklabs";
-        inherit extraPackages;
-        extraEnvironment = {
-          TMPDIR = "/home/nixos/tmp";
-        };
+        inherit extraPackages orgUrl;
       };
       runner5 = {
         enable = true;
         name = "runner5";
         user = "nixos";
         tokenFile = "/home/nixos/token5";
-        url = "https://github.com/didactiklabs";
-        inherit extraPackages;
-        extraEnvironment = {
-          TMPDIR = "/home/nixos/tmp";
-        };
+        inherit extraPackages orgUrl;
       };
     };
   };
   fileSystems = {
     "/" = {
       device = "/dev/disk/by-label/ROOT";
-      fsType = "ext4";
-    };
-    "/tmp" = {
-      device = "/dev/disk/by-label/TMP";
       fsType = "ext4";
     };
     "/var" = {
