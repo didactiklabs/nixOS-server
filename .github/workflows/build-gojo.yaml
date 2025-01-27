@@ -30,8 +30,10 @@ jobs:
     if: ${{ needs.pre_job.outputs.should_skip != 'true' }}
     runs-on: self-hosted
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - name: Get Nixpkgs revision for nixfmt
         run: |
           # This should not be a URL, because it would allow PRs to run arbitrary code in CI!

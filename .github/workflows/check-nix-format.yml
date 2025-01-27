@@ -13,10 +13,10 @@ jobs:
     runs-on: didactiklabs-runners
     if: "!contains(github.event.pull_request.title, '[skip treewide]')"
     steps:
-      - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
+      - name: Checkout
+        uses: actions/checkout@v4
         with:
-          ref: refs/pull/${{ github.event.pull_request.number }}/merge
-          fetch-depth: 2
+          fetch-depth: 0
       - name: Checking out base branch
         run: |
           base=$(mktemp -d)

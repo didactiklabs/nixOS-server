@@ -1,6 +1,6 @@
 {
   cloud ? "ippo",
-  partition ? "default60G",
+  partition ? "default70G",
   profile ? "kaasix",
   ...
 }:
