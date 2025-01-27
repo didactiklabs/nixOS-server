@@ -21,6 +21,7 @@ let
     colmena
     nixfmt-rfc-style
     updatecli
+    git-lfs
   ];
 in
 {
@@ -55,6 +56,9 @@ in
         tokenFile = "/home/nixos/token1";
         url = "https://github.com/didactiklabs";
         inherit extraPackages;
+        extraEnvironnment = {
+          TMPDIR = "/home/nixos/tmp";
+        };
       };
       runner2 = {
         enable = true;
@@ -63,6 +67,9 @@ in
         tokenFile = "/home/nixos/token2";
         url = "https://github.com/didactiklabs";
         inherit extraPackages;
+        extraEnvironnment = {
+          TMPDIR = "/home/nixos/tmp";
+        };
       };
       runner3 = {
         enable = true;
@@ -71,6 +78,9 @@ in
         tokenFile = "/home/nixos/token3";
         url = "https://github.com/didactiklabs";
         inherit extraPackages;
+        extraEnvironnment = {
+          TMPDIR = "/home/nixos/tmp";
+        };
       };
       runner4 = {
         enable = true;
@@ -79,6 +89,9 @@ in
         tokenFile = "/home/nixos/token4";
         url = "https://github.com/didactiklabs";
         inherit extraPackages;
+        extraEnvironnment = {
+          TMPDIR = "/home/nixos/tmp";
+        };
       };
       runner5 = {
         enable = true;
@@ -87,6 +100,9 @@ in
         tokenFile = "/home/nixos/token5";
         url = "https://github.com/didactiklabs";
         inherit extraPackages;
+        extraEnvironnment = {
+          TMPDIR = "/home/nixos/tmp";
+        };
       };
     };
   };
