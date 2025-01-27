@@ -33,6 +33,20 @@ in
       };
     };
   };
+  environment = {
+    systemPackages = with pkgs; [
+      xz
+      google-cloud-sdk
+      skopeo
+      awscli2
+      jq
+      busybox
+      npins
+      colmena
+      nixfmt-rfc-style
+      updatecli
+    ];
+  };
   services = {
     openssh.ports = [ 2077 ];
     github-runners = {

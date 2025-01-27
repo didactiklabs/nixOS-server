@@ -25,18 +25,8 @@ jobs:
   build:
     needs: pre_job
     if: ${{ needs.pre_job.outputs.should_skip != 'true' }}
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     steps:
-      - name: Free Disk Space (Ubuntu)
-        uses: jlumbroso/free-disk-space@main
-        with:
-          tool-cache: false
-          android: true
-          dotnet: true
-          haskell: false
-          large-packages: false
-          docker-images: false
-          swap-storage: true
       - name: Checkout code
         uses: actions/checkout@v3
       - name: Set output
