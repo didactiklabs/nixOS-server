@@ -23,7 +23,7 @@ let
     updatecli
     git-lfs
   ];
-  orgUrl = "https://github.com/didactiklabs";
+  url = "https://github.com/didactiklabs";
 in
 {
   boot = {
@@ -55,35 +55,35 @@ in
         name = "runner1";
         user = "nixos";
         tokenFile = "/home/nixos/token1";
-        inherit extraPackages orgUrl;
+        inherit extraPackages url;
       };
       runner2 = {
         enable = true;
         name = "runner2";
         user = "nixos";
         tokenFile = "/home/nixos/token2";
-        inherit extraPackages orgUrl;
+        inherit extraPackages url;
       };
       runner3 = {
         enable = true;
         name = "runner3";
         user = "nixos";
         tokenFile = "/home/nixos/token3";
-        inherit extraPackages orgUrl;
+        inherit extraPackages url;
       };
       runner4 = {
         enable = true;
         name = "runner4";
         user = "nixos";
         tokenFile = "/home/nixos/token4";
-        inherit extraPackages orgUrl;
+        inherit extraPackages url;
       };
       runner5 = {
         enable = true;
         name = "runner5";
         user = "nixos";
         tokenFile = "/home/nixos/token5";
-        inherit extraPackages orgUrl;
+        inherit extraPackages url;
       };
     };
   };
