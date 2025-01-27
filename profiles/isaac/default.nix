@@ -10,6 +10,18 @@ let
     customHomeManagerModules = { };
     imports = [ ./fastfetchConfig.nix ];
   };
+  extraPackages = with pkgs; [
+    xz
+    google-cloud-sdk
+    skopeo
+    awscli2
+    jq
+    busybox
+    npins
+    colmena
+    nixfmt-rfc-style
+    updatecli
+  ];
 in
 {
   boot = {
@@ -33,20 +45,6 @@ in
       };
     };
   };
-  environment = {
-    systemPackages = with pkgs; [
-      xz
-      google-cloud-sdk
-      skopeo
-      awscli2
-      jq
-      busybox
-      npins
-      colmena
-      nixfmt-rfc-style
-      updatecli
-    ];
-  };
   services = {
     openssh.ports = [ 2077 ];
     github-runners = {
@@ -56,6 +54,7 @@ in
         user = "nixos";
         tokenFile = "/home/nixos/token1";
         url = "https://github.com/didactiklabs";
+        inherit extraPackages;
       };
       runner2 = {
         enable = true;
@@ -63,6 +62,7 @@ in
         user = "nixos";
         tokenFile = "/home/nixos/token2";
         url = "https://github.com/didactiklabs";
+        inherit extraPackages;
       };
       runner3 = {
         enable = true;
@@ -70,6 +70,7 @@ in
         user = "nixos";
         tokenFile = "/home/nixos/token3";
         url = "https://github.com/didactiklabs";
+        inherit extraPackages;
       };
       runner4 = {
         enable = true;
@@ -77,6 +78,7 @@ in
         user = "nixos";
         tokenFile = "/home/nixos/token4";
         url = "https://github.com/didactiklabs";
+        inherit extraPackages;
       };
       runner5 = {
         enable = true;
@@ -84,6 +86,7 @@ in
         user = "nixos";
         tokenFile = "/home/nixos/token5";
         url = "https://github.com/didactiklabs";
+        inherit extraPackages;
       };
     };
   };
