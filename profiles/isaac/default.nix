@@ -56,6 +56,7 @@ in
         user = "nixos";
         tokenFile = "/home/nixos/token1";
         inherit extraPackages url;
+        workDir = "/home/nixos/runner1";
       };
       runner2 = {
         enable = true;
@@ -63,6 +64,7 @@ in
         user = "nixos";
         tokenFile = "/home/nixos/token2";
         inherit extraPackages url;
+        workDir = "/home/nixos/runner2";
       };
       runner3 = {
         enable = true;
@@ -70,6 +72,7 @@ in
         user = "nixos";
         tokenFile = "/home/nixos/token3";
         inherit extraPackages url;
+        workDir = "/home/nixos/runner3";
       };
       runner4 = {
         enable = true;
@@ -77,6 +80,7 @@ in
         user = "nixos";
         tokenFile = "/home/nixos/token4";
         inherit extraPackages url;
+        workDir = "/home/nixos/runner4";
       };
       runner5 = {
         enable = true;
@@ -84,6 +88,7 @@ in
         user = "nixos";
         tokenFile = "/home/nixos/token5";
         inherit extraPackages url;
+        workDir = "/home/nixos/runner5";
       };
     };
   };
