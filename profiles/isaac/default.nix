@@ -56,7 +56,7 @@ in
         tokenFile = "/home/nixos/token1";
         url = "https://github.com/didactiklabs";
         inherit extraPackages;
-        extraEnvironnment = {
+        extraEnvironment = {
           TMPDIR = "/home/nixos/tmp";
         };
       };
@@ -67,7 +67,7 @@ in
         tokenFile = "/home/nixos/token2";
         url = "https://github.com/didactiklabs";
         inherit extraPackages;
-        extraEnvironnment = {
+        extraEnvironment = {
           TMPDIR = "/home/nixos/tmp";
         };
       };
@@ -78,7 +78,7 @@ in
         tokenFile = "/home/nixos/token3";
         url = "https://github.com/didactiklabs";
         inherit extraPackages;
-        extraEnvironnment = {
+        extraEnvironment = {
           TMPDIR = "/home/nixos/tmp";
         };
       };
@@ -89,7 +89,7 @@ in
         tokenFile = "/home/nixos/token4";
         url = "https://github.com/didactiklabs";
         inherit extraPackages;
-        extraEnvironnment = {
+        extraEnvironment = {
           TMPDIR = "/home/nixos/tmp";
         };
       };
@@ -100,7 +100,7 @@ in
         tokenFile = "/home/nixos/token5";
         url = "https://github.com/didactiklabs";
         inherit extraPackages;
-        extraEnvironnment = {
+        extraEnvironment = {
           TMPDIR = "/home/nixos/tmp";
         };
       };
