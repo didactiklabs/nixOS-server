@@ -6,3 +6,4 @@ hardware-configuration.nix
 *.qcow2
 *.iso
 output/*
+result*

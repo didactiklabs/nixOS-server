@@ -20,7 +20,7 @@ let
       config
       ;
   };
-  isoType = if cloud then "-cloud" else "";
+  isoType = if cloud == "true" then "-cloud" else "";
 in
 {
   isoImage.isoName = lib.mkForce "${config.isoImage.isoBaseName}-${config.system.nixos.label}-${pkgs.stdenv.hostPlatform.system}-${partition}${isoType}.iso";

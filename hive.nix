@@ -39,18 +39,17 @@ in
       "cp"
     ];
   };
-
+  isaac = createConfiguration {
+    hostName = "isaac";
+    host = "isaac";
+    tags = [
+      "didactiklabs"
+      "github-runner"
+    ];
+  };
   ippo = createConfiguration {
     hostName = "ippo";
     host = "ippo";
-    tags = [
-      "bealv"
-      "worker"
-    ];
-  };
-  rintaro = createConfiguration {
-    hostName = "rintaro";
-    host = "rintaro";
     tags = [
       "bealv"
       "worker"

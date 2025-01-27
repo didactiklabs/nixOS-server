@@ -59,7 +59,7 @@
             };
           };
           var = {
-            size = "10G";
+            size = "20G";
             content = {
               type = "filesystem";
               format = "ext4";
@@ -74,7 +74,7 @@
             };
           };
           root = {
-            size = "5G";
+            size = "100%";
             content = {
               type = "filesystem";
               format = "ext4";
