@@ -42,7 +42,7 @@ in
         }
       ];
     }).config.system.build.isoImage;
-  ociQcow2 = pkgs.dockerTools.streamLayeredImage {
+  ociQcow2 = pkgs.dockerTools.buildLayeredImage {
     name = "${profile}-${nixosSystem.config.customNixOSModules.kubernetes.version.kubeadm}";
     includeStorePaths = false;
     fakeRootCommands = ''
