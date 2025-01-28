@@ -27,6 +27,19 @@ let
   url = "https://github.com/didactiklabs";
 in
 {
+  environment = {
+    etc = {
+      "nixos/hardware-configuration.nix".text = ''
+        {
+          fileSystems."/" = {
+            device = "/dev/disk/by-uuid/dummy";
+            fsType = "ext4";
+          };
+        }
+      '';
+    };
+  };
+
   boot = {
     initrd.availableKernelModules = [
       "ata_piix"
