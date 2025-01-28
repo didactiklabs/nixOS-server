@@ -22,6 +22,7 @@ let
     nixfmt-rfc-style
     updatecli
     git-lfs
+    sudo
   ];
   url = "https://github.com/didactiklabs";
 in
