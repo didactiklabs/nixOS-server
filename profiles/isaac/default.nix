@@ -130,7 +130,7 @@ in
       didactiklabs.enable = true;
       bealv.enable = true;
     };
-    ginx.enable = true;
+    ginx.enable = false;
   };
 
   imports = [
