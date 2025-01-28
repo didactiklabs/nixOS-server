@@ -55,7 +55,7 @@ jobs:
           aws --profile default configure set aws_secret_access_key "${{ secrets.AWS_SECRET_ACCESS_KEY_ID }}"
       - name: Build
         run: |
-          nix-shell shell.nix --run "buildOciQcow2 kaasix"
+          nix-build default.nix -A ociQcow2 --argstr profile kaasix
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
@@ -82,5 +82,5 @@ jobs:
           gcloud auth configure-docker gcr.io --quiet
           skopeo --version
           skopeo copy \
-          docker-archive:output/kaasix-qcow2-oci.tar \
+          docker-archive:$(nix-build default.nix -A ociQcow2 --argstr profile kaasix) \
           docker://gcr.io/${{ secrets.GCLOUD_PROJECT }}/kaasix-$(nix eval --raw -f . nixosSystem.config.customNixOSModules.kubernetes.version.kubeadm --argstr profile kaasix):${{ github.ref_name }}
