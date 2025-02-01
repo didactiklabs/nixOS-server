@@ -47,7 +47,8 @@ actions:
     kind: 'github/pullrequest'
     scmid: 'default'
     spec:
-      automerge: false
+      automerge: true
+      mergemethod: 'rebase'
       description: 'Update nixbook npins.'
       draft: false
       title: 'UPDATECLI: Update nixbook'
