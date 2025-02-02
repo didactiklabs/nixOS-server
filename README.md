@@ -29,7 +29,7 @@ buildQcow2 <profile>
 
 ```
 IPPO is the profile for a generic ISO install.
-RINTARO is the profile for a generic QCOW2 install.
+KAASIX is the profile for a generic QCOW2 install.
 
 That's just how it is.
 ```

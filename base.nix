@@ -74,6 +74,7 @@ in
     ./nixosModules/ginx.nix
     ./nixosModules/sysctl.nix
     ./nixosModules/getRevision.nix
+    ./nixosModules/forgejo.nix
     (import ./nixosModules/kubernetes {
       inherit
         pkgs
