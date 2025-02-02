@@ -71,4 +71,12 @@ in
       "worker"
     ];
   };
+  haganezuka = createConfiguration {
+    hostName = "haganezuka";
+    host = "haganezuka";
+    tags = [
+      "bealv"
+      "forgejo"
+    ];
+  };
 }
