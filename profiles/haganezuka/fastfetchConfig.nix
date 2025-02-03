@@ -9,8 +9,8 @@ let
   logo =
     let
       image = pkgs.fetchurl {
-        url = "https://i.imgur.com/jum4sY0.jpeg";
-        sha256 = "sha256-HGAScMH+zAUIhocWLwBXkAMMAk4v374arREmcnX0zXE=";
+        url = "https://i.imgur.com/QU7sofI.png";
+        sha256 = "sha256-cqk5D/48LNQyZ8MTWLPrALBWbdJBg3egyB5akPrXYJQ=";
       };
     in
     "${image}";
