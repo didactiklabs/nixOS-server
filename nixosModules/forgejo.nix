@@ -21,6 +21,25 @@ in
     };
   };
   config = lib.mkIf cfg.enable {
+    systemd.services.forgejo.preStart =
+      let
+        adminCmd = "${lib.getExe config.services.forgejo.package} admin user";
+        user = "root"; # Note, Forgejo doesn't allow creation of an account named "admin"
+      in
+      ''
+        ${adminCmd} create --admin --email "root@localhost" --username ${user} --password "admin" --must-change-password || true
+      '';
+    services.nginx = {
+      virtualHosts.${cfg.settings.server.DOMAIN} = {
+        forceSSL = true;
+        sslCertificateKey = "/var/host.key";
+        sslCertificate = "/var/host.cert";
+        extraConfig = ''
+          client_max_body_size 512M;
+        '';
+        locations."/".proxyPass = "http://localhost:${toString forgejoSrv.HTTP_PORT}";
+      };
+    };
     services.forgejo = {
       enable = true;
       database.type = "postgres";
