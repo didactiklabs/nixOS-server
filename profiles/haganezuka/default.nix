@@ -57,7 +57,7 @@ in
   customNixOSModules = {
     forgejo = {
       enable = true;
-      domain = "git.bealv.io";
+      domain = "git.bealv.lan";
     };
     caCertificates = {
       didactiklabs.enable = true;
