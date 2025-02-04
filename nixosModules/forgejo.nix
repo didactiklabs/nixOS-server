@@ -30,6 +30,7 @@ in
         ${adminCmd} create --admin --email "root@localhost" --username ${user} --password "admin" --must-change-password || true
       '';
     services.nginx = {
+      enable = true;
       virtualHosts.${cfg.settings.server.DOMAIN} = {
         forceSSL = true;
         sslCertificateKey = "/var/host.key";
