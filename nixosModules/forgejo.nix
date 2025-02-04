@@ -31,7 +31,7 @@ in
       '';
     services.nginx = {
       enable = true;
-      virtualHosts.${cfg.settings.server.DOMAIN} = {
+      virtualHosts.${forgejoSrv.DOMAIN} = {
         forceSSL = true;
         sslCertificateKey = "/var/host.key";
         sslCertificate = "/var/host.cert";
