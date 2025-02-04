@@ -52,6 +52,7 @@ in
           # You need to specify this to remove the port from URLs in the web UI.
           ROOT_URL = "https://${forgejoSrv.DOMAIN}/";
           HTTP_PORT = 3000;
+          START_SSH_SERVER = true;
         };
         openid = {
           ENABLE_OPENID_SIGNIN = true;
