@@ -39,6 +39,7 @@ in
   config = lib.mkIf cfg.enable {
     environment = {
       systemPackages = [
+        pkgs.colmena
         osupdate
         ginx
       ];
