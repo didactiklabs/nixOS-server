@@ -21,14 +21,20 @@ in
     };
   };
   config = lib.mkIf cfg.enable {
-    systemd.services.forgejo.preStart =
-      let
-        adminCmd = "${lib.getExe config.services.forgejo.package} admin user";
-        user = "root"; # Note, Forgejo doesn't allow creation of an account named "admin"
-      in
-      ''
-        ${adminCmd} create --admin --email "root@localhost" --username ${user} --password "admin" --must-change-password || true
-      '';
+    systemd.services.forgejo = {
+      preStart =
+        let
+          adminCmd = "${lib.getExe config.services.forgejo.package} admin user";
+          user = "root"; # Note, Forgejo doesn't allow creation of an account named "admin"
+        in
+        ''
+          ${adminCmd} create --admin --email "root@localhost" --username ${user} --password "admin" --must-change-password || true
+        '';
+      serviceConfig = {
+        AmbientCapabilities = "CAP_NET_BIND_SERVICE";
+        CapabilityBoundingSet = lib.mkForce "CAP_NET_BIND_SERVICE";
+      };
+    };
     services.nginx = {
       enable = true;
       virtualHosts.${forgejoSrv.DOMAIN} = {
