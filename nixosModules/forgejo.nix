@@ -33,7 +33,7 @@ in
       serviceConfig = {
         AmbientCapabilities = "CAP_NET_BIND_SERVICE";
         CapabilityBoundingSet = lib.mkForce "CAP_NET_BIND_SERVICE";
-        PrivateUsers = lib.mkFoce false;
+        PrivateUsers = lib.mkForce false;
       };
     };
     services.nginx = {
