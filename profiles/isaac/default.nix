@@ -134,7 +134,7 @@ in
   };
 
   imports = [
-    (import ../../users {
+    (import ../../users/didactiklabs {
       inherit
         config
         pkgs

@@ -6,7 +6,7 @@
   ...
 }:
 let
-  userConfig = import ../../../nixosModules/userConfig.nix {
+  userConfig = import ../../nixosModules/userConfig.nix {
     inherit
       lib
       pkgs
