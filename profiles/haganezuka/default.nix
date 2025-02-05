@@ -69,7 +69,7 @@ in
     ginx.enable = true;
   };
   imports = [
-    (import ./users {
+    (import ../../users/bealv {
       inherit
         config
         pkgs

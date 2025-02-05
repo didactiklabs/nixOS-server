@@ -53,7 +53,7 @@ in
     ginx.enable = true;
   };
   imports = [
-    (import ../../users {
+    (import ../../users/didactiklabs {
       inherit
         config
         pkgs
