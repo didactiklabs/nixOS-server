@@ -41,6 +41,7 @@ in
   };
   systemd = {
     network = {
+      enable = true;
       networks = {
         "10-ens18" = {
           matchConfig = {
