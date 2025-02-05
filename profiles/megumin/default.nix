@@ -73,15 +73,6 @@ in
     ginx.enable = true;
   };
   imports = [
-    (import ../../users/didactiklabs {
-      inherit
-        config
-        pkgs
-        lib
-        sources
-        overrides
-        ;
-    })
     (import ../../users/bealv {
       inherit
         config
