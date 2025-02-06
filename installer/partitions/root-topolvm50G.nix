@@ -34,6 +34,12 @@
     lvm_vg = {
       kubernetes = {
         type = "lvm_vg";
+        pool0 = {
+          size = "100%";
+          content = {
+            type = "lvm_thinpool";
+          };
+        };
       };
       vg1 = {
         type = "lvm_vg";
