@@ -18,7 +18,7 @@ pkgs.mkShell {
       set -euo pipefail
       mkdir -p output
       chmod +w output -R
-      cp $(nix-build default.nix -A buildQcow2 --argstr profile $1)/$1.qcow2 output/$1.qcow2
+      cp $(nix-build default.nix -A buildQcow2 --argstr profile $1)/nixos.qcow2 output/$1.qcow2
     '')
     (pkgs.writeShellScriptBin "buildOciQcow2" ''
       #!/bin/bash
