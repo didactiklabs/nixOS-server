@@ -22,8 +22,8 @@ let
   buildQcow2 = import <nixpkgs/nixos/lib/make-disk-image.nix> {
     inherit lib pkgs;
     inherit (nixosSystem) config;
-    inherit (nixosSystem.config.virtualisation) diskSize;
-    format = "qcow2";
+    diskSize = "auto";
+    format = "qcow2-compressed";
     configFile = ./profiles/${profile}/configuration.nix;
     partitionTableType = "hybrid";
     additionalSpace = "100G";
