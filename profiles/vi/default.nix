@@ -33,6 +33,16 @@ in
       };
     };
   };
+  systemd.services = {
+    qemu-guest-agent = {
+      path = [ pkgs.cloud-init ];
+    };
+    kubelet = {
+      serviceConfig.Environment = [
+        ''KUBELET_KUBECONFIG_ARGS="--bootstrap-kubeconfig=/etc/kubernetes/bootstrap-kubelet.conf --kubeconfig=/etc/kubernetes/kubelet.conf --cloud-provider=external"''
+      ];
+    };
+  };
   fileSystems = {
     "/" = {
       device = "/dev/disk/by-label/ROOT";
