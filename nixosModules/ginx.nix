@@ -22,7 +22,7 @@ let
       if  [ "$(${pkgs.jq}/bin/jq .rev /etc/nixos/version)" != "$(${pkgs.git}/bin/git ls-remote https://github.com/didactiklabs/nixOs-server HEAD | awk '{print $1}')" ]; then
         ${osupdate}/bin/osupdate
       fi
-      OS is up to date.
+      echo 'OS is up to date !'
     fi
   '';
 in
