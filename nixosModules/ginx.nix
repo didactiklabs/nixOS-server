@@ -49,16 +49,16 @@ in
             Restart = "always";
           };
         };
-        timers = {
-          ginx-timer = {
-            enable = true;
-            description = "Timer to run myService every 5 minutes";
-            wantedBy = [ "timers.target" ];
-            timerConfig = {
-              OnUnitActiveSec = "5min";
-              Persistent = true;
-              Unit = "ginx.service";
-            };
+      };
+      timers = {
+        ginx-timer = {
+          enable = true;
+          description = "Timer to run myService every 5 minutes";
+          wantedBy = [ "timers.target" ];
+          timerConfig = {
+            OnUnitActiveSec = "5min";
+            Persistent = true;
+            Unit = "ginx.service";
           };
         };
       };
