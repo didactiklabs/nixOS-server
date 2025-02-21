@@ -53,8 +53,40 @@ in
   };
   services = {
     openssh.ports = [ 2077 ];
+    qemuGuest = {
+      enable = lib.mkForce true;
+    };
   };
-  networking.useDHCP = lib.mkDefault true;
+  systemd = {
+    network = {
+      enable = true;
+      networks = {
+        "10-ens18" = {
+          matchConfig = {
+            Name = "en*";
+          };
+          linkConfig.RequiredForOnline = "routable";
+          networkConfig = {
+            DHCP = "yes";
+          };
+          dhcpV4Config = {
+            UseDNS = true;
+            UseDomains = true;
+            UseHostname = true;
+          };
+        };
+      };
+    };
+  };
+  networking = {
+    useDHCP = false;
+    dhcpcd.enable = false;
+  };
+  services = {
+    resolved = {
+      enable = true;
+    };
+  };
   nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
   hardware.cpu.intel.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
   customNixOSModules = {

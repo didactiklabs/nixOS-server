@@ -35,7 +35,7 @@ in
   };
   systemd.services = {
     qemu-guest-agent = {
-      path = [ pkgs.cloud-init ];
+      enable = lib.mkForce true;
     };
   };
   fileSystems = {
