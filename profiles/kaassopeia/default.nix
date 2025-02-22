@@ -13,6 +13,7 @@ let
 in
 {
   boot = {
+    supportedFilesystems = [ "nfs" ];
     kernelParams = [
       "consoleblank=0"
       "console=ttyS0,115200n8"
