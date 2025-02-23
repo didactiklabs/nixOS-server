@@ -55,12 +55,28 @@ in
       "worker"
     ];
   };
+  kazuma = createConfiguration {
+    hostName = "kazuma";
+    host = "kazuma";
+    tags = [
+      "bealv"
+      "master"
+    ];
+  };
+  darkness = createConfiguration {
+    hostName = "darkness";
+    host = "darkness";
+    tags = [
+      "bealv"
+      "master"
+    ];
+  };
   megumin = createConfiguration {
     hostName = "megumin";
     host = "megumin";
     tags = [
       "bealv"
-      "worker"
+      "master"
     ];
   };
   vi = createConfiguration {
@@ -76,7 +92,7 @@ in
     host = "haganezuka";
     tags = [
       "bealv"
-      "forgejo"
+      "haproxy"
     ];
   };
 }
