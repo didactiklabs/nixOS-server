@@ -12,47 +12,6 @@ let
   };
 in
 {
-  services = {
-    haproxy = {
-      enable = true;
-      config = ''
-        global
-          log /dev/log local0
-          log /dev/log local1 notice
-          chroot /var/lib/haproxy
-          stats socket /run/haproxy/admin.sock mode 660 level admin
-          stats timeout 30s
-          user haproxy
-          group haproxy
-          daemon
-          tune.ssl.default-dh-param 2048
-        defaults
-          log global
-          option redispatch
-          option httplog
-          option dontlognull
-          timeout connect 5s
-          timeout client 50s
-          timeout server 50s
-        frontend kubernetes-api
-          bind *:6443
-          default_backend kubernetes-masters
-        backend kubernetes-masters
-          balance roundrobin
-          option httpchk GET /healthz
-          default-server inter 10s fall 3 rise 2
-          server master1 10.250.0.8:6443 check
-          server master2 10.250.0.9:6443 check
-          server master3 10.250.0.10:6443 check
-      '';
-    };
-    qemuGuest = {
-      enable = lib.mkForce true;
-    };
-    resolved = {
-      enable = true;
-    };
-  };
   boot = {
     initrd.availableKernelModules = [
       "ata_piix"
@@ -74,21 +33,14 @@ in
       };
     };
   };
+  systemd.services = {
+    qemu-guest-agent = {
+      enable = lib.mkForce true;
+    };
+  };
   fileSystems = {
     "/" = {
       device = "/dev/disk/by-label/ROOT";
-      fsType = "ext4";
-    };
-    "/tmp" = {
-      device = "/dev/disk/by-label/TMP";
-      fsType = "ext4";
-    };
-    "/var" = {
-      device = "/dev/disk/by-label/VAR";
-      fsType = "ext4";
-    };
-    "/nix" = {
-      device = "/dev/disk/by-label/NIX";
       fsType = "ext4";
     };
   };
@@ -117,12 +69,20 @@ in
     useDHCP = false;
     dhcpcd.enable = false;
   };
+  services = {
+    resolved = {
+      enable = true;
+    };
+  };
   nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
   hardware.cpu.intel.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
   customNixOSModules = {
-    forgejo = {
-      enable = false;
-      domain = "git.bealv.lan";
+    kubernetes = {
+      enable = true;
+      version = {
+        kubeadm = "v1.31.4";
+        kubelet = "v1.31.4";
+      };
     };
     caCertificates = {
       didactiklabs.enable = true;
