@@ -18,29 +18,23 @@ in
       config = ''
         global
           log /dev/log local0
-          log /dev/log local1 notice
-          chroot /var/lib/haproxy
-          stats socket /run/haproxy/admin.sock mode 660 level admin
-          stats timeout 30s
-          user haproxy
-          group haproxy
-          daemon
-          tune.ssl.default-dh-param 2048
         defaults
           log global
-          option redispatch
           option httplog
           option dontlognull
-          timeout connect 5s
-          timeout client 50s
-          timeout server 50s
+          timeout connect 5000
+          timeout client 50000
+          timeout server 50000
         frontend kubernetes-api
           bind *:6443
+          mode tcp
+          option tcplog
           default_backend kubernetes-masters
         backend kubernetes-masters
           balance roundrobin
-          option httpchk GET /healthz
-          default-server inter 10s fall 3 rise 2
+          option tcplog
+          option tcp-check
+          default-server inter 10s downinter 5s rise 2 fall 2 slowstart 60s maxconn 250 maxqueue 256 weight 100
           server master1 10.250.0.8:6443 check
           server master2 10.250.0.9:6443 check
           server master3 10.250.0.10:6443 check
