@@ -73,18 +73,6 @@ in
       device = "/dev/disk/by-label/ROOT";
       fsType = "ext4";
     };
-    "/tmp" = {
-      device = "/dev/disk/by-label/TMP";
-      fsType = "ext4";
-    };
-    "/var" = {
-      device = "/dev/disk/by-label/VAR";
-      fsType = "ext4";
-    };
-    "/nix" = {
-      device = "/dev/disk/by-label/NIX";
-      fsType = "ext4";
-    };
   };
   systemd = {
     network = {
