@@ -40,6 +40,17 @@ in
     useDHCP = false;
     dhcpcd.enable = false;
   };
+  environment = {
+    etc = {
+      "kubernetes/kubelet/config.d/00-config.conf".text = ''
+        kind: KubeletConfiguration
+        apiVersion: kubelet.config.k8s.io/v1beta1
+        allowedUnsafeSysctls:
+          - net.ipv4.conf.all.src_valid_mark
+      '';
+    };
+  };
+
   systemd.services = {
     qemu-guest-agent = {
       path = [ pkgs.cloud-init ];
