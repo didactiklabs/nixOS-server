@@ -26,7 +26,7 @@ pkgs.testers.runNixOSTest {
         };
         networking.firewall.enable = false;
         virtualisation = {
-          diskSize = 3000;
+          diskSize = 2000;
           memorySize = 2048;
           cores = 2;
         };
@@ -55,7 +55,7 @@ pkgs.testers.runNixOSTest {
           ];
         };
         virtualisation = {
-          diskSize = 3000;
+          diskSize = 2000;
           memorySize = 2048;
           cores = 2;
         };

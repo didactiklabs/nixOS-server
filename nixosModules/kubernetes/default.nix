@@ -11,6 +11,7 @@ let
   kubernetesComponent =
     component: source:
     pkgs.kubernetes.overrideAttrs (oldAttrs: {
+      version = cfg.kubernetes.version.kubeadm;
       src = source;
       components = [ component ];
     });

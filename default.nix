@@ -26,7 +26,7 @@ let
     format = "qcow2-compressed";
     configFile = ./profiles/${profile}/configuration.nix;
     partitionTableType = "hybrid";
-    additionalSpace = "40G";
+    additionalSpace = "1G";
   };
   inherit (pkgs) lib;
 in
