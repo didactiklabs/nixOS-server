@@ -246,6 +246,9 @@ in
           "io.containerd.cri.v1.images".registry = {
             config_path = "/etc/containerd/certs.d";
           };
+          "io.containerd.grpc.v1.cri".registry = {
+            config_path = "/etc/containerd/certs.d";
+          };
         };
       };
     };
