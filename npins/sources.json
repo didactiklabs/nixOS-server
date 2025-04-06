@@ -230,6 +230,21 @@
       "revision": "f0946fa5f1fb876a9dc2e1850d9d3a4e3f914092",
       "url": "https://github.com/NixOS/nixpkgs/archive/f0946fa5f1fb876a9dc2e1850d9d3a4e3f914092.tar.gz",
       "hash": "089g2irgv5y5mpypgkl2dcy3bwh40qrj25b8v881a32xgpwdq5xc"
+    },
+    "runner": {
+      "type": "GitRelease",
+      "repository": {
+        "type": "GitHub",
+        "owner": "actions",
+        "repo": "runner"
+      },
+      "pre_releases": false,
+      "version_upper_bound": null,
+      "release_prefix": null,
+      "version": "v2.323.0",
+      "revision": "d8b82f44a9ec0258904d5869ae683c31d5aac299",
+      "url": "https://api.github.com/repos/actions/runner/tarball/v2.323.0",
+      "hash": "1fmzza0zss9yaqwczrvclbg21qkr4fgb05fhsk84nmbj0qcrirbx"
     }
   },
   "version": 3

@@ -6,6 +6,12 @@
   ...
 }:
 let
+  inherit (sources.runner) version;
+  github-runner = pkgs.github-runner.overrideAttrs (oldAttrs: {
+    version = builtins.replaceStrings [ "v" ] [ "" ] version;
+    src = sources.runner;
+  });
+
   overrides = {
     customHomeManagerModules = { };
     imports = [ ./fastfetchConfig.nix ];
@@ -70,6 +76,7 @@ in
         user = "nixos";
         tokenFile = "/home/nixos/token1";
         inherit extraPackages url;
+        package = github-runner;
       };
       runner2 = {
         enable = true;
@@ -77,6 +84,7 @@ in
         user = "nixos";
         tokenFile = "/home/nixos/token2";
         inherit extraPackages url;
+        package = github-runner;
       };
       runner3 = {
         enable = true;
@@ -84,6 +92,7 @@ in
         user = "nixos";
         tokenFile = "/home/nixos/token3";
         inherit extraPackages url;
+        package = github-runner;
       };
       runner4 = {
         enable = true;
@@ -91,6 +100,7 @@ in
         user = "nixos";
         tokenFile = "/home/nixos/token4";
         inherit extraPackages url;
+        package = github-runner;
       };
       runner5 = {
         enable = true;
@@ -98,6 +108,7 @@ in
         user = "nixos";
         tokenFile = "/home/nixos/token5";
         inherit extraPackages url;
+        package = github-runner;
       };
     };
   };
