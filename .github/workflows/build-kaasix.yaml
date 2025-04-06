@@ -53,24 +53,24 @@ jobs:
         run: |
           aws --profile default configure set aws_access_key_id "${{ secrets.AWS_ACCESS_KEY_ID }}"
           aws --profile default configure set aws_secret_access_key "${{ secrets.AWS_SECRET_ACCESS_KEY_ID }}"
-      - name: Build
-        run: |
-          nix-build default.nix -A buildQcow2 --argstr profile kaasix
-  push:
-    needs: build
-    if: startsWith(github.ref, 'refs/tags/kaasix-v') # Push only on tags
-    runs-on: self-hosted
-    steps:
-      - name: 'Set up skopeo'
-        uses: warjiang/setup-skopeo@v0.1.3
-      - id: 'auth'
-        uses: 'google-github-actions/auth@v2'
-        with:
-          credentials_json: '${{ secrets.GCLOUD_AUTH_CREDENTIAL_FILE }}'
-      - name: Push
-        run: |
-          gcloud auth configure-docker gcr.io --quiet
-          skopeo --version
-          skopeo copy \
-          docker-archive:$(nix-build default.nix -A ociQcow2 --argstr profile kaasix) \
-          docker://gcr.io/${{ secrets.GCLOUD_PROJECT }}/kaasix-$(nix eval --raw -f . nixosSystem.config.customNixOSModules.kubernetes.version.kubeadm --argstr profile kaasix):${{ github.ref_name }}
+  #     - name: Build
+  #       run: |
+  #         nix-build default.nix -A buildQcow2 --argstr profile kaasix
+  # push:
+  #   needs: build
+  #   if: startsWith(github.ref, 'refs/tags/kaasix-v') # Push only on tags
+  #   runs-on: self-hosted
+  #   steps:
+  #     - name: 'Set up skopeo'
+  #       uses: warjiang/setup-skopeo@v0.1.3
+  #     - id: 'auth'
+  #       uses: 'google-github-actions/auth@v2'
+  #       with:
+  #         credentials_json: '${{ secrets.GCLOUD_AUTH_CREDENTIAL_FILE }}'
+  #     - name: Push
+  #       run: |
+  #         gcloud auth configure-docker gcr.io --quiet
+  #         skopeo --version
+  #         skopeo copy \
+  #         docker-archive:$(nix-build default.nix -A ociQcow2 --argstr profile kaasix) \
+  #         docker://gcr.io/${{ secrets.GCLOUD_PROJECT }}/kaasix-$(nix eval --raw -f . nixosSystem.config.customNixOSModules.kubernetes.version.kubeadm --argstr profile kaasix):${{ github.ref_name }}
