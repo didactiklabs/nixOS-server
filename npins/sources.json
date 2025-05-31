@@ -10,6 +10,7 @@
       "pre_releases": false,
       "version_upper_bound": null,
       "release_prefix": null,
+      "submodules": false,
       "version": "v1.16.3",
       "revision": "0443d4bc74b60a6358f9cdf1fb621a7fbeb2f147",
       "url": "https://api.github.com/repos/cilium/cilium/tarball/v1.16.3",
@@ -25,6 +26,7 @@
       "pre_releases": false,
       "version_upper_bound": null,
       "release_prefix": null,
+      "submodules": false,
       "version": "v1.10.0",
       "revision": "0c6ee81232d47064f46f9d83a3dde70a2ac56d2c",
       "url": "https://api.github.com/repos/nix-community/disko/tarball/v1.10.0",
@@ -37,10 +39,11 @@
         "owner": "nix-community",
         "repo": "home-manager"
       },
-      "branch": "release-24.11",
-      "revision": "d5f1f641b289553927b3801580598d200a501863",
-      "url": "https://github.com/nix-community/home-manager/archive/d5f1f641b289553927b3801580598d200a501863.tar.gz",
-      "hash": "1mwq9mzyw1al03z4q2ifbp6d0f0sx9f128xxazwrm62z0rcgv4na"
+      "branch": "release-25.05",
+      "submodules": false,
+      "revision": "282e1e029cb6ab4811114fc85110613d72771dea",
+      "url": "https://github.com/nix-community/home-manager/archive/282e1e029cb6ab4811114fc85110613d72771dea.tar.gz",
+      "hash": "1v1r9igz2n7j65rhqspplsq5zg0g1ba4gbkq4042md4nyaf67j24"
     },
     "kubeadm-v1.31.4": {
       "type": "GitRelease",
@@ -52,6 +55,7 @@
       "pre_releases": false,
       "version_upper_bound": null,
       "release_prefix": null,
+      "submodules": false,
       "version": "v1.31.4",
       "revision": "ecbf770f0898b49c8304f9aa99d63078dc7c882d",
       "url": "https://api.github.com/repos/kubernetes/kubernetes/tarball/v1.31.4",
@@ -67,6 +71,7 @@
       "pre_releases": false,
       "version_upper_bound": null,
       "release_prefix": null,
+      "submodules": false,
       "version": "v1.32.0",
       "revision": "7e247d1acd3bd293fd854a8e4a408e4af010af32",
       "url": "https://api.github.com/repos/kubernetes/kubernetes/tarball/v1.32.0",
@@ -82,6 +87,7 @@
       "pre_releases": false,
       "version_upper_bound": null,
       "release_prefix": null,
+      "submodules": false,
       "version": "v1.32.1",
       "revision": "272016a7c4a71c2e90717cc4e08baa01300ecf4d",
       "url": "https://api.github.com/repos/kubernetes/kubernetes/tarball/v1.32.1",
@@ -97,6 +103,7 @@
       "pre_releases": false,
       "version_upper_bound": null,
       "release_prefix": null,
+      "submodules": false,
       "version": "v1.32.2",
       "revision": "f72a29c56f0f78c80ee1968cd334693374752dd3",
       "url": "https://api.github.com/repos/kubernetes/kubernetes/tarball/v1.32.2",
@@ -112,6 +119,7 @@
       "pre_releases": false,
       "version_upper_bound": null,
       "release_prefix": null,
+      "submodules": false,
       "version": "v1.32.3",
       "revision": "9bda0764be69f1065fa6543bb38416f2cfbd29d0",
       "url": "https://api.github.com/repos/kubernetes/kubernetes/tarball/v1.32.3",
@@ -127,6 +135,7 @@
       "pre_releases": false,
       "version_upper_bound": null,
       "release_prefix": null,
+      "submodules": false,
       "version": "v1.31.4",
       "revision": "ecbf770f0898b49c8304f9aa99d63078dc7c882d",
       "url": "https://api.github.com/repos/kubernetes/kubernetes/tarball/v1.31.4",
@@ -142,6 +151,7 @@
       "pre_releases": false,
       "version_upper_bound": null,
       "release_prefix": null,
+      "submodules": false,
       "version": "v1.32.0",
       "revision": "7e247d1acd3bd293fd854a8e4a408e4af010af32",
       "url": "https://api.github.com/repos/kubernetes/kubernetes/tarball/v1.32.0",
@@ -157,6 +167,7 @@
       "pre_releases": false,
       "version_upper_bound": null,
       "release_prefix": null,
+      "submodules": false,
       "version": "v1.32.1",
       "revision": "272016a7c4a71c2e90717cc4e08baa01300ecf4d",
       "url": "https://api.github.com/repos/kubernetes/kubernetes/tarball/v1.32.1",
@@ -172,6 +183,7 @@
       "pre_releases": false,
       "version_upper_bound": null,
       "release_prefix": null,
+      "submodules": false,
       "version": "v1.32.2",
       "revision": "f72a29c56f0f78c80ee1968cd334693374752dd3",
       "url": "https://api.github.com/repos/kubernetes/kubernetes/tarball/v1.32.2",
@@ -187,6 +199,7 @@
       "pre_releases": false,
       "version_upper_bound": null,
       "release_prefix": null,
+      "submodules": false,
       "version": "v1.32.3",
       "revision": "9bda0764be69f1065fa6543bb38416f2cfbd29d0",
       "url": "https://api.github.com/repos/kubernetes/kubernetes/tarball/v1.32.3",
@@ -202,6 +215,7 @@
       "pre_releases": false,
       "version_upper_bound": null,
       "release_prefix": null,
+      "submodules": false,
       "version": "v1.32.3",
       "revision": "9bda0764be69f1065fa6543bb38416f2cfbd29d0",
       "url": "https://api.github.com/repos/kubernetes/kubernetes/tarball/v1.32.3",
@@ -215,6 +229,7 @@
         "repo": "nixbook"
       },
       "branch": "main",
+      "submodules": false,
       "revision": "61a1dbdbda02d65536ed7e95e0ab89d039dbcf64",
       "url": "https://github.com/didactiklabs/nixbook/archive/61a1dbdbda02d65536ed7e95e0ab89d039dbcf64.tar.gz",
       "hash": "1wkfk3f213h5cq2i2ivqzir6lj9w8f698h431xscagj044c3z5jl"
@@ -226,10 +241,11 @@
         "owner": "NixOS",
         "repo": "nixpkgs"
       },
-      "branch": "nixos-24.11",
-      "revision": "78add7b7abb61689e34fc23070a8f55e1d26185b",
-      "url": "https://github.com/NixOS/nixpkgs/archive/78add7b7abb61689e34fc23070a8f55e1d26185b.tar.gz",
-      "hash": "07gxwsywvlsnqj87g9r60j8hrvydcy0sa60825pzkdilrwwhnwjx"
+      "branch": "nixos-25.05",
+      "submodules": false,
+      "revision": "7282cb574e0607e65224d33be8241eae7cfe0979",
+      "url": "https://github.com/NixOS/nixpkgs/archive/7282cb574e0607e65224d33be8241eae7cfe0979.tar.gz",
+      "hash": "0klkpy7ah033y3cwj51a0l96lwmkqqvwgfv3kid4z9x5g2rqr0l5"
     },
     "runner": {
       "type": "GitRelease",
@@ -241,11 +257,12 @@
       "pre_releases": false,
       "version_upper_bound": null,
       "release_prefix": null,
+      "submodules": false,
       "version": "v2.323.0",
       "revision": "d8b82f44a9ec0258904d5869ae683c31d5aac299",
       "url": "https://api.github.com/repos/actions/runner/tarball/v2.323.0",
       "hash": "1fmzza0zss9yaqwczrvclbg21qkr4fgb05fhsk84nmbj0qcrirbx"
     }
   },
-  "version": 3
+  "version": 5
 }
