@@ -118,12 +118,12 @@ in
           cp ${pkgs.coreutils}/bin/mkdir /usr/bin/mkdir
           cp ${pkgs.e2fsprogs}/bin/mkfs.ext3 /usr/bin/mkfs.ext3
           cp ${pkgs.e2fsprogs}/bin/mkfs.ext4 /usr/bin/mkfs.ext4
-          cp ${pkgs.mount}/bin/mount /usr/bin/mount
+          cp ${pkgs.util-linux.withPatches}/bin/mount /usr/bin/mount
           cp ${pkgs.multipath-tools}/bin/multipath /usr/bin/multipath
           cp ${pkgs.multipath-tools}/bin/multipathd /usr/bin/multipathd
           cp ${pkgs.procps}/bin/pgrep /usr/bin/pgrep
           cp ${pkgs.e2fsprogs}/bin/resize2fs /usr/bin/resize2fs
-          cp ${pkgs.umount}/bin/umount /usr/bin/umount
+          cp ${pkgs.util-linux.withPatches}/bin/umount /usr/bin/umount
           cp ${pkgs.kmod}/bin/lsmod /usr/bin/lsmod
         '';
       };
@@ -175,8 +175,6 @@ in
           documentation = [ "https://kubernetes.io/docs/home/" ];
           path = [
             "/opt/cni/bin"
-            pkgs.mount
-            pkgs.umount
             pkgs.util-linux.withPatches
             pkgs.file
             pkgs.iproute2
