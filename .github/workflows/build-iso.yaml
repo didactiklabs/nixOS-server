@@ -52,5 +52,6 @@ jobs:
           aws --profile default configure set aws_secret_access_key "${{ secrets.AWS_SECRET_ACCESS_KEY_ID }}"
       - name: Build and Push
         run: |
+          export NIXPKGS_ALLOW_UNFREE=1
           echo '${{ secrets.CACHE_PRIVATE_KEY }}' > cache-priv.pem
           build=$(nix-build -A buildIso default.nix)
