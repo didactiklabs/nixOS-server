@@ -72,7 +72,7 @@ in
       EDITOR = "vim";
     };
   };
-
+  nixpkgs.config.allowUnfree = true;
   imports = [
     ./tools.nix
     (import "${sources.nixbook}//nixosModules/caCertificates.nix")
