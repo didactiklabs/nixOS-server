@@ -273,11 +273,11 @@
         "owner": "NixOS",
         "repo": "nixpkgs"
       },
-      "branch": "nixos-25.05",
+      "branch": "release-25.05",
       "submodules": false,
-      "revision": "7282cb574e0607e65224d33be8241eae7cfe0979",
-      "url": "https://github.com/NixOS/nixpkgs/archive/7282cb574e0607e65224d33be8241eae7cfe0979.tar.gz",
-      "hash": "0klkpy7ah033y3cwj51a0l96lwmkqqvwgfv3kid4z9x5g2rqr0l5"
+      "revision": "da3512b1cdf498365f9d49aed1fa6ad899f2b1b6",
+      "url": "https://github.com/NixOS/nixpkgs/archive/da3512b1cdf498365f9d49aed1fa6ad899f2b1b6.tar.gz",
+      "hash": "0k3wwl2jsc75wy2q6mz0rpywpg8mvikbdx9rzhb8brqns42hnf4d"
     },
     "runner": {
       "type": "GitRelease",
