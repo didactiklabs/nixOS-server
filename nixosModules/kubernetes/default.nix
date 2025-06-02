@@ -102,8 +102,8 @@ in
         copyCSIbins.text = ''
           mkdir -p /usr/bin
           cp ${pkgs.kubectl}/bin/kubectl /usr/bin/kubectl
-          cp ${pkgs.util-linux}/bin/blkid /usr/bin/blkid
-          cp ${pkgs.util-linux}/bin/blockdev /usr/bin/blockdev
+          cp ${pkgs.util-linux.withPatches}/bin/blkid /usr/bin/blkid
+          cp ${pkgs.util-linux.withPatches}/bin/blockdev /usr/bin/blockdev
           cp ${pkgs.coreutils}/bin/cat /usr/bin/cat
           cp ${pkgs.cryptsetup}/bin/cryptsetup /usr/bin/cryptsetup
           cp ${pkgs.coreutils}/bin/dd /usr/bin/dd
@@ -112,7 +112,7 @@ in
           cp ${pkgs.e2fsprogs}/bin/fsck.ext3 /usr/bin/fsck.ext3
           cp ${pkgs.e2fsprogs}/bin/fsck.ext4 /usr/bin/fsck.ext4
           cp ${pkgs.openiscsi}/bin/iscsiadm /usr/bin/iscsiadm
-          cp ${pkgs.util-linux}/bin/losetup /usr/bin/losetup
+          cp ${pkgs.util-linux.withPatches}/bin/losetup /usr/bin/losetup
           cp ${pkgs.coreutils}/bin/ls /usr/bin/ls
           cp ${pkgs.lsscsi}/bin/lsscsi /usr/bin/lsscsi
           cp ${pkgs.coreutils}/bin/mkdir /usr/bin/mkdir
@@ -177,7 +177,7 @@ in
             "/opt/cni/bin"
             pkgs.mount
             pkgs.umount
-            pkgs.util-linux
+            pkgs.util-linux.withPatches
             pkgs.file
             pkgs.iproute2
             pkgs.iptables
