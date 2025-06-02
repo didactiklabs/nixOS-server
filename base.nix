@@ -70,6 +70,7 @@ in
     ];
     variables = {
       EDITOR = "vim";
+      NIXPKGS_ALLOW_UNFREE = 1;
     };
   };
   nixpkgs.config.allowUnfree = true;
