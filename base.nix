@@ -87,6 +87,9 @@ in
     hostProfile
   ];
   # Bootloader.
+  hardware = {
+    enableAllFirmware = true;
+  };
   boot = {
     kernelParams = [
       "intel_iommu=on"
