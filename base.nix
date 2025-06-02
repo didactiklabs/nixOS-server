@@ -6,7 +6,12 @@
 }:
 let
   sources = import ./npins;
-  pkgs = import sources.nixpkgs { };
+  pkgs = import sources.nixpkgs {
+    config = {
+      allowUnfree = true;
+      allowUnfreePredicate = true;
+    };
+  };
 
   hostProfile = import ./profiles/${hostname} {
     inherit
