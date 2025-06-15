@@ -80,7 +80,7 @@ in
     kubernetes = {
       enable = true;
       version = {
-        kubeadm = "v1.31.4";
+        kubeadm = "v1.33.1";
         kubelet = "v1.31.4";
       };
     };
