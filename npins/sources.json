@@ -322,10 +322,10 @@
       "version_upper_bound": null,
       "release_prefix": null,
       "submodules": false,
-      "version": "v2.323.0",
-      "revision": "d8b82f44a9ec0258904d5869ae683c31d5aac299",
-      "url": "https://api.github.com/repos/actions/runner/tarball/v2.323.0",
-      "hash": "1fmzza0zss9yaqwczrvclbg21qkr4fgb05fhsk84nmbj0qcrirbx"
+      "version": "v2.327.1",
+      "revision": "9513afd82fbc900d13362cdd4fcdab0538f5124e",
+      "url": "https://api.github.com/repos/actions/runner/tarball/v2.327.1",
+      "hash": "1p7clhch6vpc4ali70wb3zc2b7fs3n75f2kx1gvcplhb0gnrdksn"
     }
   },
   "version": 5
