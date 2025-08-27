@@ -189,6 +189,22 @@
       "url": "https://api.github.com/repos/kubernetes/kubernetes/tarball/v1.33.4",
       "hash": "0m5yzia5b84byyd4sjlaxplx7df1v1kzz4lygz4zlbilvvhl8hr8"
     },
+    "kubeadm-v1.34.0": {
+      "type": "GitRelease",
+      "repository": {
+        "type": "GitHub",
+        "owner": "kubernetes",
+        "repo": "kubernetes"
+      },
+      "pre_releases": false,
+      "version_upper_bound": null,
+      "release_prefix": null,
+      "submodules": false,
+      "version": "v1.34.0",
+      "revision": "275918a59a3df182fc5e9f7f9f6e960384399a35",
+      "url": "https://api.github.com/repos/kubernetes/kubernetes/tarball/v1.34.0",
+      "hash": "11rymrkxq3iig0y9sqfgkqfb7ayhsn8xh6wzphlfjpv99mgvib5c"
+    },
     "kubelet-v1.31.4": {
       "type": "GitRelease",
       "repository": {
@@ -333,6 +349,22 @@
       "url": "https://api.github.com/repos/kubernetes/kubernetes/tarball/v1.33.4",
       "hash": "0m5yzia5b84byyd4sjlaxplx7df1v1kzz4lygz4zlbilvvhl8hr8"
     },
+    "kubelet-v1.34.0": {
+      "type": "GitRelease",
+      "repository": {
+        "type": "GitHub",
+        "owner": "kubernetes",
+        "repo": "kubernetes"
+      },
+      "pre_releases": false,
+      "version_upper_bound": null,
+      "release_prefix": null,
+      "submodules": false,
+      "version": "v1.34.0",
+      "revision": "275918a59a3df182fc5e9f7f9f6e960384399a35",
+      "url": "https://api.github.com/repos/kubernetes/kubernetes/tarball/v1.34.0",
+      "hash": "11rymrkxq3iig0y9sqfgkqfb7ayhsn8xh6wzphlfjpv99mgvib5c"
+    },
     "kubernetes-latest": {
       "type": "GitRelease",
       "repository": {
@@ -344,10 +376,10 @@
       "version_upper_bound": null,
       "release_prefix": null,
       "submodules": false,
-      "version": "v1.33.4",
-      "revision": "40e11929472c57793ee75b7a040e81b32cab22a2",
-      "url": "https://api.github.com/repos/kubernetes/kubernetes/tarball/v1.33.4",
-      "hash": "0m5yzia5b84byyd4sjlaxplx7df1v1kzz4lygz4zlbilvvhl8hr8"
+      "version": "v1.34.0",
+      "revision": "275918a59a3df182fc5e9f7f9f6e960384399a35",
+      "url": "https://api.github.com/repos/kubernetes/kubernetes/tarball/v1.34.0",
+      "hash": "11rymrkxq3iig0y9sqfgkqfb7ayhsn8xh6wzphlfjpv99mgvib5c"
     },
     "nixbook": {
       "type": "Git",
