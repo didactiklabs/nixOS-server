@@ -12,11 +12,23 @@ let
   };
 in
 {
+  hardware.graphics = {
+    enable = true;
+    extraPackages = with pkgs; [
+      vpl-gpu-rt # for newer GPUs on NixOS >24.05 or unstable
+      vaapiIntel
+      intel-media-driver
+    ];
+  };
+  hardware.enableRedistributableFirmware = lib.mkDefault true;
   boot = {
     supportedFilesystems = [ "nfs" ];
     kernelParams = [
       "consoleblank=0"
       "console=ttyS0,115200n8"
+      "intel_iommu=on"
+      "iommu=pt"
+      "vfio-pci.ids=8086:3e98"
     ];
     loader = {
       systemd-boot.configurationLimit = 0;
@@ -94,8 +106,8 @@ in
     kubernetes = {
       enable = true;
       version = {
-        kubeadm = "v1.32.3";
-        kubelet = "v1.32.3";
+        kubeadm = "v1.33.4";
+        kubelet = "v1.33.4";
       };
     };
     caCertificates = {
