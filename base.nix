@@ -99,7 +99,6 @@ in
   boot = {
     kernelParams = [
       "intel_iommu=on"
-      "iommu=pt"
     ];
     loader.grub.enable = lib.mkDefault true;
     kernelPackages = pkgs.linuxPackages_latest;
@@ -130,12 +129,10 @@ in
   nix = {
     package = pkgs.lix;
     gc = {
-      automatic = true;
-      dates = "daily";
-      options = "--delete-older-than 7d";
+      automatic = false;
     };
     optimise = {
-      automatic = true;
+      automatic = false;
       dates = [ "03:45" ];
     };
     settings = {
