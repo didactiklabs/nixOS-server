@@ -57,7 +57,7 @@ in
   };
   kazuma = createConfiguration {
     hostName = "kazuma";
-    host = "kazuma";
+    host = "kazuma.bealv.lan";
     tags = [
       "bealv"
       "master"
@@ -65,7 +65,7 @@ in
   };
   darkness = createConfiguration {
     hostName = "darkness";
-    host = "darkness";
+    host = "darkness.bealv.lan";
     tags = [
       "bealv"
       "master"
@@ -73,7 +73,7 @@ in
   };
   megumin = createConfiguration {
     hostName = "megumin";
-    host = "megumin";
+    host = "megumin.bealv.lan";
     tags = [
       "bealv"
       "master"
@@ -89,7 +89,7 @@ in
   };
   haganezuka = createConfiguration {
     hostName = "haganezuka";
-    host = "haganezuka";
+    host = "haganezuka.bealv.lan";
     tags = [
       "bealv"
       "haproxy"

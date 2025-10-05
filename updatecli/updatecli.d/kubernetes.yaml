@@ -7,7 +7,8 @@ scms:
       owner: 'didactiklabs'
       repository: 'nixOS-server'
       token: '{{ requiredEnv "UPDATECLI_GITHUB_TOKEN" }}'
-      username: '{{ requiredEnv "GITHUB_ACTOR" }}'
+      user: '{{ requiredEnv "UPDATECLI_GITHUB_TOKEN_USER" }}'
+      username: '{{ requiredEnv "UPDATECLI_GITHUB_TOKEN_USER" }}'
       branch: 'main'
 sources:
   default:
@@ -23,7 +24,7 @@ sources:
       owner: 'kubernetes'
       repository: 'kubernetes'
       token: '{{ requiredEnv "UPDATECLI_GITHUB_TOKEN" }}'
-      username: '{{ requiredEnv "GITHUB_ACTOR" }}'
+      username: '{{ requiredEnv "UPDATECLI_GITHUB_TOKEN_USER" }}'
       versionfilter:
         kind: semver
         pattern: '*'
