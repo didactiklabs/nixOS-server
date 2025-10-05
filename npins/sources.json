@@ -93,6 +93,22 @@
       "url": "https://api.github.com/repos/kubernetes/kubernetes/tarball/v1.33.5",
       "hash": "0053n7c5yzp7lhpl07n2z2lq8rkyfxh8sf7vnrj93pixkzrz2daq"
     },
+    "kubeadm-v1.34.0": {
+      "type": "GitRelease",
+      "repository": {
+        "type": "GitHub",
+        "owner": "kubernetes",
+        "repo": "kubernetes"
+      },
+      "pre_releases": false,
+      "version_upper_bound": null,
+      "release_prefix": null,
+      "submodules": false,
+      "version": "v1.34.0",
+      "revision": "275918a59a3df182fc5e9f7f9f6e960384399a35",
+      "url": "https://api.github.com/repos/kubernetes/kubernetes/tarball/v1.34.0",
+      "hash": "11rymrkxq3iig0y9sqfgkqfb7ayhsn8xh6wzphlfjpv99mgvib5c"
+    },
     "kubeadm-v1.34.1": {
       "type": "GitRelease",
       "repository": {
@@ -172,6 +188,22 @@
       "revision": "27f72e08a027cd5106468299e8e1113febba6966",
       "url": "https://api.github.com/repos/kubernetes/kubernetes/tarball/v1.33.5",
       "hash": "0053n7c5yzp7lhpl07n2z2lq8rkyfxh8sf7vnrj93pixkzrz2daq"
+    },
+    "kubelet-v1.34.0": {
+      "type": "GitRelease",
+      "repository": {
+        "type": "GitHub",
+        "owner": "kubernetes",
+        "repo": "kubernetes"
+      },
+      "pre_releases": false,
+      "version_upper_bound": null,
+      "release_prefix": null,
+      "submodules": false,
+      "version": "v1.34.0",
+      "revision": "275918a59a3df182fc5e9f7f9f6e960384399a35",
+      "url": "https://api.github.com/repos/kubernetes/kubernetes/tarball/v1.34.0",
+      "hash": "11rymrkxq3iig0y9sqfgkqfb7ayhsn8xh6wzphlfjpv99mgvib5c"
     },
     "kubelet-v1.34.1": {
       "type": "GitRelease",
