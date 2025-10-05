@@ -90,7 +90,7 @@ in
   systemd = {
     network = {
       networks = {
-        "10-enp1s0" = {
+        "00-enp1s0" = {
           matchConfig = {
             Name = "en*";
           };
