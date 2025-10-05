@@ -7,8 +7,9 @@ scms:
       email: 'updatecli@didactiklabs.io'
       owner: 'didactiklabs'
       repository: 'nixOS-server'
+      user: '{{ requiredEnv "UPDATECLI_GITHUB_TOKEN_USER" }}'
       token: '{{ requiredEnv "UPDATECLI_GITHUB_TOKEN" }}'
-      username: '{{ requiredEnv "GITHUB_ACTOR" }}'
+      username: '{{ requiredEnv "UPDATECLI_GITHUB_TOKEN_USER" }}'
       branch: 'main'
 # Defines how to get "source" information such as Jenkins version
 sources:

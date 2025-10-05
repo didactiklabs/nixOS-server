@@ -129,10 +129,12 @@ in
   nix = {
     package = pkgs.lix;
     gc = {
-      automatic = false;
+      automatic = true;
+      dates = "daily";
+      options = "--delete-older-than 7d";
     };
     optimise = {
-      automatic = false;
+      automatic = true;
       dates = [ "03:45" ];
     };
     settings = {

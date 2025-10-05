@@ -12,15 +12,13 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
       - name: Install Updatecli in the runner
         uses: updatecli/updatecli-action@v2
       - uses: actions/create-github-app-token@v1
         id: app-token
         with:
-          app-id: ${{ secrets.APP_ID }}
-          private-key: ${{ secrets.PRIVATE_KEY }}
+          app-id: ${{ secrets.UPCLI_APP_ID }}
+          private-key: ${{ secrets.UPCLI_SECRET_ID }}
       - name: Get Nixpkgs revision for nixfmt
         run: |
           # This should not be a URL, because it would allow PRs to run arbitrary code in CI!
@@ -37,4 +35,4 @@ jobs:
         run: 'updatecli apply --config ./updatecli/updatecli.d --values updatecli/values.yaml'
         env:
           UPDATECLI_GITHUB_TOKEN: '${{ steps.app-token.outputs.token }}'
-          GITHUB_TOKEN: '${{ steps.app-token.outputs.token }}'
+          UPDATECLI_GITHUB_TOKEN_USER: '${{ steps.app-token.outputs.app-slug }}'

@@ -8,7 +8,8 @@ scms:
       owner: 'didactiklabs'
       repository: 'nixOS-server'
       token: '{{ requiredEnv "UPDATECLI_GITHUB_TOKEN" }}'
-      username: '{{ requiredEnv "GITHUB_ACTOR" }}'
+      username: '{{ requiredEnv "UPDATECLI_GITHUB_TOKEN_USER" }}'
+      user: '{{ requiredEnv "UPDATECLI_GITHUB_TOKEN_USER" }}'
       branch: 'main'
 # Defines how to get "source" information such as Jenkins version
 sources:
