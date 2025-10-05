@@ -51,7 +51,9 @@ targets:
       command: |
         nix run nixpkgs#npins -- add --name kubernetes-latest github kubernetes kubernetes --at {{ source `kubernetes` }}
         nix run nixpkgs#npins -- add --name kubeadm-{{ source `kubernetes` }} github kubernetes kubernetes --at {{ source `kubernetes` }}
+        nix run nixpkgs#npins -- freeze kubeadm-{{ source `kubernetes` }}
         nix run nixpkgs#npins -- add --name kubelet-{{ source `kubernetes` }} github kubernetes kubernetes --at {{ source `kubernetes` }}
+        nix run nixpkgs#npins -- freeze kubelet-{{ source `kubernetes` }}
 actions:
   default:
     kind: 'github/pullrequest'
