@@ -10,11 +10,20 @@ let
 
   kubernetesComponent =
     component: source:
-    pkgs.kubernetes.overrideAttrs (oldAttrs: {
+    pkgs.buildGoModule {
+      pname = "${builtins.baseNameOf component}";
       version = cfg.kubernetes.version.kubeadm;
       src = source;
-      components = [ component ];
-    });
+      vendorHash = null;
+
+      subPackages = [ component ];
+
+      ldFlags = [
+        "-s"
+        "-w"
+        "-X k8s.io/component-base/version.gitVersion=${cfg.kubernetes.version.kubeadm}"
+      ];
+    };
 
   # Define kubelet and kubeadm using the common function with different versions and hashes
   kubeadmSource = sources."kubeadm-${cfg.kubernetes.version.kubeadm}";
