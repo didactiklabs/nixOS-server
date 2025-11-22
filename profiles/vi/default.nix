@@ -80,8 +80,8 @@ in
     kubernetes = {
       enable = true;
       version = {
-        kubeadm = "v1.31.4";
-        kubelet = "v1.31.4";
+        kubeadm = "v1.34.2";
+        kubelet = "v1.34.2";
       };
     };
     caCertificates = {
