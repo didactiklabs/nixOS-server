@@ -39,11 +39,11 @@
         "owner": "nix-community",
         "repo": "home-manager"
       },
-      "branch": "release-25.05",
+      "branch": "release-25.11",
       "submodules": false,
-      "revision": "3b955f5f0a942f9f60cdc9cacb7844335d0f21c3",
-      "url": "https://github.com/nix-community/home-manager/archive/3b955f5f0a942f9f60cdc9cacb7844335d0f21c3.tar.gz",
-      "hash": "0q3lv288xlzxczh6lc5lcw0zj9qskvjw3pzsrgvdh8rl8ibyq75s"
+      "revision": "20561be440a11ec57a89715480717baf19fe6343",
+      "url": "https://github.com/nix-community/home-manager/archive/20561be440a11ec57a89715480717baf19fe6343.tar.gz",
+      "hash": "1n2l891p04y3xmd0sl5i3553ndgpxkinysg1bf8iiixmxhcm7i9v"
     },
     "kubeadm-v1.33.5": {
       "type": "GitRelease",
@@ -201,11 +201,11 @@
         "owner": "NixOS",
         "repo": "nixpkgs"
       },
-      "branch": "release-25.05",
+      "branch": "nixos-25.11",
       "submodules": false,
-      "revision": "ecdf4cc7d88602b44aab1f04a877db63687674b7",
-      "url": "https://github.com/NixOS/nixpkgs/archive/ecdf4cc7d88602b44aab1f04a877db63687674b7.tar.gz",
-      "hash": "0v4ra5hy1wywzigpi66r7qrs3pm0ng9h4367dw9a4r274h9nrlqa"
+      "revision": "d9bc5c7dceb30d8d6fafa10aeb6aa8a48c218454",
+      "url": "https://github.com/NixOS/nixpkgs/archive/d9bc5c7dceb30d8d6fafa10aeb6aa8a48c218454.tar.gz",
+      "hash": "1fmgk95zsz29nb5c2928yfbd619j4742qjpm7y0g49z3bwm4zd6b"
     },
     "runner": {
       "type": "GitRelease",
