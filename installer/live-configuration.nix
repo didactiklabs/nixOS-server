@@ -33,20 +33,19 @@ in
   console.keyMap = "fr";
   networking = {
     hostName = "";
-    useDHCP = true;
+    useDHCP = lib.mkForce true; # Ensures this value takes precedence
   };
-  environment.systemPackages =
-    [
-      pkgs.hwinfo
-      pkgs.busybox
-    ]
-    ++ (with config.system.build.scripts; [
-      clean
-      format
-      mount
-      install
-      installer
-    ]);
+  environment.systemPackages = [
+    pkgs.hwinfo
+    pkgs.busybox
+  ]
+  ++ (with config.system.build.scripts; [
+    clean
+    format
+    mount
+    install
+    installer
+  ]);
   nix = {
     package = pkgs.lix;
     settings = {
