@@ -113,6 +113,23 @@
       "hash": "04zmxgzp3b55pjq2dw2fbvaxh4gsd4789j73yf2kgkbxdfh35d6y",
       "frozen": true
     },
+    "kubeadm-v1.35.0": {
+      "type": "GitRelease",
+      "repository": {
+        "type": "GitHub",
+        "owner": "kubernetes",
+        "repo": "kubernetes"
+      },
+      "pre_releases": false,
+      "version_upper_bound": null,
+      "release_prefix": null,
+      "submodules": false,
+      "version": "v1.35.0",
+      "revision": "2049416c7235eeec9a413c38472708e49af3ed88",
+      "url": "https://api.github.com/repos/kubernetes/kubernetes/tarball/v1.35.0",
+      "hash": "1gi7kpwd2i7ak2pa4ijdql7z61jb3zrahmc30bkaym3733hpyg81",
+      "frozen": true
+    },
     "kubelet-v1.33.5": {
       "type": "GitRelease",
       "repository": {
@@ -180,6 +197,39 @@
       "url": "https://api.github.com/repos/kubernetes/kubernetes/tarball/v1.34.2",
       "hash": "04zmxgzp3b55pjq2dw2fbvaxh4gsd4789j73yf2kgkbxdfh35d6y",
       "frozen": true
+    },
+    "kubelet-v1.35.0": {
+      "type": "GitRelease",
+      "repository": {
+        "type": "GitHub",
+        "owner": "kubernetes",
+        "repo": "kubernetes"
+      },
+      "pre_releases": false,
+      "version_upper_bound": null,
+      "release_prefix": null,
+      "submodules": false,
+      "version": "v1.35.0",
+      "revision": "2049416c7235eeec9a413c38472708e49af3ed88",
+      "url": "https://api.github.com/repos/kubernetes/kubernetes/tarball/v1.35.0",
+      "hash": "1gi7kpwd2i7ak2pa4ijdql7z61jb3zrahmc30bkaym3733hpyg81",
+      "frozen": true
+    },
+    "kubernetes-latest": {
+      "type": "GitRelease",
+      "repository": {
+        "type": "GitHub",
+        "owner": "kubernetes",
+        "repo": "kubernetes"
+      },
+      "pre_releases": false,
+      "version_upper_bound": null,
+      "release_prefix": null,
+      "submodules": false,
+      "version": "v1.35.0",
+      "revision": "2049416c7235eeec9a413c38472708e49af3ed88",
+      "url": "https://api.github.com/repos/kubernetes/kubernetes/tarball/v1.35.0",
+      "hash": "1gi7kpwd2i7ak2pa4ijdql7z61jb3zrahmc30bkaym3733hpyg81"
     },
     "nixbook": {
       "type": "Git",
