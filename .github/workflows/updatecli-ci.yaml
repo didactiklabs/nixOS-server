@@ -17,8 +17,8 @@ jobs:
       - uses: actions/create-github-app-token@v1
         id: app-token
         with:
-          app-id: ${{ secrets.UPCLI_APP_ID }}
-          private-key: ${{ secrets.UPCLI_SECRET_ID }}
+          app-id: ${{ secrets.APP_ID }}
+          private-key: ${{ secrets.PRIVATE_KEY }}
       - name: Get Nixpkgs revision for nixfmt
         run: |
           # This should not be a URL, because it would allow PRs to run arbitrary code in CI!
