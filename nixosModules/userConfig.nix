@@ -14,6 +14,7 @@ let
       gitConfig.enable = true;
       sshConfig.enable = true;
       fastfetchConfig.enable = true;
+      zshConfig.enable = true;
     };
     imports = [ ];
   };
@@ -46,7 +47,7 @@ let
               fastfetch
             '';
             home = {
-              stateVersion = "24.05";
+              stateVersion = "25.11";
               username = "${username}";
               homeDirectory = "/home/${username}";
               sessionVariables = {
