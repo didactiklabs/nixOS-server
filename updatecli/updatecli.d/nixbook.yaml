@@ -41,7 +41,7 @@ targets:
       environments:
         - name: PATH
         - name: NIX_PATH
-      command: nix-shell -p npins --command "npins update nixbook"
+      command: nix run nixpkgs#npins -- update nixbook
 # Define action configurations if one needs to be created
 actions:
   default:
