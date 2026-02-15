@@ -38,7 +38,7 @@ conditions:
     spec:
       environments:
         - name: PATH
-      command: test "{{ source `kubernetes` }}" != "{{ source `default` }}"
+      command: 'test "$(source ''kubernetes'')" != "$(source ''default'')" && exit 0 || exit 1'
 targets:
   default:
     name: kubernetes npins update {{ source `kubernetes` }}
