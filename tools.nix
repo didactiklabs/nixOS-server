@@ -2,7 +2,7 @@
 {
   environment.defaultPackages = with pkgs; [
     # tools
-    dogdns
+    doggo
     jq
     yq-go
     unzip

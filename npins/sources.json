@@ -11,10 +11,10 @@
       "version_upper_bound": null,
       "release_prefix": null,
       "submodules": false,
-      "version": "v1.19.0",
-      "revision": "1403e61a78a013333992105bf58f9eea26d360ed",
-      "url": "https://api.github.com/repos/cilium/cilium/tarball/refs/tags/v1.19.0",
-      "hash": "sha256-DcgrDxIS/XmToGPArB8MzdufA0SgF/7imyaYmQO1i/E="
+      "version": "v1.19.1",
+      "revision": "42bb98e6f6b666e76927de89227d750f262b1415",
+      "url": "https://api.github.com/repos/cilium/cilium/tarball/refs/tags/v1.19.1",
+      "hash": "sha256-wswY4u2Z7Z8hvGVnLONxSD1Mu1RV1AglC4ijUHsCCW4="
     },
     "disko": {
       "type": "GitRelease",
@@ -39,11 +39,11 @@
         "owner": "nix-community",
         "repo": "home-manager"
       },
-      "branch": "release-25.11",
+      "branch": "master",
       "submodules": false,
-      "revision": "0d782ee42c86b196acff08acfbf41bb7d13eed5b",
-      "url": "https://github.com/nix-community/home-manager/archive/0d782ee42c86b196acff08acfbf41bb7d13eed5b.tar.gz",
-      "hash": "sha256-3iVX1+7YUIt23hBx1WZsUllhbmP2EnXrV8tCRbLxHc8="
+      "revision": "5f1d42a97b19803041434f66681d5c44c9ae62e3",
+      "url": "https://github.com/nix-community/home-manager/archive/5f1d42a97b19803041434f66681d5c44c9ae62e3.tar.gz",
+      "hash": "sha256-BZ31eN5F99YH6vkc4AhzKGE+tJgJ52kl8f01K7wCs8w="
     },
     "kubeadm-v1.33.5": {
       "type": "GitRelease",
@@ -274,9 +274,9 @@
       },
       "branch": "main",
       "submodules": false,
-      "revision": "4f9bcfe417782caca46240bfccbf665270c40db5",
-      "url": "https://github.com/didactiklabs/nixbook/archive/4f9bcfe417782caca46240bfccbf665270c40db5.tar.gz",
-      "hash": "sha256-IOKuxs9jv9o9tW6mUraHuJiUVS6EPS6wHW/3gwkNTto="
+      "revision": "0b06488fb79328ec72d0c9a26e2bdb78422b0f1b",
+      "url": "https://github.com/didactiklabs/nixbook/archive/0b06488fb79328ec72d0c9a26e2bdb78422b0f1b.tar.gz",
+      "hash": "sha256-UHCAXtUvPiOf5SYwMDGZqxAgLB2FtD2EUIfKftYA6Hg="
     },
     "nixpkgs": {
       "type": "Git",
@@ -285,11 +285,11 @@
         "owner": "NixOS",
         "repo": "nixpkgs"
       },
-      "branch": "nixos-25.11",
+      "branch": "nixos-unstable",
       "submodules": false,
-      "revision": "3aadb7ca9eac2891d52a9dec199d9580a6e2bf44",
-      "url": "https://github.com/NixOS/nixpkgs/archive/3aadb7ca9eac2891d52a9dec199d9580a6e2bf44.tar.gz",
-      "hash": "sha256-O1XDr7EWbRp+kHrNNgLWgIrB0/US5wvw9K6RERWAj6I="
+      "revision": "a82ccc39b39b621151d6732718e3e250109076fa",
+      "url": "https://github.com/NixOS/nixpkgs/archive/a82ccc39b39b621151d6732718e3e250109076fa.tar.gz",
+      "hash": "sha256-gf2AmWVTs8lEq7z/3ZAsgnZDhWIckkb+ZnAo5RzSxJg="
     },
     "runner": {
       "type": "GitRelease",
