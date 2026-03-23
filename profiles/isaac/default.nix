@@ -119,6 +119,24 @@ in
         inherit extraPackages;
         package = github-runner;
       };
+      runner7 = {
+        enable = true;
+        name = "runner7";
+        user = "nixos";
+        tokenFile = "/home/nixos/token7";
+        url = "https://github.com/RPCU";
+        inherit extraPackages;
+        package = github-runner;
+      };
+      runner8 = {
+        enable = true;
+        name = "runner8";
+        user = "nixos";
+        tokenFile = "/home/nixos/token8";
+        url = "https://github.com/RPCU";
+        inherit extraPackages;
+        package = github-runner;
+      };
     };
   };
   fileSystems = {
