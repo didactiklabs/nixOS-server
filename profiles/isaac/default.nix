@@ -110,6 +110,14 @@ in
         inherit extraPackages url;
         package = github-runner;
       };
+      runner6 = {
+        enable = true;
+        name = "runner6";
+        user = "nixos";
+        tokenFile = "/home/nixos/token6";
+        inherit extraPackages url;
+        package = github-runner;
+      };
     };
   };
   fileSystems = {
