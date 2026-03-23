@@ -116,6 +116,7 @@ in
         user = "nixos";
         tokenFile = "/home/nixos/token6";
         url = "https://github.com/RPCU";
+        inherit extraPackages;
         package = github-runner;
       };
     };
