@@ -5,6 +5,9 @@ let
       allowUnfree = true;
       allowUnfreePredicate = true;
     };
+    overlays = [
+      (import ./overlays/kubernetes.nix)
+    ];
   };
   createConfiguration = parent: {
     networking.hostName = parent.hostName;

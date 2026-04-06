@@ -6,7 +6,15 @@
 }:
 let
   sources = import ./npins;
-  pkgs = import sources.nixpkgs { };
+  pkgs = import sources.nixpkgs {
+    config = {
+      allowUnfree = true;
+      allowUnfreePredicate = true;
+    };
+    overlays = [
+      (import ./overlays/kubernetes.nix)
+    ];
+  };
   disko = import sources.disko { inherit (pkgs) lib; };
 
   isoInstall = import "${pkgs.path}/nixos/lib/eval-config.nix" {
