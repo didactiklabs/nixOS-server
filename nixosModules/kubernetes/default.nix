@@ -6,29 +6,10 @@
 }:
 let
   cfg = config.customNixOSModules;
-  sources = import ../../npins;
+  k8sPackages = pkgs.getKubernetesPackages { inherit config; }; # Call the function from the overlay
 
-  kubernetesComponent =
-    component: source:
-    pkgs.kubernetes.overrideAttrs (oldAttrs: {
-      version = cfg.kubernetes.version.kubeadm;
-      src = source;
-      components = [ component ];
-    });
-
-  # Define kubelet and kubeadm using the common function with different versions and hashes
-  kubeadmSource = sources."kubeadm-${cfg.kubernetes.version.kubeadm}";
-  kubeletSource = sources."kubelet-${cfg.kubernetes.version.kubelet}";
-  kubelet = kubernetesComponent "cmd/kubelet" kubeletSource;
-  kubeadm = kubernetesComponent "cmd/kubeadm" kubeadmSource;
-  kubeadm-bin = pkgs.runCommand "get-kubeadm" { nativeBuildInputs = [ ]; } ''
-    mkdir -p $out/bin
-    cp ${kubeadm}/bin/kubeadm $out/bin/
-  '';
-  kubelet-bin = pkgs.runCommand "get-kubelet" { nativeBuildInputs = [ ]; } ''
-    mkdir -p $out/bin
-    cp ${kubelet}/bin/kubelet $out/bin/
-  '';
+  kubeadm-bin = k8sPackages.kubernetes_kubeadm;
+  kubelet-bin = k8sPackages.kubernetes_kubelet;
   kubeadm-upgrade = pkgs.writeShellScriptBin "kubeadm-upgrade" ''
     set -euo pipefail
     if [ -f "/etc/kubernetes/admin.conf" ] && [ "$(${pkgs.kubectl}/bin/kubectl --kubeconfig=/etc/kubernetes/admin.conf get nodes | grep control-plane)" ]; then
