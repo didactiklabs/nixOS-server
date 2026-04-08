@@ -86,7 +86,7 @@ in
       enable = true;
       version = {
         kubeadm = "1.35.3";
-        kubelet = "v1.35.3";
+        kubelet = "1.35.3";
       };
     };
     caCertificates = {
