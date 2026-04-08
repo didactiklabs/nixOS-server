@@ -46,6 +46,11 @@ in
     device = "/dev/disk/by-label/nixos";
     autoResize = true;
     fsType = "ext4";
+    options = [
+      "noatime"
+      "nodiratime"
+      "discard"
+    ];
   };
   networking = {
     useDHCP = false;

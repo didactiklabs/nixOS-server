@@ -72,6 +72,11 @@ in
     "/" = {
       device = "/dev/disk/by-label/ROOT";
       fsType = "ext4";
+      options = [
+        "noatime"
+        "nodiratime"
+        "discard"
+      ];
     };
   };
   systemd = {

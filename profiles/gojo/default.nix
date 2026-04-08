@@ -33,6 +33,11 @@ in
   fileSystems."/" = {
     device = "/dev/disk/by-uuid/0480434c-adf5-4119-ae4d-8b2825aa64e3";
     fsType = "ext4";
+    options = [
+      "noatime"
+      "nodiratime"
+      "discard"
+    ];
   };
   swapDevices = [ ];
   networking.useDHCP = lib.mkDefault true;

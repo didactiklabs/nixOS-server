@@ -102,6 +102,7 @@ in
   boot = {
     kernelParams = [
       "intel_iommu=on"
+      "elevator=none"
     ];
     loader.grub.enable = lib.mkDefault true;
     kernelPackages = pkgs.linuxPackages_latest;
