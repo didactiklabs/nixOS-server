@@ -42,6 +42,11 @@ in
     "/" = {
       device = "/dev/disk/by-label/ROOT";
       fsType = "ext4";
+      options = [
+        "noatime"
+        "nodiratime"
+        "discard"
+      ];
     };
   };
   systemd = {
@@ -81,7 +86,7 @@ in
       enable = true;
       version = {
         kubeadm = "1.35.3";
-        kubelet = "v1.34.2";
+        kubelet = "v1.35.3";
       };
     };
     caCertificates = {

@@ -37,22 +37,47 @@ in
     "/" = {
       device = "/dev/disk/by-label/ROOT";
       fsType = "ext4";
+      options = [
+        "noatime"
+        "nodiratime"
+        "discard"
+      ];
     };
     "/tmp" = {
       device = "/dev/disk/by-label/TMP";
       fsType = "ext4";
+      options = [
+        "noatime"
+        "nodiratime"
+        "discard"
+      ];
     };
     "/var" = {
       device = "/dev/disk/by-label/VAR";
       fsType = "ext4";
+      options = [
+        "noatime"
+        "nodiratime"
+        "discard"
+      ];
     };
     "/var/lib/containerd" = {
       device = "/dev/disk/by-label/VARLIBCONTAINERD";
       fsType = "ext4";
+      options = [
+        "noatime"
+        "nodiratime"
+        "discard"
+      ];
     };
     "/nix" = {
       device = "/dev/disk/by-label/NIX";
       fsType = "ext4";
+      options = [
+        "noatime"
+        "nodiratime"
+        "discard"
+      ];
     };
   };
   networking.useDHCP = lib.mkDefault true;
