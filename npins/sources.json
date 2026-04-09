@@ -291,22 +291,6 @@
       "url": "https://github.com/NixOS/nixpkgs/archive/a82ccc39b39b621151d6732718e3e250109076fa.tar.gz",
       "hash": "sha256-gf2AmWVTs8lEq7z/3ZAsgnZDhWIckkb+ZnAo5RzSxJg="
     },
-    "runner": {
-      "type": "GitRelease",
-      "repository": {
-        "type": "GitHub",
-        "owner": "actions",
-        "repo": "runner"
-      },
-      "pre_releases": false,
-      "version_upper_bound": null,
-      "release_prefix": null,
-      "submodules": false,
-      "version": "v2.331.0",
-      "revision": "39f6c643d3032f8795fa71f1482731ca90c8e038",
-      "url": "https://api.github.com/repos/actions/runner/tarball/refs/tags/v2.331.0",
-      "hash": "sha256-ZRzs8hqFCiUHxzWea1Gd6gKMiywp2F/+9U/BdeB2yX8="
-    },
     "nixpkgs-k8s-1.35.3": {
       "type": "Git",
       "repository": {
@@ -320,6 +304,22 @@
       "url": "https://github.com/NixOS/nixpkgs/archive/ecb3ef385ef05b4cf77237d811d8b0bd9ffe2389.tar.gz",
       "hash": "sha256-5CjySB6Lw1HKloWebT/IXdK03qd3X/i6LRsqMCbPZeQ=",
       "frozen": true
+    },
+    "runner": {
+      "type": "GitRelease",
+      "repository": {
+        "type": "GitHub",
+        "owner": "actions",
+        "repo": "runner"
+      },
+      "pre_releases": false,
+      "version_upper_bound": null,
+      "release_prefix": null,
+      "submodules": false,
+      "version": "v2.333.1",
+      "revision": "6792966801e8925346735b68c03bf9f347af4646",
+      "url": "https://api.github.com/repos/actions/runner/tarball/refs/tags/v2.333.1",
+      "hash": "sha256-fTMO518gVty6CZcJZlCEDpBWgtXNEZRDcg19PgFMTwQ="
     }
   },
   "version": 7
