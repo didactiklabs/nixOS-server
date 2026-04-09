@@ -260,10 +260,10 @@
       "version_upper_bound": null,
       "release_prefix": null,
       "submodules": false,
-      "version": "v1.35.1",
-      "revision": "b454787a567812fa492ab0535e3c3ed44189a5bd",
-      "url": "https://api.github.com/repos/kubernetes/kubernetes/tarball/refs/tags/v1.35.1",
-      "hash": "sha256-Y5ixQgAdtMBUs/nfPOOdu4pp9uOh/Cr57HO/Owf7PwI="
+      "version": "v1.35.3",
+      "revision": "e666bc7de9a51bad471cba21ff41ac9805272281",
+      "url": "https://api.github.com/repos/kubernetes/kubernetes/tarball/refs/tags/v1.35.3",
+      "hash": "sha256-woIp7AnW7r3y0rpKO03+0t6ONyNXTS1IYxW40E1O8DA="
     },
     "nixbook": {
       "type": "Git",
