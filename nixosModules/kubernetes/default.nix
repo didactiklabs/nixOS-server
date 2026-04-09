@@ -14,14 +14,14 @@ let
     set -euo pipefail
     if [ -f "/etc/kubernetes/admin.conf" ] && [ "$(${pkgs.kubectl}/bin/kubectl --kubeconfig=/etc/kubernetes/admin.conf get nodes | grep control-plane)" ]; then
       KUBE_APISERVER_VERSION=$(${pkgs.kubectl}/bin/kubectl --kubeconfig=/etc/kubernetes/admin.conf version -o json | ${pkgs.jq}/bin/jq -r '.serverVersion.gitVersion')
-      if [ "$KUBE_APISERVER_VERSION" != "${cfg.kubernetes.version.kubeadm}" ]; then
-        ${kubeadm-bin}/bin/kubeadm upgrade apply ${cfg.kubernetes.version.kubeadm} -y
+      if [ "$KUBE_APISERVER_VERSION" != "v${cfg.kubernetes.version.kubeadm}" ]; then
+        ${kubeadm-bin}/bin/kubeadm upgrade apply v${cfg.kubernetes.version.kubeadm} -y
         echo upgrade control-plane done.
         exit 0
       fi
     elif [ -f "/etc/kubernetes/kubelet.conf" ] && [ "$(${pkgs.kubectl}/bin/kubectl --kubeconfig=/etc/kubernetes/kubelet.conf cluster-info | grep running)" ]; then
       KUBE_APISERVER_VERSION=$(${pkgs.kubectl}/bin/kubectl --kubeconfig=/etc/kubernetes/kubelet.conf version -o json | ${pkgs.jq}/bin/jq -r '.serverVersion.gitVersion')
-      if [ "$KUBE_APISERVER_VERSION" != "${cfg.kubernetes.version.kubeadm}" ]; then
+      if [ "$KUBE_APISERVER_VERSION" != "v${cfg.kubernetes.version.kubeadm}" ]; then
         ${kubeadm-bin}/bin/kubeadm upgrade node
         echo upgrade worker done.
         exit 0
