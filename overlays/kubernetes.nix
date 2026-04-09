@@ -6,10 +6,10 @@ final: prev: {
     { config }:
     let
       cfg = config.customNixOSModules;
-      sources = import ../npins; # Assuming npins is at the project root
+      sources = import ../npins;
 
       getNixpkgsForK8sVersion =
-        k8sVersion: component:
+        k8sVersion:
         let
           pinName = "nixpkgs-k8s-${k8sVersion}";
         in
@@ -19,15 +19,11 @@ final: prev: {
             config = { inherit (config.nixpkgs.config) allowUnfree allowUnfreePredicate; };
           }).kubernetes
         else
-          prev.kubernetes.overrideAttrs (oldAttrs: {
-            version = k8sVersion;
-            src = sources."${component}-${k8sVersion}";
-            components = [ "cmd/${component}" ];
-          });
+          throw "No nixpkgs pin found for Kubernetes ${k8sVersion}. Add a '${pinName}' pin to npins.";
 
     in
     {
-      kubernetes_kubeadm = getNixpkgsForK8sVersion cfg.kubernetes.version.kubeadm "kubeadm";
-      kubernetes_kubelet = getNixpkgsForK8sVersion cfg.kubernetes.version.kubelet "kubelet";
+      kubernetes_kubeadm = getNixpkgsForK8sVersion cfg.kubernetes.version.kubeadm;
+      kubernetes_kubelet = getNixpkgsForK8sVersion cfg.kubernetes.version.kubelet;
     };
 }

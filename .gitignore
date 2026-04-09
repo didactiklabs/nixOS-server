@@ -1,3 +1,5 @@
+.devenv*
+.direnv
 .env
 .swp
 result

@@ -12,12 +12,12 @@ in
     enable = lib.mkOption {
       type = lib.types.bool;
       default = false;
-      description = '''';
+      description = "";
     };
     domain = lib.mkOption {
       type = lib.types.str;
       default = "";
-      description = '''';
+      description = "";
     };
   };
   config = lib.mkIf cfg.enable {
