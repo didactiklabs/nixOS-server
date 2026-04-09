@@ -41,9 +41,9 @@
       },
       "branch": "master",
       "submodules": false,
-      "revision": "5f1d42a97b19803041434f66681d5c44c9ae62e3",
-      "url": "https://github.com/nix-community/home-manager/archive/5f1d42a97b19803041434f66681d5c44c9ae62e3.tar.gz",
-      "hash": "sha256-BZ31eN5F99YH6vkc4AhzKGE+tJgJ52kl8f01K7wCs8w="
+      "revision": "7ba4ee4228ed36123c7cb75d50524b43514ef992",
+      "url": "https://github.com/nix-community/home-manager/archive/7ba4ee4228ed36123c7cb75d50524b43514ef992.tar.gz",
+      "hash": "sha256-oBYyowo6yfgb95Z78s3uTnAd9KkpJpwzjJbfnpLaM2Y="
     },
     "kubeadm-v1.33.5": {
       "type": "GitRelease",
@@ -291,6 +291,20 @@
       "url": "https://github.com/NixOS/nixpkgs/archive/a82ccc39b39b621151d6732718e3e250109076fa.tar.gz",
       "hash": "sha256-gf2AmWVTs8lEq7z/3ZAsgnZDhWIckkb+ZnAo5RzSxJg="
     },
+    "nixpkgs-k8s-1.35.3": {
+      "type": "Git",
+      "repository": {
+        "type": "GitHub",
+        "owner": "NixOS",
+        "repo": "nixpkgs"
+      },
+      "branch": "master",
+      "submodules": false,
+      "revision": "ecb3ef385ef05b4cf77237d811d8b0bd9ffe2389",
+      "url": "https://github.com/NixOS/nixpkgs/archive/ecb3ef385ef05b4cf77237d811d8b0bd9ffe2389.tar.gz",
+      "hash": "sha256-5CjySB6Lw1HKloWebT/IXdK03qd3X/i6LRsqMCbPZeQ=",
+      "frozen": true
+    },
     "runner": {
       "type": "GitRelease",
       "repository": {
@@ -306,20 +320,6 @@
       "revision": "39f6c643d3032f8795fa71f1482731ca90c8e038",
       "url": "https://api.github.com/repos/actions/runner/tarball/refs/tags/v2.331.0",
       "hash": "sha256-ZRzs8hqFCiUHxzWea1Gd6gKMiywp2F/+9U/BdeB2yX8="
-    },
-    "nixpkgs-k8s-1.35.3": {
-      "type": "Git",
-      "repository": {
-        "type": "GitHub",
-        "owner": "NixOS",
-        "repo": "nixpkgs"
-      },
-      "branch": "master",
-      "submodules": false,
-      "revision": "ecb3ef385ef05b4cf77237d811d8b0bd9ffe2389",
-      "url": "https://github.com/NixOS/nixpkgs/archive/ecb3ef385ef05b4cf77237d811d8b0bd9ffe2389.tar.gz",
-      "hash": "sha256-5CjySB6Lw1HKloWebT/IXdK03qd3X/i6LRsqMCbPZeQ=",
-      "frozen": true
     }
   },
   "version": 7
