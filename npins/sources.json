@@ -41,9 +41,9 @@
       },
       "branch": "master",
       "submodules": false,
-      "revision": "5f1d42a97b19803041434f66681d5c44c9ae62e3",
-      "url": "https://github.com/nix-community/home-manager/archive/5f1d42a97b19803041434f66681d5c44c9ae62e3.tar.gz",
-      "hash": "sha256-BZ31eN5F99YH6vkc4AhzKGE+tJgJ52kl8f01K7wCs8w="
+      "revision": "7ba4ee4228ed36123c7cb75d50524b43514ef992",
+      "url": "https://github.com/nix-community/home-manager/archive/7ba4ee4228ed36123c7cb75d50524b43514ef992.tar.gz",
+      "hash": "sha256-oBYyowo6yfgb95Z78s3uTnAd9KkpJpwzjJbfnpLaM2Y="
     },
     "kubeadm-v1.33.5": {
       "type": "GitRelease",
