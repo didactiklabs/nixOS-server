@@ -29,7 +29,7 @@ in
       systemd-boot.enable = false;
       grub = {
         enable = true;
-        device = "/dev/disko";
+        device = "/dev/sda";
       };
     };
   };
