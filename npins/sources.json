@@ -260,10 +260,10 @@
       "version_upper_bound": null,
       "release_prefix": null,
       "submodules": false,
-      "version": "v1.35.1",
-      "revision": "b454787a567812fa492ab0535e3c3ed44189a5bd",
-      "url": "https://api.github.com/repos/kubernetes/kubernetes/tarball/refs/tags/v1.35.1",
-      "hash": "sha256-Y5ixQgAdtMBUs/nfPOOdu4pp9uOh/Cr57HO/Owf7PwI="
+      "version": "v1.35.3",
+      "revision": "e666bc7de9a51bad471cba21ff41ac9805272281",
+      "url": "https://api.github.com/repos/kubernetes/kubernetes/tarball/refs/tags/v1.35.3",
+      "hash": "sha256-woIp7AnW7r3y0rpKO03+0t6ONyNXTS1IYxW40E1O8DA="
     },
     "nixbook": {
       "type": "Git",
@@ -291,6 +291,20 @@
       "url": "https://github.com/NixOS/nixpkgs/archive/a82ccc39b39b621151d6732718e3e250109076fa.tar.gz",
       "hash": "sha256-gf2AmWVTs8lEq7z/3ZAsgnZDhWIckkb+ZnAo5RzSxJg="
     },
+    "nixpkgs-k8s-1.35.3": {
+      "type": "Git",
+      "repository": {
+        "type": "GitHub",
+        "owner": "NixOS",
+        "repo": "nixpkgs"
+      },
+      "branch": "master",
+      "submodules": false,
+      "revision": "ecb3ef385ef05b4cf77237d811d8b0bd9ffe2389",
+      "url": "https://github.com/NixOS/nixpkgs/archive/ecb3ef385ef05b4cf77237d811d8b0bd9ffe2389.tar.gz",
+      "hash": "sha256-5CjySB6Lw1HKloWebT/IXdK03qd3X/i6LRsqMCbPZeQ=",
+      "frozen": true
+    },
     "runner": {
       "type": "GitRelease",
       "repository": {
@@ -306,20 +320,6 @@
       "revision": "39f6c643d3032f8795fa71f1482731ca90c8e038",
       "url": "https://api.github.com/repos/actions/runner/tarball/refs/tags/v2.331.0",
       "hash": "sha256-ZRzs8hqFCiUHxzWea1Gd6gKMiywp2F/+9U/BdeB2yX8="
-    },
-    "nixpkgs-k8s-1.35.3": {
-      "type": "Git",
-      "repository": {
-        "type": "GitHub",
-        "owner": "NixOS",
-        "repo": "nixpkgs"
-      },
-      "branch": "master",
-      "submodules": false,
-      "revision": "ecb3ef385ef05b4cf77237d811d8b0bd9ffe2389",
-      "url": "https://github.com/NixOS/nixpkgs/archive/ecb3ef385ef05b4cf77237d811d8b0bd9ffe2389.tar.gz",
-      "hash": "sha256-5CjySB6Lw1HKloWebT/IXdK03qd3X/i6LRsqMCbPZeQ=",
-      "frozen": true
     }
   },
   "version": 7
