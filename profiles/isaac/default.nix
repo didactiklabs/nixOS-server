@@ -78,6 +78,10 @@ in
         tokenFile = "/home/nixos/token1";
         inherit extraPackages url;
         package = github-runner;
+        serviceOverrides = {
+          Restart = "always";
+          OOMPolicy = "continue";
+        };
       };
       runner2 = {
         enable = true;
@@ -86,6 +90,10 @@ in
         tokenFile = "/home/nixos/token2";
         inherit extraPackages url;
         package = github-runner;
+        serviceOverrides = {
+          Restart = "always";
+          OOMPolicy = "continue";
+        };
       };
       runner3 = {
         enable = true;
@@ -94,6 +102,10 @@ in
         tokenFile = "/home/nixos/token3";
         inherit extraPackages url;
         package = github-runner;
+        serviceOverrides = {
+          Restart = "always";
+          OOMPolicy = "continue";
+        };
       };
       runner4 = {
         enable = true;
@@ -102,6 +114,10 @@ in
         tokenFile = "/home/nixos/token4";
         inherit extraPackages url;
         package = github-runner;
+        serviceOverrides = {
+          Restart = "always";
+          OOMPolicy = "continue";
+        };
       };
       runner5 = {
         enable = true;
@@ -110,6 +126,10 @@ in
         tokenFile = "/home/nixos/token5";
         inherit extraPackages url;
         package = github-runner;
+        serviceOverrides = {
+          Restart = "always";
+          OOMPolicy = "continue";
+        };
       };
       runner6 = {
         enable = true;
@@ -119,6 +139,10 @@ in
         url = "https://github.com/RPCU";
         inherit extraPackages;
         package = github-runner;
+        serviceOverrides = {
+          Restart = "always";
+          OOMPolicy = "continue";
+        };
       };
       runner7 = {
         enable = true;
@@ -128,6 +152,10 @@ in
         url = "https://github.com/RPCU";
         inherit extraPackages;
         package = github-runner;
+        serviceOverrides = {
+          Restart = "always";
+          OOMPolicy = "continue";
+        };
       };
       runner8 = {
         enable = true;
@@ -137,6 +165,10 @@ in
         url = "https://github.com/RPCU";
         inherit extraPackages;
         package = github-runner;
+        serviceOverrides = {
+          Restart = "always";
+          OOMPolicy = "continue";
+        };
       };
     };
   };
