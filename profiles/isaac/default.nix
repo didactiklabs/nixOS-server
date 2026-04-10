@@ -79,7 +79,7 @@ in
         inherit extraPackages url;
         package = github-runner;
         serviceOverrides = {
-          Restart = "always";
+          Restart = lib.mkForce "always";
           OOMPolicy = "continue";
         };
       };
@@ -91,7 +91,7 @@ in
         inherit extraPackages url;
         package = github-runner;
         serviceOverrides = {
-          Restart = "always";
+          Restart = lib.mkForce "always";
           OOMPolicy = "continue";
         };
       };
@@ -103,7 +103,7 @@ in
         inherit extraPackages url;
         package = github-runner;
         serviceOverrides = {
-          Restart = "always";
+          Restart = lib.mkForce "always";
           OOMPolicy = "continue";
         };
       };
@@ -115,7 +115,7 @@ in
         inherit extraPackages url;
         package = github-runner;
         serviceOverrides = {
-          Restart = "always";
+          Restart = lib.mkForce "always";
           OOMPolicy = "continue";
         };
       };
@@ -127,7 +127,7 @@ in
         inherit extraPackages url;
         package = github-runner;
         serviceOverrides = {
-          Restart = "always";
+          Restart = lib.mkForce "always";
           OOMPolicy = "continue";
         };
       };
@@ -140,7 +140,7 @@ in
         inherit extraPackages;
         package = github-runner;
         serviceOverrides = {
-          Restart = "always";
+          Restart = lib.mkForce "always";
           OOMPolicy = "continue";
         };
       };
@@ -153,7 +153,7 @@ in
         inherit extraPackages;
         package = github-runner;
         serviceOverrides = {
-          Restart = "always";
+          Restart = lib.mkForce "always";
           OOMPolicy = "continue";
         };
       };
@@ -166,7 +166,7 @@ in
         inherit extraPackages;
         package = github-runner;
         serviceOverrides = {
-          Restart = "always";
+          Restart = lib.mkForce "always";
           OOMPolicy = "continue";
         };
       };
