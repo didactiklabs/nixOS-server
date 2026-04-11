@@ -80,7 +80,7 @@ in
         package = github-runner;
         serviceOverrides = {
           Restart = lib.mkForce "always";
-          OOMPolicy = "continue";
+          # OOMPolicy = "continue";
         };
       };
       runner2 = {
@@ -92,7 +92,7 @@ in
         package = github-runner;
         serviceOverrides = {
           Restart = lib.mkForce "always";
-          OOMPolicy = "continue";
+          # OOMPolicy = "continue";
         };
       };
       runner3 = {
@@ -104,7 +104,7 @@ in
         package = github-runner;
         serviceOverrides = {
           Restart = lib.mkForce "always";
-          OOMPolicy = "continue";
+          # OOMPolicy = "continue";
         };
       };
       runner4 = {
@@ -116,7 +116,7 @@ in
         package = github-runner;
         serviceOverrides = {
           Restart = lib.mkForce "always";
-          OOMPolicy = "continue";
+          # OOMPolicy = "continue";
         };
       };
       runner5 = {
@@ -128,7 +128,7 @@ in
         package = github-runner;
         serviceOverrides = {
           Restart = lib.mkForce "always";
-          OOMPolicy = "continue";
+          # OOMPolicy = "continue";
         };
       };
       runner6 = {
@@ -141,7 +141,7 @@ in
         package = github-runner;
         serviceOverrides = {
           Restart = lib.mkForce "always";
-          OOMPolicy = "continue";
+          # OOMPolicy = "continue";
         };
       };
       runner7 = {
@@ -154,7 +154,7 @@ in
         package = github-runner;
         serviceOverrides = {
           Restart = lib.mkForce "always";
-          OOMPolicy = "continue";
+          # OOMPolicy = "continue";
         };
       };
       runner8 = {
@@ -167,7 +167,7 @@ in
         package = github-runner;
         serviceOverrides = {
           Restart = lib.mkForce "always";
-          OOMPolicy = "continue";
+          # OOMPolicy = "continue";
         };
       };
     };
