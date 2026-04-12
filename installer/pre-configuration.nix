@@ -39,7 +39,7 @@ in
               ""
           }
                 echo Starting final configuration...
-                sleep 2
+                sleep 10
                 ginx --source https://github.com/didactiklabs/nixos-server -b main --now -- colmena apply-local --sudo
                 sudo reboot
         '';
