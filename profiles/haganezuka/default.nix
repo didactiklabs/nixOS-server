@@ -64,7 +64,7 @@ in
       systemd-boot.enable = false;
       grub = {
         enable = true;
-        device = "/dev/disko";
+        device = "/dev/disk/by-id/scsi-0QEMU_QEMU_HARDDISK_drive-scsi0";
       };
     };
   };
