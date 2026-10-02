@@ -55,6 +55,42 @@ in
         '';
       };
     };
+    reserved = {
+      system = lib.mkOption {
+        type = lib.types.attrsOf lib.types.str;
+        default = {
+          cpu = "250m";
+          memory = "1Gi";
+        };
+        description = ''
+          kubelet systemReserved: kept out of node allocatable for the OS
+          (sshd, journald, ginx/nix-daemon deploys).
+        '';
+      };
+      kube = lib.mkOption {
+        type = lib.types.attrsOf lib.types.str;
+        default = {
+          cpu = "250m";
+          memory = "512Mi";
+        };
+        description = "kubelet kubeReserved (kubelet, containerd).";
+      };
+      evictionHard = lib.mkOption {
+        type = lib.types.attrsOf lib.types.str;
+        # Every signal is listed: a partial evictionHard sets the others to 0.
+        default = {
+          "memory.available" = "500Mi";
+          "nodefs.available" = "10%";
+          "nodefs.inodesFree" = "5%";
+          "imagefs.available" = "15%";
+          "imagefs.inodesFree" = "5%";
+        };
+        description = ''
+          kubelet evictionHard: evict pods before the node thrashes (default
+          memory threshold is only 100Mi).
+        '';
+      };
+    };
   };
   config = lib.mkIf cfg.kubernetes.enable {
     boot.kernel.sysctl = {
@@ -115,10 +151,16 @@ in
         kubelet-bin
       ];
       etc = {
-        "kubernetes/kubelet/config.d/99-config.conf".text = ''
-          kind: KubeletConfiguration
-          apiVersion: kubelet.config.k8s.io/v1beta1
-        '';
+        # Node memory headroom: on 2026-10-02 a control plane with no
+        # reservation thrashed instead of evicting, its etcd stalled and the
+        # node went NotReady. Shrinks allocatable by ~1.75Gi on defaults.
+        "kubernetes/kubelet/config.d/99-config.conf".text = builtins.toJSON {
+          kind = "KubeletConfiguration";
+          apiVersion = "kubelet.config.k8s.io/v1beta1";
+          systemReserved = cfg.kubernetes.reserved.system;
+          kubeReserved = cfg.kubernetes.reserved.kube;
+          inherit (cfg.kubernetes.reserved) evictionHard;
+        };
       };
     };
     # kubelet systemd unit is heavily inspired by official image-builder unit
@@ -166,6 +208,10 @@ in
             pkgs.multipath-tools
             pkgs.openiscsi
             pkgs.lsscsi
+          ];
+          # apply reservation changes from config.d on switch
+          restartTriggers = [
+            config.environment.etc."kubernetes/kubelet/config.d/99-config.conf".source
           ];
           serviceConfig = {
             Restart = "always";

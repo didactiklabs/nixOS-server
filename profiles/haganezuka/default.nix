@@ -112,7 +112,11 @@ in
       didactiklabs.enable = true;
       bealv.enable = true;
     };
-    ginx.enable = true;
+    ginx = {
+      enable = true;
+      # staggered so nodes of a cluster never evaluate/switch together
+      applyDelay = 0;
+    };
   };
   imports = [
     (import ../../users/bealv {
