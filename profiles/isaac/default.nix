@@ -11,6 +11,8 @@ let
     version = builtins.replaceStrings [ "v" ] [ "" ] version;
     src = sources.runner;
   });
+  # node24 only: the module's default (node20 + node24) pulls in the insecure nodejs_20
+  nodeRuntimes = [ "node24" ];
 
   overrides = {
     customHomeManagerModules = { };
@@ -40,7 +42,7 @@ in
             fileSystems."/" = {
               device = "/dev/disk/by-uuid/dummy";
               fsType = "ext4";
-        options = [ "noatime" "nodiratime" "discard" ];
+        options = [ "noatime" ];
             };
           }
       '';
@@ -78,6 +80,7 @@ in
         tokenFile = "/home/nixos/token1";
         inherit extraPackages url;
         package = github-runner;
+        inherit nodeRuntimes;
         serviceOverrides = {
           Restart = lib.mkForce "always";
           # OOMPolicy = "continue";
@@ -90,6 +93,7 @@ in
         tokenFile = "/home/nixos/token2";
         inherit extraPackages url;
         package = github-runner;
+        inherit nodeRuntimes;
         serviceOverrides = {
           Restart = lib.mkForce "always";
           # OOMPolicy = "continue";
@@ -102,6 +106,7 @@ in
         tokenFile = "/home/nixos/token3";
         inherit extraPackages url;
         package = github-runner;
+        inherit nodeRuntimes;
         serviceOverrides = {
           Restart = lib.mkForce "always";
           # OOMPolicy = "continue";
@@ -114,6 +119,7 @@ in
         tokenFile = "/home/nixos/token4";
         inherit extraPackages url;
         package = github-runner;
+        inherit nodeRuntimes;
         serviceOverrides = {
           Restart = lib.mkForce "always";
           # OOMPolicy = "continue";
@@ -126,6 +132,7 @@ in
         tokenFile = "/home/nixos/token5";
         inherit extraPackages url;
         package = github-runner;
+        inherit nodeRuntimes;
         serviceOverrides = {
           Restart = lib.mkForce "always";
           # OOMPolicy = "continue";
@@ -139,6 +146,7 @@ in
         url = "https://github.com/RPCU";
         inherit extraPackages;
         package = github-runner;
+        inherit nodeRuntimes;
         serviceOverrides = {
           Restart = lib.mkForce "always";
           # OOMPolicy = "continue";
@@ -152,6 +160,7 @@ in
         url = "https://github.com/RPCU";
         inherit extraPackages;
         package = github-runner;
+        inherit nodeRuntimes;
         serviceOverrides = {
           Restart = lib.mkForce "always";
           # OOMPolicy = "continue";
@@ -165,6 +174,7 @@ in
         url = "https://github.com/RPCU";
         inherit extraPackages;
         package = github-runner;
+        inherit nodeRuntimes;
         serviceOverrides = {
           Restart = lib.mkForce "always";
           # OOMPolicy = "continue";
@@ -178,8 +188,6 @@ in
       fsType = "ext4";
       options = [
         "noatime"
-        "nodiratime"
-        "discard"
       ];
     };
     "/var" = {
@@ -187,8 +195,6 @@ in
       fsType = "ext4";
       options = [
         "noatime"
-        "nodiratime"
-        "discard"
       ];
     };
     "/tmp" = {
@@ -196,8 +202,6 @@ in
       fsType = "ext4";
       options = [
         "noatime"
-        "nodiratime"
-        "discard"
       ];
     };
     "/nix" = {
@@ -205,8 +209,6 @@ in
       fsType = "ext4";
       options = [
         "noatime"
-        "nodiratime"
-        "discard"
       ];
     };
   };

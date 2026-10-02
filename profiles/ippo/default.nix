@@ -39,8 +39,6 @@ in
       fsType = "ext4";
       options = [
         "noatime"
-        "nodiratime"
-        "discard"
       ];
     };
     "/tmp" = {
@@ -48,8 +46,6 @@ in
       fsType = "ext4";
       options = [
         "noatime"
-        "nodiratime"
-        "discard"
       ];
     };
     "/var" = {
@@ -57,8 +53,6 @@ in
       fsType = "ext4";
       options = [
         "noatime"
-        "nodiratime"
-        "discard"
       ];
     };
     "/var/lib/containerd" = {
@@ -66,8 +60,6 @@ in
       fsType = "ext4";
       options = [
         "noatime"
-        "nodiratime"
-        "discard"
       ];
     };
     "/nix" = {
@@ -75,8 +67,6 @@ in
       fsType = "ext4";
       options = [
         "noatime"
-        "nodiratime"
-        "discard"
       ];
     };
   };

@@ -20,11 +20,10 @@ in
           log /dev/log local0
         defaults
           log global
-          option httplog
           option dontlognull
           timeout connect 5000
-          timeout client 50000
-          timeout server 50000
+          timeout client 4h
+          timeout server 4h
         frontend kubernetes-api
           bind *:6443
           mode tcp
@@ -74,8 +73,6 @@ in
       fsType = "ext4";
       options = [
         "noatime"
-        "nodiratime"
-        "discard"
       ];
     };
   };
