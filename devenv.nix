@@ -20,7 +20,7 @@ in
   scripts = {
     build-iso.exec = ''
       mkdir -p output
-      cp $(nix-build default.nix -A buildIso --argstr partition "''${1:-default60G}" --argstr cloud "''${2:-false}")/iso/* output/
+      cp $(nix-build default.nix -A buildIso --argstr partition "''${1:-default70G}" --argstr cloud "''${2:-false}")/iso/* output/
     '';
     build-qcow2.exec = ''
       mkdir -p output
@@ -40,11 +40,12 @@ in
     add-k8s-pin.exec = ''
       if [ -z "$1" ] || [ -z "$2" ]; then
         echo "Usage: add-k8s-pin <K8S_VERSION> <NIXPKGS_REV>"
-        echo "Example: add-k8s-pin v1.35.2 24f4544180242cd80bb2492ce6907243bc716e08"
+        echo "Example: add-k8s-pin 1.35.2 24f4544180242cd80bb2492ce6907243bc716e08"
         exit 1
       fi
 
-      K8S_VERSION="$1"
+      # pin names have no "v" prefix (overlays/kubernetes.nix looks up nixpkgs-k8s-<version>)
+      K8S_VERSION="''${1#v}"
       NIXPKGS_REV="$2"
       PIN_NAME="nixpkgs-k8s-$K8S_VERSION"
 
@@ -58,7 +59,7 @@ in
     '';
     run-iso.exec = ''
       set -euo pipefail
-      if ! nix-build default.nix --argstr partition "''${1:-default}" --argstr cloud "''${2:-false}"; then
+      if ! nix-build default.nix --argstr partition "''${1:-default70G}" --argstr cloud "''${2:-false}"; then
         echo "nix-build failed!"
         exit 1
       fi
@@ -69,7 +70,7 @@ in
         exit 1
       fi
 
-      if ! qemu-img create -f raw disk.img 50G; then
+      if ! qemu-img create -f raw disk.img 80G; then
         echo "Failed to create disk image!"
         exit 1
       fi
@@ -112,7 +113,7 @@ in
     echo ""
     echo "  build-iso       - Build bootable NixOS installation ISO image"
     echo "                    Output: ./output/"
-    echo "                    Example: build-iso default60G false"
+    echo "                    Example: build-iso default70G false"
     echo ""
     echo "  build-qcow2     - Build compressed QCOW2 disk image for VM/cloud use"
     echo "                    Output: ./output/<profile>.qcow2"
@@ -126,14 +127,14 @@ in
     echo "                    Example: build-oci-qcow2 kaas"
     echo ""
     echo "  run-iso         - Build ISO and boot it in QEMU (4GB RAM, KVM)"
-    echo "                    Example: run-iso default false"
+    echo "                    Example: run-iso default70G false"
     echo ""
     echo "  show-k8s-pins   - Display already available Kubernetes nixpkgs pins"
     echo "                    Example: show-k8s-pins"
     echo ""
     echo "  add-k8s-pin     - Pin a nixpkgs revision for a specific Kubernetes version"
     echo "                    Usage: add-k8s-pin <K8S_VERSION> <NIXPKGS_REV>"
-    echo "                    Example: add-k8s-pin v1.35.2 24f4544180242cd80bb2492ce6907243bc716e08"
+    echo "                    Example: add-k8s-pin 1.35.2 24f4544180242cd80bb2492ce6907243bc716e08"
     echo ""
   '';
 }

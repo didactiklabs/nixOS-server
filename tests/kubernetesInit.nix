@@ -1,8 +1,19 @@
 let
-  nixpkgs = <nixpkgs>;
-  pkgs = import nixpkgs { };
-  sources = builtins.fromJSON (builtins.readFile ../npins/sources.json);
-  kubernetesLatestVersion = sources.pins."kubernetes-latest".version;
+  sources = import ../npins;
+  pkgs = import sources.nixpkgs {
+    overlays = [
+      (import ../overlays/kubernetes.nix)
+    ];
+  };
+  inherit (pkgs) lib;
+  # newest Kubernetes version that has a `nixpkgs-k8s-<version>` pin
+  kubernetesLatestVersion = lib.last (
+    builtins.sort lib.versionOlder (
+      map (lib.removePrefix "nixpkgs-k8s-") (
+        builtins.filter (lib.hasPrefix "nixpkgs-k8s-") (builtins.attrNames sources)
+      )
+    )
+  );
 in
 pkgs.testers.runNixOSTest {
   name = "kubernetes-bootstrap";
@@ -46,6 +57,7 @@ pkgs.testers.runNixOSTest {
         imports = [
           ../nixosModules/kubernetes
           ../nixosModules/sysctl.nix
+          ../nixosModules/networkManager.nix
           ../tools.nix
         ];
         networking.firewall.enable = false;
@@ -72,7 +84,7 @@ pkgs.testers.runNixOSTest {
   };
 
   testScript = ''
-    master.succeed('kubeadm version -o json | jq -r .clientVersion.gitVersion | grep -q "^${kubernetesLatestVersion}$"')
+    master.succeed('kubeadm version -o json | jq -r .clientVersion.gitVersion | grep -q "^v${kubernetesLatestVersion}$"')
     master.wait_until_succeeds('kubeadm init --pod-network-cidr=10.244.0.0/16 --control-plane-endpoint=master --apiserver-cert-extra-sans=master', timeout = 300)
 
     master.wait_until_succeeds('kubectl --kubeconfig=/etc/kubernetes/admin.conf get nodes | grep control-plane', timeout = 300)

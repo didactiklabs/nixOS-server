@@ -44,8 +44,6 @@ in
       fsType = "ext4";
       options = [
         "noatime"
-        "nodiratime"
-        "discard"
       ];
     };
   };

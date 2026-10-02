@@ -102,7 +102,7 @@ in
   boot = {
     kernelParams = [
       "intel_iommu=on"
-      "elevator=none"
+      "iommu=pt"
     ];
     loader.grub.enable = lib.mkDefault true;
     kernelPackages = pkgs.linuxPackages_latest;
@@ -161,7 +161,7 @@ in
       # Ensure we can still build when missing-server is not accessible
       fallback = true
       min-free = ${toString (10240 * 1024 * 1024)}
-      max-free = ${toString (10240 * 1024 * 1024)}
+      max-free = ${toString (30720 * 1024 * 1024)}
     '';
   };
   # SSH Agent

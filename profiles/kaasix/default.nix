@@ -36,8 +36,6 @@ in
     fsType = "ext4";
     options = [
       "noatime"
-      "nodiratime"
-      "discard"
     ];
   };
   networking = {
@@ -56,10 +54,11 @@ in
     };
     resolved = {
       enable = true;
-      llmnr = "false"; # allow shotdns resolution in kubevirt
-      extraConfig = ''
-        ResolveUnicastSingleLabel=true # allow shotdns resolution in kubevirt
-      '';
+      # allow shortdns resolution in kubevirt
+      settings.Resolve = {
+        LLMNR = false;
+        ResolveUnicastSingleLabel = true;
+      };
     };
   };
   security = {
