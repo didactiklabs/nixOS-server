@@ -77,6 +77,10 @@ colmena apply --on @tag           # Deploy to hosts matching tag
 colmena apply --on hostname       # Deploy to specific host
 ```
 
+Hosts also pull `main` themselves through **ginx** (`nixosModules/ginx.nix`): on a new revision each host waits `customNixOSModules.ginx.applyDelay` seconds, then evaluates and switches in a transient `ginx-apply` unit (MemoryHigh 2G / MemoryMax 4G, low CPU/IO weight; nix-daemon has the same caps). Hosts of one cluster have different delays (kazuma 0 / darkness 600 / megumin 1200; frieren 0 / gojo 600 / ippo 1200 / vi 1800) so they never evaluate or switch together: on 2026-10-02 the three mgmt control planes evaluating at once (10 GB RAM, no kubelet reservation) made megumin thrash, its etcd stalled and it went NotReady for 4 min. `ginx.service` has `restartIfChanged = false`, so changes to the ginx unit itself only apply after a ginx restart or reboot. Don't merge host changes together with cluster (flux-mgmt) changes.
+
+Kubelet reservations (`customNixOSModules.kubernetes.reserved.{system,kube,evictionHard}`, defaults 1Gi+512Mi reserved, evict below 500Mi) are written to `/etc/kubernetes/kubelet/config.d/99-config.conf`; changing them restarts the kubelet.
+
 ## CI/CD
 
 - Self-hosted GitHub Actions runners (on `isaac`, 8 runners)
