@@ -2,6 +2,11 @@
   cloud ? "ippo",
   partition ? "default70G",
   profile ? "kaasix",
+  # Override the profile's Kubernetes version (kubeadm + kubelet) for image
+  # builds, e.g. one KaaS worker template per step of an upgrade path:
+  #   build-qcow2 kaassopeia 1.35.4 ; build-qcow2 kaassopeia 1.36.3
+  # Needs a nixpkgs-k8s-<version> pin (show-k8s-pins / add-k8s-pin).
+  k8sVersion ? "",
   ...
 }:
 let
@@ -26,9 +31,19 @@ let
     specialArgs = { inherit disko partition cloud; };
   };
   nixosSystem = import (sources.nixpkgs + "/nixos") {
-    configuration = ./profiles/${profile}/configuration.nix;
+    configuration =
+      { lib, ... }:
+      {
+        imports = [ ./profiles/${profile}/configuration.nix ];
+        customNixOSModules.kubernetes.version = lib.mkIf (k8sVersion != "") (
+          lib.mkForce {
+            kubeadm = k8sVersion;
+            kubelet = k8sVersion;
+          }
+        );
+      };
   };
-  buildQcow2 = import <nixpkgs/nixos/lib/make-disk-image.nix> {
+  buildQcow2 = import "${sources.nixpkgs}/nixos/lib/make-disk-image.nix" {
     inherit lib pkgs;
     inherit (nixosSystem) config;
     diskSize = "auto";

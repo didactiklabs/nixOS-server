@@ -23,9 +23,13 @@ in
       cp $(nix-build default.nix -A buildIso --argstr partition "''${1:-default70G}" --argstr cloud "''${2:-false}")/iso/* output/
     '';
     build-qcow2.exec = ''
+      set -euo pipefail
+      # build-qcow2 <profile> [k8s-version]  (version: e.g. 1.36.3, overrides the profile's)
       mkdir -p output
       chmod +w output -R
-      cp $(nix-build default.nix -A buildQcow2 --argstr profile $1)/nixos.qcow2 output/$1.qcow2
+      name="$1''${2:+-$2}"
+      cp "$(nix-build default.nix -A buildQcow2 --argstr profile "$1" --argstr k8sVersion "''${2:-}")/nixos.qcow2" "output/$name.qcow2"
+      echo "output/$name.qcow2"
     '';
     build-oci-qcow2.exec = ''
       mkdir -p output
@@ -119,7 +123,8 @@ in
     echo "                    Output: ./output/<profile>.qcow2"
     PROFILES=$(ls -1 profiles/ 2>/dev/null | tr '\n' ',' | sed 's/,$//')
     echo "                    Available profiles: $PROFILES"
-    echo "                    Example: build-qcow2 kaas"
+    echo "                    Usage: build-qcow2 <profile> [k8s-version] -> output/<profile>[-<version>].qcow2"
+    echo "                    Example: build-qcow2 kaassopeia 1.36.3"
     echo ""
     echo "  build-oci-qcow2 - Build OCI container image with embedded QCOW2"
     echo "                    Output: ./output/<profile>-qcow2-oci.tar"
