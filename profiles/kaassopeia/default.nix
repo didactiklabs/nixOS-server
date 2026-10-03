@@ -111,8 +111,8 @@ in
     kubernetes = {
       enable = true;
       version = {
-        kubeadm = "1.35.3";
-        kubelet = "1.35.3";
+        kubeadm = "1.35.4";
+        kubelet = "1.35.4";
       };
     };
     caCertificates = {
