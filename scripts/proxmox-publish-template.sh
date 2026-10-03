@@ -206,17 +206,25 @@ for tstore in "${todo[@]}"; do
   | [.key, (if (.key|test("^net")) then (.value|sub("^(?<m>[a-z0-9]+)=[0-9A-Fa-f:]{17}"; "\(.m)")) else (.value|tostring) end)]
   | @tsv' <<<"$refcfg")
 
+  # Don't leave a half-made VM behind if a step below fails.
+  trap 'echo "removing unfinished VM ${vmid}" >&2; curl "${curl_opts[@]}" --max-time 120 -X DELETE "${PVE_URL%/}/api2/json/nodes/${node}/qemu/${vmid}?purge=1&destroy-unreferenced-disks=1" >/dev/null || true' EXIT
   echo "creating VM ${vmid} (hardware from ${ref}, disk on ${tstore})..."
   printf '  %s\n' "${args[@]}" | grep -v '^  -' | grep -v '^  --' || true
   upid="$(api POST "/nodes/${node}/qemu" "${args[@]}" | jq -r .)"
   wait_task "$upid"
-  echo "growing ${vmid}'s ${disk_key:-scsi0} to ${dsize}..."
-  upid="$(api PUT "/nodes/${node}/qemu/${vmid}/resize" -d "disk=${disk_key:-scsi0}" -d "size=${dsize}" | jq -r .)"
-  # Proxmox >= 8 runs the resize as a task; older versions answer null.
-  [ "$upid" = null ] || wait_task "$upid"
+  # CI stages an image already grown to TEMPLATE_DISK_SIZE (qemu-img resize on
+  # Proxmox's HDD storage times out); grow it here only when it is smaller.
+  read -r _ cur < <(template_disk "$vmid")
+  if [ "$cur" -lt "$(to_bytes "$dsize")" ]; then
+    echo "growing ${vmid}'s ${disk_key:-scsi0} to ${dsize}..."
+    upid="$(api PUT "/nodes/${node}/qemu/${vmid}/resize" -d "disk=${disk_key:-scsi0}" -d "size=${dsize}" | jq -r .)"
+    # Proxmox >= 8 runs the resize as a task; older versions answer null.
+    [ "$upid" = null ] || wait_task "$upid"
+  fi
   echo "converting ${vmid} to a template..."
   upid="$(api POST "/nodes/${node}/qemu/${vmid}/template" | jq -r .)"
   wait_task "$upid"
+  trap - EXIT
   # On this storage, only the new template keeps the version tag.
   templates | while read -r id tags; do
     [ "$id" = "$vmid" ] && continue

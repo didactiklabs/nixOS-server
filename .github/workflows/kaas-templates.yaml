@@ -84,10 +84,16 @@ jobs:
       - name: Stage image on GHCR
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TEMPLATE_DISK_SIZE: ${{ vars.TEMPLATE_DISK_SIZE }}
         run: |
           owner="${GITHUB_REPOSITORY_OWNER,,}"
           hash="$(basename "$(dirname "$(readlink -f result-image/nixos.qcow2)")" | cut -c1-12)"
           cp -L result-image/nixos.qcow2 kaassopeia.qcow2
+          chmod u+w kaassopeia.qcow2
+          # Grow the virtual disk here (sparse: the file barely changes) so
+          # Proxmox imports it at full size; a resize on Proxmox's HDD storage
+          # times out (qemu-img resize on disk_hddb).
+          nix shell nixpkgs#qemu-utils -c qemu-img resize kaassopeia.qcow2 "${TEMPLATE_DISK_SIZE:-70G}"
           echo "$GH_TOKEN" | nix run nixpkgs#oras -- login ghcr.io -u "$GITHUB_ACTOR" --password-stdin
           nix run nixpkgs#oras -- push "ghcr.io/${owner}/kaassopeia-image:${{ matrix.version }}-${hash}" \
             kaassopeia.qcow2:application/vnd.didactiklabs.kaas.qcow2
