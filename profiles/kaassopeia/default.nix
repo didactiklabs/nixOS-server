@@ -131,6 +131,6 @@ in
         overrides
         ;
     })
-    <nixpkgs/nixos/modules/profiles/qemu-guest.nix>
+    "${sources.nixpkgs}/nixos/modules/profiles/qemu-guest.nix"
   ];
 }
