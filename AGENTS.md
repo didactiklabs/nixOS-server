@@ -92,7 +92,7 @@ KaaS templates from CI (`.github/workflows/kaas-templates.yaml`, manual run with
 - Repo variable `KAAS_TEMPLATES_ENABLED=true`.
 - Repo variable `PVE_PINNED_PUBKEY`: the API certificate comes from Proxmox's own CA (`CN=proxmox-alv`, no `proxmox.bealv.lan` SAN), so the workflow pins its public key. After a certificate renewal with a new key the publish step fails closed; recompute with `echo | openssl s_client -connect proxmox.bealv.lan:8006 2>/dev/null | openssl x509 -pubkey -noout | openssl pkey -pubin -outform der | openssl dgst -sha256 -binary | openssl base64` and set `sha256//<that>`. Optional variables: `PVE_URL`, `PVE_NODE`, `REFERENCE_VMID`, `TEMPLATE_STORAGES`, `IMPORT_STORAGE`, `PVE_INSECURE=1` (if the API certificate isn't from the bealv CA).
 
-Kubelet reservations (`customNixOSModules.kubernetes.reserved.{system,kube,evictionHard}`, defaults 1Gi+512Mi reserved, evict below 500Mi) are written to `/etc/kubernetes/kubelet/config.d/99-config.conf`; changing them restarts the kubelet.
+Kubelet reservations (`customNixOSModules.kubernetes.reserved.{system,kube,evictionHard}`, defaults 1Gi+512Mi reserved, evict below 500Mi) are written to `/etc/kubernetes/kubelet/config.d/99-config.conf`; changing them restarts the kubelet. The same drop-in turns on parallel image pulls (`serializeImagePulls: false`, `maxParallelImagePulls: 5`, registry QPS 10/burst 20) for every node, mgmt hosts and kaassopeia workers (from their next template).
 
 ## CI/CD
 
