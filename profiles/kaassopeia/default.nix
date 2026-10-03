@@ -96,7 +96,11 @@ in
   systemd = {
     network = {
       networks = {
-        "00-enp1s0" = {
+        # Fallback only: never DHCP on en* when nothing else configures it.
+        # Must sort AFTER cloud-init's 10-cloud-init-<iface>.network (CAPMOX
+        # static IP, matched by MAC): networkd uses the first matching file,
+        # and as 00-enp1s0 this rule left new workers without an address.
+        "99-en-no-dhcp" = {
           matchConfig = {
             Name = "en*";
           };
