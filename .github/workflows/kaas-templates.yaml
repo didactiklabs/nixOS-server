@@ -28,6 +28,9 @@ on:
       - profiles/kaassopeia/**
       - .github/workflows/kaas-templates.yaml
       - scripts/proxmox-publish-template.sh
+permissions:
+  contents: read
+  packages: write # stage images on GHCR for Proxmox to download
 concurrency:
   group: kaas-templates
   cancel-in-progress: false
@@ -75,6 +78,21 @@ jobs:
           nix-build default.nix -A buildQcow2 --argstr profile kaassopeia \
             --argstr k8sVersion "${{ matrix.version }}" -o result-image
           ls -lh result-image/
+      # Proxmox pulls the image from GitHub's CDN over its own link instead of
+      # a 2 GB upload through the tailnet (US runner -> ~1.6 MB/s, 22 min).
+      # Single-file OCI artifact: the blob is the raw qcow2.
+      - name: Stage image on GHCR
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          owner="${GITHUB_REPOSITORY_OWNER,,}"
+          hash="$(basename "$(dirname "$(readlink -f result-image/nixos.qcow2)")" | cut -c1-12)"
+          cp -L result-image/nixos.qcow2 kaassopeia.qcow2
+          echo "$GH_TOKEN" | nix run nixpkgs#oras -- login ghcr.io -u "$GITHUB_ACTOR" --password-stdin
+          nix run nixpkgs#oras -- push "ghcr.io/${owner}/kaassopeia-image:${{ matrix.version }}-${hash}" \
+            kaassopeia.qcow2:application/vnd.didactiklabs.kaas.qcow2
+          echo "IMAGE_SHA256=$(sha256sum kaassopeia.qcow2 | cut -d' ' -f1)" >> "$GITHUB_ENV"
+          rm kaassopeia.qcow2
       - name: Join the tailnet
         uses: tailscale/github-action@v3
         with:
@@ -91,6 +109,7 @@ jobs:
           tailscale ping --c 5 opnsense
       - name: Publish template
         env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           PVE_URL: ${{ vars.PVE_URL || 'https://proxmox.bealv.lan:8006' }}
           PVE_TOKEN_ID: ${{ secrets.PVE_TOKEN_ID }}
           PVE_TOKEN_SECRET: ${{ secrets.PVE_TOKEN_SECRET }}
@@ -101,6 +120,15 @@ jobs:
           PVE_PINNED_PUBKEY: ${{ vars.PVE_PINNED_PUBKEY }}
           PVE_INSECURE: ${{ vars.PVE_INSECURE }}
         run: |
+          # Short-lived signed URL of the staged blob (GHCR redirects to its
+          # CDN); requested right before use.
+          owner="${GITHUB_REPOSITORY_OWNER,,}"
+          token="$(curl -fsS -u "${GITHUB_ACTOR}:${GH_TOKEN}" "https://ghcr.io/token?scope=repository:${owner}/kaassopeia-image:pull" | jq -r .token)"
+          IMAGE_URL="$(curl -fsS -o /dev/null -w '%{redirect_url}' -H "Authorization: Bearer ${token}" \
+            "https://ghcr.io/v2/${owner}/kaassopeia-image/blobs/sha256:${IMAGE_SHA256}")"
+          [ -n "$IMAGE_URL" ] || { echo "no signed URL from GHCR" >&2; exit 1; }
+          echo "::add-mask::${IMAGE_URL}"
+          export IMAGE_URL
           # bealv internal CA (nixbook) for proxmox.bealv.lan's certificate.
           PVE_CACERT="$(nix eval --raw --impure --expr '(import ./npins).nixbook.outPath')/assets/certs/bealv-ca.crt"
           export PVE_CACERT
