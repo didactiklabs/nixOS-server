@@ -115,7 +115,8 @@ jobs:
           PVE_TOKEN_SECRET: ${{ secrets.PVE_TOKEN_SECRET }}
           PVE_NODE: ${{ vars.PVE_NODE || 'proxmox-alv' }}
           REFERENCE_VMID: ${{ vars.REFERENCE_VMID || '997' }}
-          TEMPLATE_STORAGE: ${{ vars.TEMPLATE_STORAGE }}
+          # One template per Proxmox storage (IDs, not StorageClass names).
+          TEMPLATE_STORAGES: ${{ vars.TEMPLATE_STORAGES || 'disk_hdd disk_hddb' }}
           IMPORT_STORAGE: ${{ vars.IMPORT_STORAGE || 'local' }}
           PVE_PINNED_PUBKEY: ${{ vars.PVE_PINNED_PUBKEY }}
           PVE_INSECURE: ${{ vars.PVE_INSECURE }}

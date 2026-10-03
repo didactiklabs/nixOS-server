@@ -6,13 +6,14 @@
 #
 # The template copies the hardware of REFERENCE_VMID (an existing KaaS
 # template: cores, memory, cpu, machine, bios, net, scsihw, serial, agent...)
-# with a fresh MAC, imports the image as its boot disk on TEMPLATE_STORAGE, and
+# with a fresh MAC, imports the image as its boot disk on each of TEMPLATE_STORAGES, and
 # gets the tags CAPMOX selects on (flux-mgmt ClusterClass templateSelector,
 # matchPolicy uniqueSubset):
-#   kaassopeia  k8s-v<version>  img-<nix store hash>
+#   kaassopeia  k8s-v<version>  img-<nix store hash>  storage-<proxmox storage>
+# One template per storage in TEMPLATE_STORAGES (from one image download).
 # Publishing the same image again is a no-op. A new image for a version that
-# already has a template takes the k8s-v<version> tag; the previous template is
-# retagged superseded-k8s-v<version> (kept for rollback; existing VMs are full
+# already has a template on that storage takes the k8s-v<version> tag; the
+# previous one there is retagged superseded-k8s-v<version> (kept for rollback; existing VMs are full
 # clones and don't depend on it).
 #
 # Image transfer: with IMAGE_URL (+ IMAGE_SHA256) Proxmox downloads the image
@@ -21,8 +22,8 @@
 #
 # Env: PVE_URL (https://proxmox.bealv.lan:8006), PVE_TOKEN_ID (user@realm!name),
 #      PVE_TOKEN_SECRET, PVE_NODE (proxmox-alv), REFERENCE_VMID (997),
-#      TEMPLATE_STORAGE (Proxmox storage ID; default: the one of REFERENCE_VMID's
-#      disk), IMPORT_STORAGE (local; needs the "Import"
+#      TEMPLATE_STORAGES (space-separated Proxmox storage IDs; default: the one
+#      of REFERENCE_VMID's disk), IMPORT_STORAGE (local; needs the "Import"
 #      content type). TLS, first match wins:
 #        PVE_PINNED_PUBKEY  sha256//<base64> of the API certificate's public key
 #                           (Proxmox's own self-signed CA, CN=proxmox-alv: pin it)
@@ -35,12 +36,13 @@ version="${2#v}"
 : "${PVE_URL:?}" "${PVE_TOKEN_ID:?}" "${PVE_TOKEN_SECRET:?}"
 node="${PVE_NODE:-proxmox-alv}"
 ref="${REFERENCE_VMID:-997}"
-tstore="${TEMPLATE_STORAGE:-}" # default: the reference template's disk storage
+# Proxmox storage IDs to create a template on (space separated); default: the
+# storage of the reference template's disk. One template per storage.
+storages_in="${TEMPLATE_STORAGES:-${TEMPLATE_STORAGE:-}}"
 istore="${IMPORT_STORAGE:-local}"
 imghash="$(basename "$(dirname "$(readlink -f "$image")")" | cut -c1-12)"
 vtag="k8s-v${version}"
 itag="img-${imghash}"
-tags_new="kaassopeia;${vtag};${itag}"
 file="kaassopeia-${version}-${imghash}.qcow2"
 
 # --fail-with-body: on HTTP errors curl still exits non-zero, but Proxmox's
@@ -88,11 +90,57 @@ templates() { # all KaaS templates on the node: vmid tags
   api GET "/nodes/${node}/qemu" | jq -r '.[] | select(.template == 1) | select((.tags // "") | split(";") | index("kaassopeia")) | "\(.vmid) \(.tags)"'
 }
 
+boot_disk_key() { # first non-cloud-init disk key of a VM config (json on stdin)
+  jq -r 'to_entries[] | select(.key|test("^(scsi|virtio|sata|ide)[0-9]+$")) | select(.value|test("cloudinit|media=cdrom")|not) | .key' | head -1
+}
+template_storage() { # Proxmox storage of a VM's boot disk
+  local cfg key
+  cfg="$(api GET "/nodes/${node}/qemu/$1/config")"
+  key="$(boot_disk_key <<<"$cfg")"
+  jq -r --arg k "${key:-scsi0}" '.[$k] // ""' <<<"$cfg" | cut -d: -f1
+}
+
 # Fail here (TLS, token, routing) rather than inside a condition below.
 echo "Proxmox API: $(api GET /version | jq -r '"version \(.version)"')"
 
-if templates | awk '{print $2}' | tr ';' '\n' | grep -qx "$itag"; then
-  echo "image ${imghash} already published for ${vtag}, nothing to do"
+refcfg="$(api GET "/nodes/${node}/qemu/${ref}/config")"
+disk_key="$(boot_disk_key <<<"$refcfg")"
+ci_key="$(jq -r 'to_entries[] | select(.value|tostring|test("cloudinit")) | .key' <<<"$refcfg" | head -1)"
+if [ -z "$storages_in" ]; then
+  # Proxmox storage ID (not the Kubernetes StorageClass name) of the reference
+  # template's boot disk, e.g. "disk_hdd:base-997-disk-0" -> "disk_hdd".
+  storages_in="$(jq -r --arg k "${disk_key:-scsi0}" '.[$k] // ""' <<<"$refcfg" | cut -d: -f1)"
+  [ -n "$storages_in" ] || {
+    echo "cannot find the storage of ${ref}'s disk; set TEMPLATE_STORAGES" >&2
+    exit 1
+  }
+fi
+known="$(api GET "/nodes/${node}/storage" | jq -r '.[].storage')"
+read -ra storages <<<"$storages_in"
+for st in "${storages[@]}"; do
+  grep -qx "$st" <<<"$known" || {
+    echo "Proxmox storage '${st}' does not exist on ${node}; available: $(paste -sd' ' <<<"$known")" >&2
+    exit 1
+  }
+done
+
+# Storages that don't have a template of this image yet.
+todo=()
+for st in "${storages[@]}"; do
+  found=""
+  while read -r id tags; do
+    [ -n "$id" ] || continue
+    tr ';' '\n' <<<"$tags" | grep -qx "$itag" || continue
+    [ "$(template_storage "$id")" = "$st" ] && found="$id"
+  done < <(templates)
+  if [ -n "$found" ]; then
+    echo "image ${imghash} already published on ${st} (template ${found})"
+  else
+    todo+=("$st")
+  fi
+done
+if [ "${#todo[@]}" -eq 0 ]; then
+  echo "nothing to do"
   exit 0
 fi
 
@@ -120,53 +168,44 @@ else
   wait_task "$upid"
 fi
 
-refcfg="$(api GET "/nodes/${node}/qemu/${ref}/config")"
-disk_key="$(jq -r 'to_entries[] | select(.key|test("^(scsi|virtio|sata|ide)[0-9]+$")) | select(.value|test("cloudinit|media=cdrom")|not) | .key' <<<"$refcfg" | head -1)"
-ci_key="$(jq -r 'to_entries[] | select(.value|tostring|test("cloudinit")) | .key' <<<"$refcfg" | head -1)"
-if [ -z "$tstore" ]; then
-  # Proxmox storage ID (not the Kubernetes StorageClass name) of the reference
-  # template's boot disk, e.g. "local-lvm:base-997-disk-0" -> "local-lvm".
-  tstore="$(jq -r --arg k "${disk_key:-scsi0}" '.[$k]' <<<"$refcfg" | cut -d: -f1)"
-  [ -n "$tstore" ] && [ "$tstore" != null ] || {
-    echo "cannot find the storage of ${ref}'s disk; set TEMPLATE_STORAGE" >&2
-    exit 1
-  }
-fi
-vmid="$(api GET /cluster/nextid | jq -r .)"
-args=(
-  -d "vmid=${vmid}"
-  --data-urlencode "name=kaassopeia-${version//./-}"
-  --data-urlencode "tags=${tags_new}"
-  --data-urlencode "${disk_key:-scsi0}=${tstore}:0,import-from=${volid}"
-  --data-urlencode "boot=order=${disk_key:-scsi0}"
-)
-[ -n "$ci_key" ] && args+=(--data-urlencode "${ci_key}=${tstore}:cloudinit")
-# Hardware copied from the reference template. MAC addresses are dropped
-# (model=MAC -> model) so every template, and every clone, gets its own.
-while IFS=$'\t' read -r k v; do
-  args+=(--data-urlencode "${k}=${v}")
-done < <(jq -r 'to_entries[]
+for tstore in "${todo[@]}"; do
+  vmid="$(api GET /cluster/nextid | jq -r .)"
+  tags_new="kaassopeia;${vtag};${itag};storage-${tstore}"
+  args=(
+    -d "vmid=${vmid}"
+    --data-urlencode "name=kaassopeia-${version//./-}-${tstore//_/-}"
+    --data-urlencode "tags=${tags_new}"
+    --data-urlencode "${disk_key:-scsi0}=${tstore}:0,import-from=${volid}"
+    --data-urlencode "boot=order=${disk_key:-scsi0}"
+  )
+  [ -n "$ci_key" ] && args+=(--data-urlencode "${ci_key}=${tstore}:cloudinit")
+  # Hardware copied from the reference template. MAC addresses are dropped
+  # (model=MAC -> model) so every template, and every clone, gets its own.
+  while IFS=$'\t' read -r k v; do
+    args+=(--data-urlencode "${k}=${v}")
+  done < <(jq -r 'to_entries[]
   | select(.key|test("^(cores|sockets|memory|balloon|cpu|machine|bios|ostype|scsihw|vga|agent|numa|hotplug|serial[0-9]+|net[0-9]+|efidisk0)$"))
   | select(.key != "efidisk0")
   | [.key, (if (.key|test("^net")) then (.value|sub("^(?<m>[a-z0-9]+)=[0-9A-Fa-f:]{17}"; "\(.m)")) else (.value|tostring) end)]
   | @tsv' <<<"$refcfg")
 
-echo "creating VM ${vmid} (hardware from ${ref}, disk on ${tstore})..."
-printf '  %s\n' "${args[@]}" | grep -v '^  -' | grep -v '^  --' || true
-upid="$(api POST "/nodes/${node}/qemu" "${args[@]}" | jq -r .)"
-wait_task "$upid"
-echo "converting ${vmid} to a template..."
-upid="$(api POST "/nodes/${node}/qemu/${vmid}/template" | jq -r .)"
-wait_task "$upid"
-api DELETE "/nodes/${node}/storage/${istore}/content/$(jq -rn --arg v "$volid" '$v|@uri')" >/dev/null || echo "warning: could not delete ${volid}" >&2
-
-# Only the new template keeps the version tag.
-templates | while read -r id tags; do
-  [ "$id" = "$vmid" ] && continue
-  if tr ';' '\n' <<<"$tags" | grep -qx "$vtag"; then
+  echo "creating VM ${vmid} (hardware from ${ref}, disk on ${tstore})..."
+  printf '  %s\n' "${args[@]}" | grep -v '^  -' | grep -v '^  --' || true
+  upid="$(api POST "/nodes/${node}/qemu" "${args[@]}" | jq -r .)"
+  wait_task "$upid"
+  echo "converting ${vmid} to a template..."
+  upid="$(api POST "/nodes/${node}/qemu/${vmid}/template" | jq -r .)"
+  wait_task "$upid"
+  # On this storage, only the new template keeps the version tag.
+  templates | while read -r id tags; do
+    [ "$id" = "$vmid" ] && continue
+    tr ';' '\n' <<<"$tags" | grep -qx "$vtag" || continue
+    [ "$(template_storage "$id")" = "$tstore" ] || continue
     newtags="$(tr ';' '\n' <<<"$tags" | sed "s/^${vtag}\$/superseded-${vtag}/" | paste -sd';')"
     echo "template ${id}: ${tags} -> ${newtags}"
     api PUT "/nodes/${node}/qemu/${id}/config" --data-urlencode "tags=${newtags}" >/dev/null
-  fi
+  done
+  echo "published template ${vmid}: ${tags_new}"
 done
-echo "published template ${vmid}: ${tags_new}"
+
+api DELETE "/nodes/${node}/storage/${istore}/content/$(jq -rn --arg v "$volid" '$v|@uri')" >/dev/null || echo "warning: could not delete ${volid}" >&2
