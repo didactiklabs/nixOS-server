@@ -1,0 +1,96 @@
+# Build KaaS worker images (profile kaassopeia) and publish them as Proxmox
+# templates that the flux-mgmt ClusterClass selects by tag
+# (kaassopeia + k8s-v<version>). See scripts/proxmox-publish-template.sh.
+#
+# Runs on GitHub-hosted runners (they have /dev/kvm, needed for disk images)
+# and reaches proxmox.bealv.lan through the tailnet (OPNsense subnet routes).
+# Setup (once):
+#   - secrets TS_OAUTH_CLIENT_ID / TS_OAUTH_SECRET: Tailscale OAuth client
+#     (scope auth_keys, tag:ci); tailnet ACL: tag:ci -> Proxmox :8006 (+ DNS);
+#     split DNS bealv.lan -> the OPNsense resolver, or set vars.PVE_URL to an IP.
+#   - secrets PVE_TOKEN_ID / PVE_TOKEN_SECRET: Proxmox API token (see AGENTS.md).
+#   - storage `local` (vars.IMPORT_STORAGE) with the "Import" content type.
+#   - repo variable KAAS_TEMPLATES_ENABLED=true (the jobs are skipped until then).
+name: KaaS templates
+on:
+  workflow_dispatch:
+    inputs:
+      versions:
+        description: "Kubernetes versions (space separated), one template each"
+        default: "1.35.4 1.36.3"
+  push:
+    branches:
+      - main
+    paths:
+      - profiles/kaassopeia/**
+      - .github/workflows/kaas-templates.yaml
+      - scripts/proxmox-publish-template.sh
+concurrency:
+  group: kaas-templates
+  cancel-in-progress: false
+jobs:
+  versions:
+    if: vars.KAAS_TEMPLATES_ENABLED == 'true'
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.v.outputs.matrix }}
+    steps:
+      - id: v
+        env:
+          VERSIONS: ${{ inputs.versions || '1.35.4 1.36.3' }}
+        run: echo "matrix=$(jq -Rc 'split(" ") | map(select(length > 0) | ltrimstr("v"))' <<<"$VERSIONS")" >> "$GITHUB_OUTPUT"
+  template:
+    needs: versions
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      max-parallel: 1
+      matrix:
+        version: ${{ fromJSON(needs.versions.outputs.matrix) }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Free disk space
+        run: |
+          sudo rm -rf /usr/share/dotnet /usr/local/lib/android /opt/ghc /opt/hostedtoolcache/CodeQL
+          df -h /
+      - name: Enable KVM
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
+      - uses: cachix/install-nix-action@ba0dd844c9180cbf77aa72a116d6fbc515d0e87b # v27
+        with:
+          extra_nix_config: |
+            fallback = true
+            connect-timeout = 5
+            system-features = nixos-test benchmark big-parallel kvm
+            trusted-public-keys = didactiklabs-nixcache:PxLKN0+ZkP07M8g8/B6xbP6A4MYpqQg6LH7V3muiy/0= cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY=
+            substituters = https://s3.didactiklabs.io/nix-cache https://cache.nixos.org/
+      - name: Build image
+        run: |
+          export NIXPKGS_ALLOW_UNFREE=1
+          nix-build default.nix -A buildQcow2 --argstr profile kaassopeia \
+            --argstr k8sVersion "${{ matrix.version }}" -o result-image
+          ls -lh result-image/
+      - name: Join the tailnet
+        uses: tailscale/github-action@v3
+        with:
+          oauth-client-id: ${{ secrets.TS_OAUTH_CLIENT_ID }}
+          oauth-secret: ${{ secrets.TS_OAUTH_SECRET }}
+          tags: tag:ci
+          args: --accept-routes
+      - name: Publish template
+        env:
+          PVE_URL: ${{ vars.PVE_URL || 'https://proxmox.bealv.lan:8006' }}
+          PVE_TOKEN_ID: ${{ secrets.PVE_TOKEN_ID }}
+          PVE_TOKEN_SECRET: ${{ secrets.PVE_TOKEN_SECRET }}
+          PVE_NODE: ${{ vars.PVE_NODE || 'proxmox-alv' }}
+          REFERENCE_VMID: ${{ vars.REFERENCE_VMID || '997' }}
+          TEMPLATE_STORAGE: ${{ vars.TEMPLATE_STORAGE || 'disk-hdd' }}
+          IMPORT_STORAGE: ${{ vars.IMPORT_STORAGE || 'local' }}
+          PVE_INSECURE: ${{ vars.PVE_INSECURE }}
+        run: |
+          # bealv internal CA (nixbook) for proxmox.bealv.lan's certificate.
+          PVE_CACERT="$(nix eval --raw --impure --expr '(import ./npins).nixbook.outPath')/assets/certs/bealv-ca.crt"
+          export PVE_CACERT
+          ./scripts/proxmox-publish-template.sh result-image/nixos.qcow2 "${{ matrix.version }}"
