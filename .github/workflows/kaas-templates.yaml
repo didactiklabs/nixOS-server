@@ -125,6 +125,9 @@ jobs:
           # template's). One is enough: flux-mgmt's storage/storageAlt Cluster
           # variables make CAPMOX full-clone onto each worker class's storage.
           TEMPLATE_STORAGES: ${{ vars.TEMPLATE_STORAGES }}
+          # GPU variant for the alt (GPU) worker class: the iGPU's Proxmox PCI
+          # mapping, one GVT-g vGPU. Empty variable = no GPU template.
+          TEMPLATE_GPU_HOSTPCI: ${{ vars.TEMPLATE_GPU_HOSTPCI }}
           IMPORT_STORAGE: ${{ vars.IMPORT_STORAGE || 'local' }}
           PVE_PINNED_PUBKEY: ${{ vars.PVE_PINNED_PUBKEY }}
           PVE_INSECURE: ${{ vars.PVE_INSECURE }}

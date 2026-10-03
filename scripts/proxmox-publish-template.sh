@@ -23,6 +23,8 @@
 # Env: PVE_URL (https://proxmox.bealv.lan:8006), PVE_TOKEN_ID (user@realm!name),
 #      PVE_TOKEN_SECRET, PVE_NODE (proxmox-alv), REFERENCE_VMID (997),
 #      TEMPLATE_DISK_SIZE (70G; smaller existing templates get replaced),
+#      TEMPLATE_GPU_HOSTPCI (optional: also publish a "gpu" template on the
+#      first storage with this hostpci0, e.g. mapping=igpu,mdev=i915-GVTg_V5_4),
 #      TEMPLATE_STORAGES (space-separated Proxmox storage IDs; default: the one
 #      of REFERENCE_VMID's disk), IMPORT_STORAGE (local; needs the "Import"
 #      content type). TLS, first match wins:
@@ -44,6 +46,10 @@ istore="${IMPORT_STORAGE:-local}"
 # Boot disk size of the templates (clones inherit it; the image grows its
 # partition and filesystem on boot). The qcow2 itself is only ~10G.
 dsize="${TEMPLATE_DISK_SIZE:-70G}"
+# Optional GPU variant: one more template (tag "gpu") with this hostpci0, e.g.
+# "mapping=igpu,mdev=i915-GVTg_V5_4" (a Proxmox PCI resource mapping, so
+# non-root tokens can set it and every full clone inherits it).
+gpu_hostpci="${TEMPLATE_GPU_HOSTPCI:-}"
 imghash="$(basename "$(dirname "$(readlink -f "$image")")" | cut -c1-12)"
 vtag="k8s-v${version}"
 itag="img-${imghash}"
@@ -106,6 +112,7 @@ template_disk() { # boot disk of a VM: "<storage> <size in bytes>"
     echo "${d%%:*} $(to_bytes "$(sed -n 's/.*size=\([0-9]*[KMGT]\?\).*/\1/p' <<<"$d")")"
   }
 }
+is_gpu() { tr ';' '\n' <<<"$1" | grep -qx gpu; }
 template_storage() { template_disk "$1" | cut -d' ' -f1; }
 to_bytes() { # 70G -> bytes (Proxmox size suffixes are binary)
   numfmt --from=iec "${1:-0}"
@@ -137,11 +144,17 @@ done
 
 # Storages that don't have a template of this image yet.
 todo=()
-for st in "${storages[@]}"; do
+# Work items: "<storage> plain" per storage, plus "<first storage> gpu".
+items=()
+for st in "${storages[@]}"; do items+=("$st plain"); done
+[ -n "$gpu_hostpci" ] && items+=("${storages[0]} gpu")
+for item in "${items[@]}"; do
+  read -r st variant <<<"$item"
   found=""
   while read -r id tags; do
     [ -n "$id" ] || continue
     tr ';' '\n' <<<"$tags" | grep -qx "$itag" || continue
+    if is_gpu "$tags"; then [ "$variant" = gpu ] || continue; else [ "$variant" = plain ] || continue; fi
     read -r tst tsz < <(template_disk "$id")
     [ "$tst" = "$st" ] || continue
     if [ "$tsz" -ge "$(to_bytes "$dsize")" ]; then
@@ -151,9 +164,9 @@ for st in "${storages[@]}"; do
     fi
   done < <(templates)
   if [ -n "$found" ]; then
-    echo "image ${imghash} already published on ${st} (template ${found})"
+    echo "image ${imghash} (${variant}) already published on ${st} (template ${found})"
   else
-    todo+=("$st")
+    todo+=("$item")
   fi
 done
 if [ "${#todo[@]}" -eq 0 ]; then
@@ -185,17 +198,24 @@ else
   wait_task "$upid"
 fi
 
-for tstore in "${todo[@]}"; do
+for item in "${todo[@]}"; do
+  read -r tstore variant <<<"$item"
   vmid="$(api GET /cluster/nextid | jq -r .)"
   tags_new="kaassopeia;${vtag};${itag};storage-${tstore}"
+  suffix=""
+  if [ "$variant" = gpu ]; then
+    tags_new+=";gpu"
+    suffix="-gpu"
+  fi
   args=(
     -d "vmid=${vmid}"
-    --data-urlencode "name=kaassopeia-${version//./-}-${tstore//_/-}"
+    --data-urlencode "name=kaassopeia-${version//./-}-${tstore//_/-}${suffix}"
     --data-urlencode "tags=${tags_new}"
     --data-urlencode "${disk_key:-scsi0}=${tstore}:0,import-from=${volid}"
     --data-urlencode "boot=order=${disk_key:-scsi0}"
   )
   [ -n "$ci_key" ] && args+=(--data-urlencode "${ci_key}=${tstore}:cloudinit")
+  [ "$variant" = gpu ] && args+=(--data-urlencode "hostpci0=${gpu_hostpci}")
   # Hardware copied from the reference template. MAC addresses are dropped
   # (model=MAC -> model) so every template, and every clone, gets its own.
   while IFS=$'\t' read -r k v; do
@@ -208,7 +228,7 @@ for tstore in "${todo[@]}"; do
 
   # Don't leave a half-made VM behind if a step below fails.
   trap 'echo "removing unfinished VM ${vmid}" >&2; curl "${curl_opts[@]}" --max-time 120 -X DELETE "${PVE_URL%/}/api2/json/nodes/${node}/qemu/${vmid}?purge=1&destroy-unreferenced-disks=1" >/dev/null || true' EXIT
-  echo "creating VM ${vmid} (hardware from ${ref}, disk on ${tstore})..."
+  echo "creating VM ${vmid} (${variant}, hardware from ${ref}, disk on ${tstore})..."
   printf '  %s\n' "${args[@]}" | grep -v '^  -' | grep -v '^  --' || true
   upid="$(api POST "/nodes/${node}/qemu" "${args[@]}" | jq -r .)"
   wait_task "$upid"
@@ -225,10 +245,11 @@ for tstore in "${todo[@]}"; do
   upid="$(api POST "/nodes/${node}/qemu/${vmid}/template" | jq -r .)"
   wait_task "$upid"
   trap - EXIT
-  # On this storage, only the new template keeps the version tag.
+  # On this storage and variant, only the new template keeps the version tag.
   templates | while read -r id tags; do
     [ "$id" = "$vmid" ] && continue
     tr ';' '\n' <<<"$tags" | grep -qx "$vtag" || continue
+    if is_gpu "$tags"; then [ "$variant" = gpu ] || continue; else [ "$variant" = plain ] || continue; fi
     [ "$(template_storage "$id")" = "$tstore" ] || continue
     newtags="$(tr ';' '\n' <<<"$tags" | sed "s/^${vtag}\$/superseded-${vtag}/" | paste -sd';')"
     echo "template ${id}: ${tags} -> ${newtags}"
