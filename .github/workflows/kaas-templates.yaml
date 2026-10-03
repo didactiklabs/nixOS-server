@@ -87,6 +87,8 @@ jobs:
         run: |
           tailscale status
           tailscale netcheck
+          # "via <ip>:41641" = direct, "via DERP(xxx)" = relayed.
+          tailscale ping --c 5 opnsense
       - name: Publish template
         env:
           PVE_URL: ${{ vars.PVE_URL || 'https://proxmox.bealv.lan:8006' }}
