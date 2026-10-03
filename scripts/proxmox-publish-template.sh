@@ -18,8 +18,11 @@
 # Env: PVE_URL (https://proxmox.bealv.lan:8006), PVE_TOKEN_ID (user@realm!name),
 #      PVE_TOKEN_SECRET, PVE_NODE (proxmox-alv), REFERENCE_VMID (997),
 #      TEMPLATE_STORAGE (disk-hdd), IMPORT_STORAGE (local; needs the "Import"
-#      content type), PVE_CACERT (CA file for the API certificate) or
-#      PVE_INSECURE=1 (skip certificate verification).
+#      content type). TLS, first match wins:
+#        PVE_PINNED_PUBKEY  sha256//<base64> of the API certificate's public key
+#                           (Proxmox's own self-signed CA, CN=proxmox-alv: pin it)
+#        PVE_CACERT         CA file for the API certificate
+#        PVE_INSECURE=1     no verification at all
 set -euo pipefail
 
 image="$1"
@@ -36,8 +39,14 @@ tags_new="kaassopeia;${vtag};${itag}"
 file="kaassopeia-${version}-${imghash}.qcow2"
 
 curl_opts=(-fsS --retry 3 -H "Authorization: PVEAPIToken=${PVE_TOKEN_ID}=${PVE_TOKEN_SECRET}")
-[ -n "${PVE_CACERT:-}" ] && curl_opts+=(--cacert "$PVE_CACERT")
-[ "${PVE_INSECURE:-}" = 1 ] && curl_opts+=(-k)
+if [ -n "${PVE_PINNED_PUBKEY:-}" ]; then
+  # -k skips CA/hostname checks; --pinnedpubkey still rejects any other key.
+  curl_opts+=(-k --pinnedpubkey "$PVE_PINNED_PUBKEY")
+elif [ -n "${PVE_CACERT:-}" ]; then
+  curl_opts+=(--cacert "$PVE_CACERT")
+elif [ "${PVE_INSECURE:-}" = 1 ]; then
+  curl_opts+=(-k)
+fi
 api() { # api METHOD PATH [curl args...] -> .data
   local m="$1" p="$2"
   shift 2
@@ -60,6 +69,9 @@ wait_task() {
 templates() { # all KaaS templates on the node: vmid tags
   api GET "/nodes/${node}/qemu" | jq -r '.[] | select(.template == 1) | select((.tags // "") | split(";") | index("kaassopeia")) | "\(.vmid) \(.tags)"'
 }
+
+# Fail here (TLS, token, routing) rather than inside a condition below.
+echo "Proxmox API: $(api GET /version | jq -r '"version \(.version)"')"
 
 if templates | awk '{print $2}' | tr ';' '\n' | grep -qx "$itag"; then
   echo "image ${imghash} already published for ${vtag}, nothing to do"

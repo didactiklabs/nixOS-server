@@ -11,6 +11,9 @@
 #   - secrets PVE_TOKEN_ID / PVE_TOKEN_SECRET: Proxmox API token (see AGENTS.md).
 #   - storage `local` (vars.IMPORT_STORAGE) with the "Import" content type.
 #   - repo variable KAAS_TEMPLATES_ENABLED=true (the jobs are skipped until then).
+#   - repo variable PVE_PINNED_PUBKEY: the API certificate is signed by
+#     Proxmox's own CA for CN=proxmox-alv, so the key is pinned instead (see
+#     AGENTS.md for how to recompute it after a certificate renewal).
 name: KaaS templates
 on:
   workflow_dispatch:
@@ -88,6 +91,7 @@ jobs:
           REFERENCE_VMID: ${{ vars.REFERENCE_VMID || '997' }}
           TEMPLATE_STORAGE: ${{ vars.TEMPLATE_STORAGE || 'disk-hdd' }}
           IMPORT_STORAGE: ${{ vars.IMPORT_STORAGE || 'local' }}
+          PVE_PINNED_PUBKEY: ${{ vars.PVE_PINNED_PUBKEY }}
           PVE_INSECURE: ${{ vars.PVE_INSECURE }}
         run: |
           # bealv internal CA (nixbook) for proxmox.bealv.lan's certificate.
