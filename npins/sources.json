@@ -111,6 +111,20 @@
       "hash": "sha256-uR8052LbLrfZZvQKe5OiaeonjrzqCqqy/QlA+sEXeSA=",
       "frozen": true
     },
+    "nixpkgs-k8s-1.36.3": {
+      "type": "Git",
+      "repository": {
+        "type": "GitHub",
+        "owner": "NixOS",
+        "repo": "nixpkgs"
+      },
+      "branch": "master",
+      "submodules": false,
+      "revision": "6b1008c2068c33938dd9e0c4819c41cf1b616ac7",
+      "url": "https://github.com/NixOS/nixpkgs/archive/6b1008c2068c33938dd9e0c4819c41cf1b616ac7.tar.gz",
+      "hash": "sha256-ef4wSrQna3PlF7+w+8kzzwN+F8m0eAlhrm/kUDxALRU=",
+      "frozen": true
+    },
     "runner": {
       "type": "GitRelease",
       "repository": {
