@@ -13,6 +13,7 @@ let
     };
     overlays = [
       (import ./overlays/kubernetes.nix)
+      (import ./overlays/server.nix)
     ];
   };
   disko = import sources.disko { inherit (pkgs) lib; };

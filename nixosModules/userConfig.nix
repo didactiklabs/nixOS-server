@@ -43,7 +43,7 @@ let
         users.${username} = {
           config = {
             inherit (mergedConfig) customHomeManagerModules;
-            programs.zsh.initExtra = ''
+            programs.zsh.initContent = ''
               fastfetch
             '';
             home = {
@@ -59,10 +59,9 @@ let
           imports = lib.concatLists [
             mergedConfig.imports
             [
-              (import "${sources.nixbook}//homeManagerModules/zshConfig.nix")
-              (import "${sources.nixbook}//homeManagerModules/gitConfig.nix")
               (import "${sources.nixbook}//homeManagerModules/sshConfig.nix")
               (import "${sources.nixbook}//homeManagerModules/fastfetchConfig.nix")
+              ../homeManagerModules/server.nix
             ]
             userImports
           ];

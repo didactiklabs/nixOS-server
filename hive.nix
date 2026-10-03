@@ -7,6 +7,7 @@ let
     };
     overlays = [
       (import ./overlays/kubernetes.nix)
+      (import ./overlays/server.nix)
     ];
   };
   createConfiguration = parent: {

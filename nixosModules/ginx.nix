@@ -14,6 +14,10 @@ let
     echo applying revision: "$(${pkgs.git}/bin/git ls-remote https://github.com/didactiklabs/nixOs-server HEAD | awk '{print $1}')"...
 
     echo Running ginx...
+    # Fresh Nix cache: see applyScript.
+    XDG_CACHE_HOME="$(mktemp -d)"
+    export XDG_CACHE_HOME
+    trap 'rm -rf "$XDG_CACHE_HOME"' EXIT
     ${ginx}/bin/ginx --source https://github.com/didactiklabs/nixOs-server -b main --now -- ${pkgs.colmena}/bin/colmena apply-local --sudo
   '';
   # Run by ginx in its checkout of the repo when a new revision lands. After
@@ -21,12 +25,18 @@ let
   # cgroup): throttled before it can push etcd/kubelet out of memory, low
   # CPU/IO priority (MemoryMax is a backstop well above a normal evaluation),
   # and a switch that restarts ginx.service can no longer kill itself.
+  # Each run gets an empty Nix cache (RuntimeDirectory, removed afterwards):
+  # pinned sources used only during evaluation (nixbook, nixpkgs-k8s-*) are
+  # not GC roots, and after the nightly GC, Lix's fetcher cache still pointed
+  # at the deleted path ("path '...-source' is not valid", every evaluation
+  # failed on kazuma on 2026-10-03). With no cache it just fetches them again.
   applyScript = pkgs.writeShellScript "ginx-apply" ''
     set -euo pipefail
     sleep ${toString cfg.applyDelay}
     exec ${config.systemd.package}/bin/systemd-run --wait --collect --pipe --quiet \
       --unit=ginx-apply --working-directory="$PWD" \
       --setenv=PATH="$PATH" --setenv=HOME=/root \
+      -p RuntimeDirectory=ginx-apply --setenv=XDG_CACHE_HOME=/run/ginx-apply \
       -p MemoryHigh=2G -p MemoryMax=4G -p CPUWeight=20 -p IOWeight=20 \
       -- colmena apply-local
   '';

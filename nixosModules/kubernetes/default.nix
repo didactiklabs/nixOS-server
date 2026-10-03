@@ -160,6 +160,9 @@ in
           systemReserved = cfg.kubernetes.reserved.system;
           kubeReserved = cfg.kubernetes.reserved.kube;
           inherit (cfg.kubernetes.reserved) evictionHard;
+          # Remove images no pod has used for a week instead of keeping every
+          # old version until the disk is 85% full (bealv workers: ~33 GB).
+          imageMaximumGCAge = "168h";
         };
       };
     };

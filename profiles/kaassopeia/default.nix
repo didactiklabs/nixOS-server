@@ -20,7 +20,9 @@ in
       intel-media-driver
     ];
   };
-  hardware.enableRedistributableFirmware = lib.mkDefault true;
+  # Cloud/KubeVirt VM image: no firmware to load (see base.nix).
+  hardware.enableAllFirmware = false;
+  hardware.enableRedistributableFirmware = false;
   boot = {
     supportedFilesystems = [ "nfs" ];
     kernelParams = [
