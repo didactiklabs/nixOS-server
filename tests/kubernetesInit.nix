@@ -3,6 +3,7 @@ let
   pkgs = import sources.nixpkgs {
     overlays = [
       (import ../overlays/kubernetes.nix)
+      (import ../overlays/server.nix)
     ];
   };
   inherit (pkgs) lib;

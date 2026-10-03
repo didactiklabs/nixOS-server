@@ -78,6 +78,9 @@ in
     };
   };
   nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
+  # Proxmox VM: no firmware or microcode to load (see base.nix).
+  hardware.enableAllFirmware = false;
+  hardware.enableRedistributableFirmware = false;
   hardware.cpu.intel.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
   customNixOSModules = {
     kubernetes = {

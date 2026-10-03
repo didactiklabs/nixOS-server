@@ -13,6 +13,7 @@ let
     };
     overlays = [
       (import ./overlays/kubernetes.nix)
+      (import ./overlays/server.nix)
     ];
   };
 
@@ -97,7 +98,9 @@ in
   ];
   # Bootloader.
   hardware = {
-    enableAllFirmware = true;
+    # Physical hosts need it; VM profiles turn it off (virtio needs no
+    # firmware, ~0.8 GiB per generation).
+    enableAllFirmware = lib.mkDefault true;
   };
   boot = {
     kernelParams = [
