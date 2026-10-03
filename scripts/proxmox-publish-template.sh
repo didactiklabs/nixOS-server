@@ -15,6 +15,10 @@
 # retagged superseded-k8s-v<version> (kept for rollback; existing VMs are full
 # clones and don't depend on it).
 #
+# Image transfer: with IMAGE_URL (+ IMAGE_SHA256) Proxmox downloads the image
+# itself (download-url, checksum verified; needs Sys.AccessNetwork), otherwise
+# the image is uploaded through the API (slow over a long tailnet path).
+#
 # Env: PVE_URL (https://proxmox.bealv.lan:8006), PVE_TOKEN_ID (user@realm!name),
 #      PVE_TOKEN_SECRET, PVE_NODE (proxmox-alv), REFERENCE_VMID (997),
 #      TEMPLATE_STORAGE (disk-hdd), IMPORT_STORAGE (local; needs the "Import"
@@ -96,6 +100,13 @@ size="$(stat -Lc %s "$image")"
 have="$(api GET "/nodes/${node}/storage/${istore}/content?content=import" | jq -r --arg v "$volid" '.[] | select(.volid == $v) | .size')"
 if [ "$have" = "$size" ]; then
   echo "${volid} already uploaded (${size} bytes), reusing it"
+elif [ -n "${IMAGE_URL:-}" ]; then
+  echo "Proxmox downloads ${file} into ${istore} (sha256 ${IMAGE_SHA256:?})..."
+  upid="$(api POST "/nodes/${node}/storage/${istore}/download-url" \
+    -d content=import --data-urlencode "filename=${file}" \
+    --data-urlencode "url=${IMAGE_URL}" \
+    -d checksum-algorithm=sha256 -d "checksum=${IMAGE_SHA256}" | jq -r .)"
+  wait_task "$upid"
 else
   echo "uploading ${file} to ${istore}..."
   echo "image size: $(stat -Lc %s "$image") bytes"
