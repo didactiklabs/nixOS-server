@@ -21,7 +21,8 @@
 #
 # Env: PVE_URL (https://proxmox.bealv.lan:8006), PVE_TOKEN_ID (user@realm!name),
 #      PVE_TOKEN_SECRET, PVE_NODE (proxmox-alv), REFERENCE_VMID (997),
-#      TEMPLATE_STORAGE (disk-hdd), IMPORT_STORAGE (local; needs the "Import"
+#      TEMPLATE_STORAGE (Proxmox storage ID; default: the one of REFERENCE_VMID's
+#      disk), IMPORT_STORAGE (local; needs the "Import"
 #      content type). TLS, first match wins:
 #        PVE_PINNED_PUBKEY  sha256//<base64> of the API certificate's public key
 #                           (Proxmox's own self-signed CA, CN=proxmox-alv: pin it)
@@ -34,7 +35,7 @@ version="${2#v}"
 : "${PVE_URL:?}" "${PVE_TOKEN_ID:?}" "${PVE_TOKEN_SECRET:?}"
 node="${PVE_NODE:-proxmox-alv}"
 ref="${REFERENCE_VMID:-997}"
-tstore="${TEMPLATE_STORAGE:-disk-hdd}"
+tstore="${TEMPLATE_STORAGE:-}" # default: the reference template's disk storage
 istore="${IMPORT_STORAGE:-local}"
 imghash="$(basename "$(dirname "$(readlink -f "$image")")" | cut -c1-12)"
 vtag="k8s-v${version}"
@@ -122,6 +123,15 @@ fi
 refcfg="$(api GET "/nodes/${node}/qemu/${ref}/config")"
 disk_key="$(jq -r 'to_entries[] | select(.key|test("^(scsi|virtio|sata|ide)[0-9]+$")) | select(.value|test("cloudinit|media=cdrom")|not) | .key' <<<"$refcfg" | head -1)"
 ci_key="$(jq -r 'to_entries[] | select(.value|tostring|test("cloudinit")) | .key' <<<"$refcfg" | head -1)"
+if [ -z "$tstore" ]; then
+  # Proxmox storage ID (not the Kubernetes StorageClass name) of the reference
+  # template's boot disk, e.g. "local-lvm:base-997-disk-0" -> "local-lvm".
+  tstore="$(jq -r --arg k "${disk_key:-scsi0}" '.[$k]' <<<"$refcfg" | cut -d: -f1)"
+  [ -n "$tstore" ] && [ "$tstore" != null ] || {
+    echo "cannot find the storage of ${ref}'s disk; set TEMPLATE_STORAGE" >&2
+    exit 1
+  }
+fi
 vmid="$(api GET /cluster/nextid | jq -r .)"
 args=(
   -d "vmid=${vmid}"
