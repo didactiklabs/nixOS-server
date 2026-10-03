@@ -22,6 +22,7 @@
 #
 # Env: PVE_URL (https://proxmox.bealv.lan:8006), PVE_TOKEN_ID (user@realm!name),
 #      PVE_TOKEN_SECRET, PVE_NODE (proxmox-alv), REFERENCE_VMID (997),
+#      TEMPLATE_DISK_SIZE (70G; smaller existing templates get replaced),
 #      TEMPLATE_STORAGES (space-separated Proxmox storage IDs; default: the one
 #      of REFERENCE_VMID's disk), IMPORT_STORAGE (local; needs the "Import"
 #      content type). TLS, first match wins:
@@ -40,6 +41,9 @@ ref="${REFERENCE_VMID:-997}"
 # storage of the reference template's disk. One template per storage.
 storages_in="${TEMPLATE_STORAGES:-${TEMPLATE_STORAGE:-}}"
 istore="${IMPORT_STORAGE:-local}"
+# Boot disk size of the templates (clones inherit it; the image grows its
+# partition and filesystem on boot). The qcow2 itself is only ~10G.
+dsize="${TEMPLATE_DISK_SIZE:-70G}"
 imghash="$(basename "$(dirname "$(readlink -f "$image")")" | cut -c1-12)"
 vtag="k8s-v${version}"
 itag="img-${imghash}"
@@ -93,11 +97,18 @@ templates() { # all KaaS templates on the node: vmid tags
 boot_disk_key() { # first non-cloud-init disk key of a VM config (json on stdin)
   jq -r 'to_entries[] | select(.key|test("^(scsi|virtio|sata|ide)[0-9]+$")) | select(.value|test("cloudinit|media=cdrom")|not) | .key' | head -1
 }
-template_storage() { # Proxmox storage of a VM's boot disk
+template_disk() { # boot disk of a VM: "<storage> <size in bytes>"
   local cfg key
   cfg="$(api GET "/nodes/${node}/qemu/$1/config")"
   key="$(boot_disk_key <<<"$cfg")"
-  jq -r --arg k "${key:-scsi0}" '.[$k] // ""' <<<"$cfg" | cut -d: -f1
+  jq -r --arg k "${key:-scsi0}" '.[$k] // ""' <<<"$cfg" | {
+    IFS= read -r d
+    echo "${d%%:*} $(to_bytes "$(sed -n 's/.*size=\([0-9]*[KMGT]\?\).*/\1/p' <<<"$d")")"
+  }
+}
+template_storage() { template_disk "$1" | cut -d' ' -f1; }
+to_bytes() { # 70G -> bytes (Proxmox size suffixes are binary)
+  numfmt --from=iec "${1:-0}"
 }
 
 # Fail here (TLS, token, routing) rather than inside a condition below.
@@ -131,7 +142,13 @@ for st in "${storages[@]}"; do
   while read -r id tags; do
     [ -n "$id" ] || continue
     tr ';' '\n' <<<"$tags" | grep -qx "$itag" || continue
-    [ "$(template_storage "$id")" = "$st" ] && found="$id"
+    read -r tst tsz < <(template_disk "$id")
+    [ "$tst" = "$st" ] || continue
+    if [ "$tsz" -ge "$(to_bytes "$dsize")" ]; then
+      found="$id"
+    else
+      echo "template ${id} on ${st} has this image but a $(numfmt --to=iec "$tsz") disk (< ${dsize}), replacing it"
+    fi
   done < <(templates)
   if [ -n "$found" ]; then
     echo "image ${imghash} already published on ${st} (template ${found})"
@@ -193,6 +210,10 @@ for tstore in "${todo[@]}"; do
   printf '  %s\n' "${args[@]}" | grep -v '^  -' | grep -v '^  --' || true
   upid="$(api POST "/nodes/${node}/qemu" "${args[@]}" | jq -r .)"
   wait_task "$upid"
+  echo "growing ${vmid}'s ${disk_key:-scsi0} to ${dsize}..."
+  upid="$(api PUT "/nodes/${node}/qemu/${vmid}/resize" -d "disk=${disk_key:-scsi0}" -d "size=${dsize}" | jq -r .)"
+  # Proxmox >= 8 runs the resize as a task; older versions answer null.
+  [ "$upid" = null ] || wait_task "$upid"
   echo "converting ${vmid} to a template..."
   upid="$(api POST "/nodes/${node}/qemu/${vmid}/template" | jq -r .)"
   wait_task "$upid"
