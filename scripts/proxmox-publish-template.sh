@@ -38,7 +38,9 @@ itag="img-${imghash}"
 tags_new="kaassopeia;${vtag};${itag}"
 file="kaassopeia-${version}-${imghash}.qcow2"
 
-curl_opts=(-fsS --retry 3 -H "Authorization: PVEAPIToken=${PVE_TOKEN_ID}=${PVE_TOKEN_SECRET}")
+# --fail-with-body: on HTTP errors curl still exits non-zero, but Proxmox's
+# error message (JSON "message"/"errors") is printed instead of swallowed.
+curl_opts=(-sS --fail-with-body --retry 3 -H "Authorization: PVEAPIToken=${PVE_TOKEN_ID}=${PVE_TOKEN_SECRET}")
 if [ -n "${PVE_PINNED_PUBKEY:-}" ]; then
   # -k skips CA/hostname checks; --pinnedpubkey still rejects any other key.
   curl_opts+=(-k --pinnedpubkey "$PVE_PINNED_PUBKEY")
@@ -47,13 +49,24 @@ elif [ -n "${PVE_CACERT:-}" ]; then
 elif [ "${PVE_INSECURE:-}" = 1 ]; then
   curl_opts+=(-k)
 fi
-api() { # api METHOD PATH [curl args...] -> .data
-  local m="$1" p="$2"
+api() { # api METHOD PATH [curl args...] -> .data (exits on any error)
+  local m="$1" p="$2" out
   shift 2
-  curl "${curl_opts[@]}" -X "$m" "${PVE_URL%/}/api2/json${p}" "$@" | jq -c '.data'
+  if ! out="$(curl "${curl_opts[@]}" --max-time 300 -X "$m" "${PVE_URL%/}/api2/json${p}" "$@")"; then
+    echo "Proxmox API ${m} ${p} failed: ${out}" >&2
+    exit 1
+  fi
+  jq -c '.data' <<<"$out"
 }
 wait_task() {
   local upid="$1" st
+  case "$upid" in
+  UPID:*) ;;
+  *)
+    echo "expected a task id, got '${upid}'" >&2
+    exit 1
+    ;;
+  esac
   while :; do
     st="$(api GET "/nodes/${node}/tasks/$(jq -rn --arg u "$upid" '$u|@uri')/status")"
     if [ "$(jq -r .status <<<"$st")" = "stopped" ]; then
@@ -78,16 +91,22 @@ if templates | awk '{print $2}' | tr ';' '\n' | grep -qx "$itag"; then
   exit 0
 fi
 
-echo "uploading ${file} to ${istore}..."
-echo "image size: $(stat -Lc %s "$image") bytes"
-# --speed-limit/--speed-time: abort a stalled transfer after 2 min instead of
-# waiting for pveproxy's own timeout; -w reports how far it got.
-upid="$(curl "${curl_opts[@]}" --speed-limit 1024 --speed-time 120 \
-  -w '\n%{stderr}upload: %{size_upload} bytes in %{time_total}s (%{speed_upload} B/s), http %{http_code}\n' \
-  -X POST "${PVE_URL%/}/api2/json/nodes/${node}/storage/${istore}/upload" \
-  -F content=import -F "filename=@${image};filename=${file}" | jq -r '.data')"
-wait_task "$upid"
 volid="${istore}:import/${file}"
+size="$(stat -Lc %s "$image")"
+have="$(api GET "/nodes/${node}/storage/${istore}/content?content=import" | jq -r --arg v "$volid" '.[] | select(.volid == $v) | .size')"
+if [ "$have" = "$size" ]; then
+  echo "${volid} already uploaded (${size} bytes), reusing it"
+else
+  echo "uploading ${file} to ${istore}..."
+  echo "image size: $(stat -Lc %s "$image") bytes"
+  # --speed-limit/--speed-time: abort a stalled transfer after 2 min instead of
+  # waiting for pveproxy's own timeout; -w reports how far it got.
+  upid="$(curl "${curl_opts[@]}" --speed-limit 1024 --speed-time 120 \
+    -w '\n%{stderr}upload: %{size_upload} bytes in %{time_total}s (%{speed_upload} B/s), http %{http_code}\n' \
+    -X POST "${PVE_URL%/}/api2/json/nodes/${node}/storage/${istore}/upload" \
+    -F content=import -F "filename=@${image};filename=${file}" | jq -r '.data')"
+  wait_task "$upid"
+fi
 
 refcfg="$(api GET "/nodes/${node}/qemu/${ref}/config")"
 disk_key="$(jq -r 'to_entries[] | select(.key|test("^(scsi|virtio|sata|ide)[0-9]+$")) | select(.value|test("cloudinit|media=cdrom")|not) | .key' <<<"$refcfg" | head -1)"
@@ -112,9 +131,12 @@ done < <(jq -r 'to_entries[]
   | @tsv' <<<"$refcfg")
 
 echo "creating VM ${vmid} (hardware from ${ref}, disk on ${tstore})..."
-wait_task "$(api POST "/nodes/${node}/qemu" "${args[@]}" | jq -r .)"
+printf '  %s\n' "${args[@]}" | grep -v '^  -' | grep -v '^  --' || true
+upid="$(api POST "/nodes/${node}/qemu" "${args[@]}" | jq -r .)"
+wait_task "$upid"
 echo "converting ${vmid} to a template..."
-wait_task "$(api POST "/nodes/${node}/qemu/${vmid}/template" | jq -r .)"
+upid="$(api POST "/nodes/${node}/qemu/${vmid}/template" | jq -r .)"
+wait_task "$upid"
 api DELETE "/nodes/${node}/storage/${istore}/content/$(jq -rn --arg v "$volid" '$v|@uri')" >/dev/null || echo "warning: could not delete ${volid}" >&2
 
 # Only the new template keeps the version tag.
