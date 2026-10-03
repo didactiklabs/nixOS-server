@@ -163,6 +163,13 @@ in
           # Remove images no pod has used for a week instead of keeping every
           # old version until the disk is 85% full (bealv workers: ~33 GB).
           imageMaximumGCAge = "168h";
+          # Pull images in parallel: with serialized pulls a fresh node waited
+          # 5-10 min for its ~60 images although each took 2-30 s (bealv,
+          # 2026-10-03). Overrides kubeadm's config.yaml on every node.
+          serializeImagePulls = false;
+          maxParallelImagePulls = 5;
+          registryPullQPS = 10;
+          registryBurst = 20;
         };
       };
     };
