@@ -121,8 +121,10 @@ jobs:
           PVE_TOKEN_SECRET: ${{ secrets.PVE_TOKEN_SECRET }}
           PVE_NODE: ${{ vars.PVE_NODE || 'proxmox-alv' }}
           REFERENCE_VMID: ${{ vars.REFERENCE_VMID || '997' }}
-          # One template per Proxmox storage (IDs, not StorageClass names).
-          TEMPLATE_STORAGES: ${{ vars.TEMPLATE_STORAGES || 'disk_hdd disk_hddb' }}
+          # Proxmox storage IDs to publish on (default: the reference
+          # template's). One is enough: flux-mgmt's storage/storageAlt Cluster
+          # variables make CAPMOX full-clone onto each worker class's storage.
+          TEMPLATE_STORAGES: ${{ vars.TEMPLATE_STORAGES }}
           IMPORT_STORAGE: ${{ vars.IMPORT_STORAGE || 'local' }}
           PVE_PINNED_PUBKEY: ${{ vars.PVE_PINNED_PUBKEY }}
           PVE_INSECURE: ${{ vars.PVE_INSECURE }}
