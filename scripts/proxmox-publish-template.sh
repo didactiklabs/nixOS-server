@@ -79,7 +79,12 @@ if templates | awk '{print $2}' | tr ';' '\n' | grep -qx "$itag"; then
 fi
 
 echo "uploading ${file} to ${istore}..."
-upid="$(curl "${curl_opts[@]}" -X POST "${PVE_URL%/}/api2/json/nodes/${node}/storage/${istore}/upload" \
+echo "image size: $(stat -Lc %s "$image") bytes"
+# --speed-limit/--speed-time: abort a stalled transfer after 2 min instead of
+# waiting for pveproxy's own timeout; -w reports how far it got.
+upid="$(curl "${curl_opts[@]}" --speed-limit 1024 --speed-time 120 \
+  -w '\n%{stderr}upload: %{size_upload} bytes in %{time_total}s (%{speed_upload} B/s), http %{http_code}\n' \
+  -X POST "${PVE_URL%/}/api2/json/nodes/${node}/storage/${istore}/upload" \
   -F content=import -F "filename=@${image};filename=${file}" | jq -r '.data')"
 wait_task "$upid"
 volid="${istore}:import/${file}"

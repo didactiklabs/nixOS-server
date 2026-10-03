@@ -82,6 +82,11 @@ jobs:
           oauth-secret: ${{ secrets.TS_OAUTH_SECRET }}
           tags: tag:ci
           args: --accept-routes
+      - name: Tailnet path (direct or relayed)
+        continue-on-error: true
+        run: |
+          tailscale status
+          tailscale netcheck
       - name: Publish template
         env:
           PVE_URL: ${{ vars.PVE_URL || 'https://proxmox.bealv.lan:8006' }}
