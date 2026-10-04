@@ -72,6 +72,22 @@ in
   };
   services = {
     openssh.ports = [ 2077 ];
+    # RPCU netbird mesh, so the RPCU runners (6-8) reach OpenStack (*.rpcu.vpn)
+    # to publish hephaestus Glance images. Runner jobs can't run netbird
+    # themselves (NoNewPrivileges, no /dev/net/tun). Restrict this peer's group
+    # with a netbird policy: every job on isaac, runners 1-5 included, gets it.
+    # One-time: put a setup key in /root/netbird-rpcu-setup-key (root only).
+    netbird = {
+      useRoutingFeatures = "client";
+      clients.rpcu = {
+        port = 51820;
+        environment.NB_MANAGEMENT_URL = "https://netbird.rpcu.io";
+        login = {
+          enable = true;
+          setupKeyFile = "/root/netbird-rpcu-setup-key";
+        };
+      };
+    };
     github-runners = {
       runner1 = {
         enable = true;
