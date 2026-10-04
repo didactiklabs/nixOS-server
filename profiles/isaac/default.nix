@@ -6,11 +6,15 @@
   ...
 }:
 let
-  inherit (sources.runner) version;
-  github-runner = pkgs.github-runner.overrideAttrs (oldAttrs: {
-    version = builtins.replaceStrings [ "v" ] [ "" ] version;
-    src = sources.runner;
-  });
+  # GitHub rejects runners a few releases behind ("deprecated and cannot receive
+  # messages"), faster than stable nixpkgs follows: take the whole package
+  # (source + matching NuGet deps) from nixos-unstable.
+  inherit
+    (import sources.nixpkgs-unstable {
+      inherit (pkgs.stdenv.hostPlatform) system;
+    })
+    github-runner
+    ;
   # node24 only: the module's default (node20 + node24) pulls in the insecure nodejs_20
   nodeRuntimes = [ "node24" ];
 

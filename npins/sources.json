@@ -139,21 +139,11 @@
       "hash": "sha256-69xHQhAeMAD2wDXO7T2pcOZIF9Sga2W+JkmY2a11Ops=",
       "frozen": true
     },
-    "runner": {
-      "type": "GitRelease",
-      "repository": {
-        "type": "GitHub",
-        "owner": "actions",
-        "repo": "runner"
-      },
-      "pre_releases": false,
-      "version_upper_bound": null,
-      "release_prefix": null,
-      "submodules": false,
-      "version": "v2.334.0",
-      "revision": "f1995ede5d885c997d13d8eca5467c4ce97fe69c",
-      "url": "https://api.github.com/repos/actions/runner/tarball/refs/tags/v2.334.0",
-      "hash": "sha256-pJYN1QKkdgb6+I93hZODdS0NccquXTlADJDhxhXvXQE="
+    "nixpkgs-unstable": {
+      "type": "Channel",
+      "name": "nixos-unstable",
+      "url": "https://releases.nixos.org/nixos/unstable/nixos-26.11pre1083223.c59305bab206/nixexprs.tar.xz",
+      "hash": "sha256-VBA0QerzzmL+4wxgtwiCdiLwLpJg2/9xOxhgO3BRJQA="
     }
   },
   "version": 7
