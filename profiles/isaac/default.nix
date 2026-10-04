@@ -233,6 +233,13 @@ in
     };
   };
   networking.useDHCP = lib.mkDefault true;
+  # RPCU OpenStack endpoints: every *.rpcu.vpn name is the kgateway LB
+  # (argus infrastructure/kgateway/gateway.yaml), reached over netbird-rpcu
+  # (10.0.0.0/24 route via quinn). No netbird nameserver serves rpcu.vpn.
+  networking.hosts."10.0.0.240" = [
+    "keystone.rpcu.vpn"
+    "glance.rpcu.vpn"
+  ];
   nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
   hardware.cpu.intel.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
   customNixOSModules = {
