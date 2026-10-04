@@ -12,21 +12,18 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-      - name: Get Kubernetes version from nixpkgs master
+      - name: Get Kubernetes version from nixos-unstable
         id: k8s-version
         run: |
-          K8S_FILE_URL="https://raw.githubusercontent.com/NixOS/nixpkgs/master/pkgs/by-name/ku/kubernetes/package.nix"
-          K8S_FILE=$(curl -sL "$K8S_FILE_URL")
-
-          # Extract version from line 26 - format is like: pname = "kubernetes"; version = "v1.35.3";
-          VERSION=$(echo "$K8S_FILE" | sed -n '26p' | grep -oP 'version = "\K[^"]+')
+          # nixos-unstable rather than master: its commits are built by Hydra,
+          # so the pinned kubernetes comes from cache.nixos.org.
+          NIXPKGS_COMMIT=$(curl -sfL "https://api.github.com/repos/NixOS/nixpkgs/commits/nixos-unstable" | jq -r '.sha')
+          VERSION=$(curl -sfL "https://raw.githubusercontent.com/NixOS/nixpkgs/$NIXPKGS_COMMIT/pkgs/by-name/ku/kubernetes/package.nix" |
+            grep -m1 -oP '^\s*version = "v?\K[0-9.]+(?=")')
+          test -n "$VERSION"
           echo "version=$VERSION" >> "$GITHUB_OUTPUT"
-          echo "Found Kubernetes version: $VERSION"
-
-          # Get the current nixpkgs master commit SHA
-          NIXPKGS_COMMIT=$(curl -sL "https://api.github.com/repos/NixOS/nixpkgs/commits/master" | jq -r '.sha')
           echo "nixpkgs_revision=$NIXPKGS_COMMIT" >> "$GITHUB_OUTPUT"
-          echo "Nixpkgs master revision: $NIXPKGS_COMMIT"
+          echo "Found Kubernetes $VERSION at nixos-unstable $NIXPKGS_COMMIT"
       - name: Check if pin already exists
         id: check-pin
         run: |
@@ -65,7 +62,10 @@ jobs:
           PIN_NAME="${{ steps.check-pin.outputs.pin_name }}"
           NIXPKGS_REV="${{ steps.check-pin.outputs.nixpkgs_rev }}"
 
-          nix run nixpkgs#npins -- add github NixOS nixpkgs \
+          # npins from the pinned nixpkgs (0.4.0): a newer npins refuses the
+          # v7 sources.json ("Version 7 is too old").
+          NPINS=$(nix-build --no-out-link -E '(import (import ./npins).nixpkgs { }).npins')
+          "$NPINS/bin/npins" add github NixOS nixpkgs \
             --name "$PIN_NAME" \
             --branch "master" --frozen \
             --at "$NIXPKGS_REV"
@@ -83,7 +83,7 @@ jobs:
             This PR adds a frozen npins pin for Kubernetes version `${{ steps.k8s-version.outputs.version }}`.
 
             - Nixpkgs revision: `${{ steps.check-pin.outputs.nixpkgs_rev }}`
-            - Source: [pkgs/by-name/ku/kubernetes/package.nix](https://github.com/NixOS/nixpkgs/blob/master/pkgs/by-name/ku/kubernetes/package.nix)
+            - Source: [pkgs/by-name/ku/kubernetes/package.nix](https://github.com/NixOS/nixpkgs/blob/${{ steps.check-pin.outputs.nixpkgs_rev }}/pkgs/by-name/ku/kubernetes/package.nix) (nixos-unstable)
           branch: "k8s-pin-${{ steps.k8s-version.outputs.version }}"
           delete-branch: true
       - name: Enable Pull Request Automerge
