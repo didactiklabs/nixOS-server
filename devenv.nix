@@ -1,5 +1,8 @@
 let
   sources = import ./npins;
+  # npins from the pinned nixpkgs (0.4.0): a newer npins refuses the v7
+  # sources.json ("Version 7 is too old") and `upgrade` rewrites the whole file.
+  npins = (import sources.nixpkgs { }).npins;
 in
 {
   pkgs,
@@ -9,9 +12,9 @@ in
 {
   imports = [ "${sources.nixbook}/devenvModules/devenv.nix" ];
 
-  packages = with pkgs; [
-    qemu
-    docker
+  packages = [
+    pkgs.qemu
+    pkgs.docker
     npins
   ];
 
@@ -38,7 +41,7 @@ in
     '';
     show-k8s-pins.description = "Display already available Kubernetes nixpkgs pins via npins";
     show-k8s-pins.exec = ''
-      ${pkgs.npins}/bin/npins show | grep 'nixpkgs-k8s-'
+      ${npins}/bin/npins show | grep 'nixpkgs-k8s-'
     '';
     add-k8s-pin.description = "Pin a nixpkgs revision for a specific Kubernetes version via npins";
     add-k8s-pin.exec = ''
@@ -54,7 +57,7 @@ in
       PIN_NAME="nixpkgs-k8s-$K8S_VERSION"
 
       echo "Adding pin for $PIN_NAME with revision $NIXPKGS_REV..."
-      ${pkgs.npins}/bin/npins add github NixOS nixpkgs \
+      ${npins}/bin/npins add github NixOS nixpkgs \
         --name "$PIN_NAME" \
         --branch "master" --frozen \
         --at "$NIXPKGS_REV"
@@ -103,14 +106,11 @@ in
     echo ""
     echo "Available tools:"
     ${lib.concatStringsSep "\n    " (
-      map (pkg: "echo \"  • ${pkg.name or pkg.pname or "unknown"} - ${pkg.meta.description or ""}\"") (
-        with pkgs;
-        [
-          qemu
-          docker
-          npins
-        ]
-      )
+      map (pkg: "echo \"  • ${pkg.name or pkg.pname or "unknown"} - ${pkg.meta.description or ""}\"") ([
+        pkgs.qemu
+        pkgs.docker
+        npins
+      ])
     )}
     echo ""
     echo "Available build scripts:"
