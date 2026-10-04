@@ -20,7 +20,7 @@ on:
     inputs:
       versions:
         description: "Kubernetes versions (space separated), one template each"
-        default: "1.35.4 1.36.3"
+        default: "1.36.3 1.37.1"
   push:
     branches:
       - main
@@ -43,7 +43,7 @@ jobs:
     steps:
       - id: v
         env:
-          VERSIONS: ${{ inputs.versions || '1.35.4 1.36.3' }}
+          VERSIONS: ${{ inputs.versions || '1.36.3 1.37.1' }}
         run: echo "matrix=$(jq -Rc 'split(" ") | map(select(length > 0) | ltrimstr("v"))' <<<"$VERSIONS")" >> "$GITHUB_OUTPUT"
   template:
     needs: versions
