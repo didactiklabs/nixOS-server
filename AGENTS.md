@@ -96,7 +96,7 @@ Kubelet reservations (`customNixOSModules.kubernetes.reserved.{system,kube,evict
 
 ## CI/CD
 
-- Self-hosted GitHub Actions runners (on `isaac`, 8 runners)
+- Self-hosted GitHub Actions runners (on `isaac`, 3 runners: 1-2 didactiklabs, 6 RPCU)
 - Nix build cache at `s3.didactiklabs.io/nix-cache`
 - Automated K8s version checking every 6 hours (`k8s-version-check.yaml`)
 - Automated dependency updates (`npins-update.yaml`)
