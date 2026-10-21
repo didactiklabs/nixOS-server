@@ -76,10 +76,10 @@ in
   };
   services = {
     openssh.ports = [ 2077 ];
-    # RPCU netbird mesh, so the RPCU runners (6-8) reach OpenStack (*.rpcu.vpn)
+    # RPCU netbird mesh, so the RPCU runner (6) reaches OpenStack (*.rpcu.vpn)
     # to publish hephaestus Glance images. Runner jobs can't run netbird
     # themselves (NoNewPrivileges, no /dev/net/tun). Restrict this peer's group
-    # with a netbird policy: every job on isaac, runners 1-5 included, gets it.
+    # with a netbird policy: every job on isaac, runners 1-2 included, gets it.
     # One-time: put a setup key in /root/netbird-rpcu-setup-key (root only).
     netbird = {
       useRoutingFeatures = "client";
@@ -119,78 +119,11 @@ in
           # OOMPolicy = "continue";
         };
       };
-      runner3 = {
-        enable = true;
-        name = "runner3";
-        user = "nixos";
-        tokenFile = "/home/nixos/token3";
-        inherit extraPackages url;
-        package = github-runner;
-        inherit nodeRuntimes;
-        serviceOverrides = {
-          Restart = lib.mkForce "always";
-          # OOMPolicy = "continue";
-        };
-      };
-      runner4 = {
-        enable = true;
-        name = "runner4";
-        user = "nixos";
-        tokenFile = "/home/nixos/token4";
-        inherit extraPackages url;
-        package = github-runner;
-        inherit nodeRuntimes;
-        serviceOverrides = {
-          Restart = lib.mkForce "always";
-          # OOMPolicy = "continue";
-        };
-      };
-      runner5 = {
-        enable = true;
-        name = "runner5";
-        user = "nixos";
-        tokenFile = "/home/nixos/token5";
-        inherit extraPackages url;
-        package = github-runner;
-        inherit nodeRuntimes;
-        serviceOverrides = {
-          Restart = lib.mkForce "always";
-          # OOMPolicy = "continue";
-        };
-      };
       runner6 = {
         enable = true;
         name = "runner6";
         user = "nixos";
         tokenFile = "/home/nixos/token6";
-        url = "https://github.com/RPCU";
-        inherit extraPackages;
-        package = github-runner;
-        inherit nodeRuntimes;
-        serviceOverrides = {
-          Restart = lib.mkForce "always";
-          # OOMPolicy = "continue";
-        };
-      };
-      runner7 = {
-        enable = true;
-        name = "runner7";
-        user = "nixos";
-        tokenFile = "/home/nixos/token7";
-        url = "https://github.com/RPCU";
-        inherit extraPackages;
-        package = github-runner;
-        inherit nodeRuntimes;
-        serviceOverrides = {
-          Restart = lib.mkForce "always";
-          # OOMPolicy = "continue";
-        };
-      };
-      runner8 = {
-        enable = true;
-        name = "runner8";
-        user = "nixos";
-        tokenFile = "/home/nixos/token8";
         url = "https://github.com/RPCU";
         inherit extraPackages;
         package = github-runner;
